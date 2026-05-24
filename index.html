@@ -1278,8 +1278,8 @@ function renderHeatmap(days90) {
 // GEMINI API HELPER
 // ═══════════════════════════════════════════════════════════
 async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
-  const key = STATE.apiKey || GEMINI_API_KEY;
-  if (!key || key === 'PASTE_GEMINI_KEY_DISINI') throw new Error('API key belum diset! Klik tombol API Key di kanan atas.');
+  const key = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  if (!key) throw new Error('API key kosong!');
   
   const contents = [];
   if (systemPrompt) {
@@ -1302,8 +1302,8 @@ async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
 }
 
 async function callGeminiWithHistory(history, systemPrompt, maxTokens = 1000) {
-  const key = STATE.apiKey || GEMINI_API_KEY;
-  if (!key || key === 'PASTE_GEMINI_KEY_DISINI') throw new Error('API key belum diset!');
+  const key = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  if (!key) throw new Error('API key kosong!');
 
   const contents = [];
   if (systemPrompt) {
@@ -1571,7 +1571,7 @@ function previewSubmitFile(e) {
 
 async function submitAssignment() {
   if (!submitFiles.length) { document.getElementById('submit-error').textContent = 'Upload gambar karyamu dulu!'; return; }
-  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { document.getElementById('submit-error').textContent = 'Set Gemini API key dulu di tombol kanan atas!'; return; }
+  // key check handled in callGemini
   const btn = document.getElementById('submit-btn');
   btn.textContent = '⟳ Sensei sedang menilai...'; btn.disabled = true;
   document.getElementById('submit-error').textContent = '';
@@ -1734,7 +1734,7 @@ function activateTask(i) {
 }
 
 async function generateTasks() {
-  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { alert('Set Gemini API key dulu di tombol kanan atas!'); return; }
+  
   const week = CURRICULUM[STATE.currentWeek-1];
   const skills = Object.entries(STATE.skills).map(([k,v])=>`${k}:${v}%`).join(', ');
   const btn = document.querySelector('[onclick="generateTasks()"]');
@@ -1889,7 +1889,7 @@ async function sendToSensei() {
   const inp = document.getElementById('sensei-input');
   const text = inp?.value.trim();
   if (!text && !senseiImgData) return;
-  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { alert('Set Gemini API key dulu di tombol kanan atas!'); return; }
+  
 
   const userMsg = { role:'user', text, image: senseiImgData };
   STATE.chatHistory.push(userMsg);
@@ -2024,9 +2024,10 @@ function importData(e) {
 
 // Load API key input if set
 window.addEventListener('load', () => {
-  if (STATE.apiKey) document.getElementById('api-key-input').value = STATE.apiKey;
+  const displayKey = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  if (displayKey) document.getElementById('api-key-input').value = displayKey;
   goTo('dashboard');
-  if (!STATE.apiKey) setTimeout(()=>openModal('modal-api'), 500);
+  if (!STATE.apiKey && GEMINI_API_KEY === 'PASTE_GEMINI_KEY_DISINI') setTimeout(()=>openModal('modal-api'), 500);
 });
 
 </script>
