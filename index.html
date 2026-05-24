@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier — Drawing Progress Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --bg2: #0d0d18;
+  --bg3: #12121f;
+  --border: #1e1e30;
+  --border2: #2a2a40;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --gold-dim: rgba(201,168,76,0.12);
+  --text: #e2ddd4;
+  --text2: #9994a0;
+  --text3: #554f66;
+  --green: #4caf82;
+  --red: #c95a5a;
+  --blue: #5a8ac9;
+  --radius: 8px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* LAYOUT */
+.shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 0; position: fixed;
+  top: 0; left: 0; height: 100vh;
+  z-index: 100;
+  transition: transform .3s;
+}
+.main { margin-left: 220px; flex: 1; min-height: 100vh; }
+.topbar {
+  height: 56px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.page-content { padding: 28px; max-width: 1000px; }
+
+/* SIDEBAR */
+.logo-wrap { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--font-display); font-size: 22px; color: var(--gold); letter-spacing: 1px; }
+.logo-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; color: var(--text3); text-transform: uppercase; margin-top: 2px; }
+.nav-section { padding: 12px 0; }
+.nav-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; color: var(--text3); text-transform: uppercase; padding: 0 20px; margin-bottom: 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px; cursor: pointer;
+  color: var(--text3); font-size: 13px;
+  transition: all .15s; position: relative;
+  font-family: var(--font-body);
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active {
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  height: 60%; width: 2px; background: var(--gold); border-radius: 0 1px 1px 0;
+}
+.nav-icon { font-size: 15px; width: 18px; text-align: center; }
+.nav-badge {
+  margin-left: auto; background: var(--gold); color: var(--bg);
+  font-family: var(--font-mono); font-size: 9px; padding: 1px 6px;
+  border-radius: 999px; font-weight: 500;
+}
+.sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); }
+.streak-widget {
+  background: var(--gold-dim); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 10px 12px;
+}
+.streak-num { font-family: var(--font-display); font-size: 28px; color: var(--gold); line-height: 1; }
+.streak-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; margin-top: 2px; }
+
+/* CARDS */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--border2); }
+.card-gold { border-color: rgba(201,168,76,0.3); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* TYPOGRAPHY */
+.page-title { font-family: var(--font-display); font-size: 26px; color: var(--gold2); margin-bottom: 4px; }
+.page-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; color: var(--text3); text-transform: uppercase; margin-bottom: 24px; }
+.section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; color: var(--text3); text-transform: uppercase; margin-bottom: 14px; }
+.card-title { font-family: var(--font-display); font-size: 15px; color: var(--text); margin-bottom: 4px; }
+
+/* STAT CARDS */
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.stat-val { font-family: var(--font-display); font-size: 32px; color: var(--gold); line-height: 1.1; }
+.stat-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; margin-top: 4px; }
+.stat-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border2); border-radius: 4px;
+  padding: 8px 16px; cursor: pointer; font-size: 12px;
+  font-family: var(--font-mono); letter-spacing: 1px;
+  color: var(--text2); background: var(--bg3);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--gold); color: var(--gold); }
+.btn-primary { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 500; }
+.btn-primary:hover { background: var(--gold2); border-color: var(--gold2); color: var(--bg); }
+.btn-danger { border-color: var(--red); color: var(--red); }
+.btn-danger:hover { background: rgba(201,90,90,0.1); }
+.btn-green { border-color: var(--green); color: var(--green); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-icon { padding: 7px 10px; }
+
+/* INPUTS */
+.input, .textarea, .select {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); padding: 9px 12px; border-radius: 4px;
+  font-family: var(--font-body); font-size: 13px; outline: none;
+  transition: border-color .15s;
+}
+.input:focus, .textarea:focus, .select:focus { border-color: var(--gold); }
+.textarea { resize: vertical; min-height: 80px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* PROGRESS BARS */
+.progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .5s; }
+.progress-fill.green { background: var(--green); }
+.progress-fill.blue { background: var(--blue); }
+
+/* TAGS/BADGES */
+.tag {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px;
+  padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+}
+.tag-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.2); }
+.tag-green { background: rgba(76,175,130,0.1); color: var(--green); border: 1px solid rgba(76,175,130,0.2); }
+.tag-blue { background: rgba(90,138,201,0.1); color: var(--blue); border: 1px solid rgba(90,138,201,0.2); }
+.tag-red { background: rgba(201,90,90,0.1); color: var(--red); border: 1px solid rgba(201,90,90,0.2); }
+
+/* HEATMAP */
+.heatmap { display: flex; gap: 3px; flex-wrap: wrap; }
+.heatmap-day { width: 14px; height: 14px; border-radius: 2px; background: var(--bg3); transition: all .2s; }
+.heatmap-day.level1 { background: rgba(201,168,76,0.25); }
+.heatmap-day.level2 { background: rgba(201,168,76,0.55); }
+.heatmap-day.level3 { background: var(--gold); }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,8,16,0.88); z-index: 1000;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 28px;
+  width: 90%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+}
+.modal-lg { max-width: 720px; }
+.modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.modal-title { font-family: var(--font-display); font-size: 18px; color: var(--gold2); }
+.close-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 20px; line-height: 1; padding: 2px; }
+.close-btn:hover { color: var(--text); }
+
+/* GALLERY GRID */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 14px; }
+.gallery-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; cursor: pointer;
+  transition: all .2s; position: relative;
+}
+.gallery-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.gallery-thumb { height: 150px; overflow: hidden; background: var(--bg3); position: relative; }
+.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.gallery-info { padding: 10px 12px; }
+.gallery-title { font-size: 13px; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gallery-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text3); }
+
+/* CHAT */
+.chat-area { display: flex; flex-direction: column; height: calc(100vh - 160px); min-height: 500px; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 16px; }
+.chat-msg { display: flex; gap: 12px; align-items: flex-start; }
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-avatar {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.chat-avatar.sensei { background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+.chat-avatar.user { background: var(--bg3); border: 1px solid var(--border2); color: var(--text3); }
+.chat-bubble {
+  max-width: 78%; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px; font-size: 13px; line-height: 1.75;
+  white-space: pre-wrap;
+}
+.chat-bubble.sensei { border-color: rgba(201,168,76,0.15); background: rgba(201,168,76,0.04); }
+.chat-input-area { padding-top: 14px; border-top: 1px solid var(--border); }
+.chat-input-row { display: flex; gap: 8px; }
+
+/* TIMER */
+.timer-display {
+  font-family: var(--font-mono); font-size: 56px; color: var(--gold);
+  text-align: center; letter-spacing: 4px; line-height: 1;
+}
+.timer-display.urgent { color: var(--red); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+/* SKILL TREE */
+.skill-node {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px 14px; border-radius: var(--radius);
+  background: var(--bg3); border: 1px solid var(--border);
+  position: relative; transition: all .2s;
+}
+.skill-node:hover { border-color: var(--gold); }
+.skill-node.mastered { border-color: rgba(201,168,76,0.4); background: var(--gold-dim); }
+.skill-node-name { font-size: 12px; color: var(--text); }
+.skill-node-src { font-family: var(--font-mono); font-size: 9px; color: var(--text3); letter-spacing: 1px; }
+.skill-pct { font-family: var(--font-mono); font-size: 10px; color: var(--gold); }
+
+/* JOURNAL */
+.journal-entry {
+  border-left: 2px solid var(--border2);
+  padding: 0 0 20px 18px; position: relative; margin-bottom: 4px;
+}
+.journal-entry::before {
+  content: ''; position: absolute; left: -5px; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--bg2); border: 2px solid var(--border2);
+}
+.journal-entry.has-work::before { border-color: var(--gold); background: var(--gold-dim); }
+.journal-date { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; margin-bottom: 6px; }
+.journal-title { font-family: var(--font-display); font-size: 15px; color: var(--text); margin-bottom: 6px; }
+.journal-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
+
+/* TASK CARDS */
+.task-card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); padding: 16px 18px; margin-bottom: 10px;
+  transition: border-color .2s;
+}
+.task-card.active { border-color: rgba(201,168,76,0.4); background: var(--gold-dim); }
+.task-card.done { opacity: 0.5; }
+.task-card-title { font-family: var(--font-display); font-size: 14px; margin-bottom: 4px; }
+.task-timer { font-family: var(--font-mono); font-size: 11px; color: var(--gold); }
+
+/* UPLOAD ZONE */
+.upload-zone {
+  border: 1px dashed var(--border2); border-radius: var(--radius);
+  padding: 36px 20px; text-align: center; cursor: pointer;
+  transition: all .2s;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--gold); background: var(--gold-dim); }
+.upload-icon { font-size: 36px; color: var(--border2); margin-bottom: 10px; }
+.upload-zone:hover .upload-icon { color: var(--gold); }
+
+/* GRADE DISPLAY */
+.grade-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 2px solid var(--gold); display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--gold-dim);
+}
+.grade-letter { font-family: var(--font-display); font-size: 28px; color: var(--gold); line-height: 1; }
+.grade-score { font-family: var(--font-mono); font-size: 9px; color: var(--text3); }
+
+/* TABS */
+.tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.tab-btn {
+  padding: 10px 18px; cursor: pointer; font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text3); border: none; background: none;
+  border-bottom: 2px solid transparent; transition: all .15s;
+}
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab-btn:hover { color: var(--text); }
+
+/* RATING STARS */
+.stars { display: flex; gap: 4px; }
+.star { font-size: 22px; cursor: pointer; color: var(--border2); transition: color .1s; }
+.star.active { color: var(--gold); }
+
+/* CURRICULUM */
+.week-card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); margin-bottom: 10px; overflow: hidden;
+}
+.week-card.active-week { border-color: rgba(201,168,76,0.4); }
+.week-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; cursor: pointer;
+}
+.week-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--bg3); border: 1px solid var(--border2); color: var(--text3);
+}
+.week-num.done { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+.week-num.current { border-color: var(--gold); color: var(--gold); }
+.week-body { padding: 0 18px 16px 64px; display: none; }
+.week-body.open { display: block; }
+
+/* ANIMATIONS */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .3s ease; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .grid4 { grid-template-columns: 1fr 1fr; }
+  .grid3 { grid-template-columns: 1fr; }
+  .menu-toggle { display: flex !important; }
+}
+.menu-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 20px; }
+
+/* MISC */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.tooltip { position: relative; }
+.highlight-box { background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--radius); padding: 14px 16px; }
+.green-box { background: rgba(76,175,130,0.07); border: 1px solid rgba(76,175,130,0.2); border-radius: var(--radius); padding: 14px 16px; }
+.red-box { background: rgba(201,90,90,0.07); border: 1px solid rgba(201,90,90,0.2); border-radius: var(--radius); padding: 14px 16px; }
+
+.topbar-title { font-family: var(--font-display); font-size: 16px; color: var(--text2); }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+select.input, select.select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23554f66'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; appearance: none; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-wrap">
+      <div class="logo">Atelier</div>
+      <div class="logo-sub">Drawing Academy</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Utama</div>
+      <button class="nav-item active" onclick="goTo('dashboard')"><span class="nav-icon">⌂</span> Dashboard</button>
+      <button class="nav-item" onclick="goTo('journal')"><span class="nav-icon">✍</span> Jurnal</button>
+      <button class="nav-item" onclick="goTo('gallery')"><span class="nav-icon">◈</span> Galeri</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Belajar</div>
+      <button class="nav-item" onclick="goTo('curriculum')"><span class="nav-icon">◎</span> Kurikulum</button>
+      <button class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✦</span> Tugas <span class="nav-badge" id="badge-tasks">0</span></button>
+      <button class="nav-item" onclick="goTo('timer')"><span class="nav-icon">◷</span> Timer</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Progres</div>
+      <button class="nav-item" onclick="goTo('skills')"><span class="nav-icon">◆</span> Skill Tree</button>
+      <button class="nav-item" onclick="goTo('sensei')"><span class="nav-icon">◉</span> Sensei AI</button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="streak-widget">
+        <div class="streak-num" id="sidebar-streak">0</div>
+        <div class="streak-label">Hari streak aktif</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <span class="topbar-title" id="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-sm" onclick="exportData()">⬇ Export</button>
+        <button class="btn btn-sm" onclick="document.getElementById('importFile').click()">⬆ Import</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-sm btn-primary" onclick="openModal('modal-api')">⚙ Gemini Key</button>
+      </div>
+    </div>
+    <div class="page-content fade-in" id="app-content"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="modal-api">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Gemini API Key</div>
+      <button class="close-btn" onclick="closeModal('modal-api')">×</button>
+    </div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:18px">
+      API key diperlukan untuk fitur <b>Sensei AI</b> dan <b>penilaian tugas otomatis</b>.<br>
+      Key disimpan hanya di localStorage browser-mu — tidak dikirim ke mana pun selain Anthropic.
+    </div>
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label">Gemini API Key</label>
+      <input type="password" class="input" id="api-key-input" placeholder="AIza...">
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Dapatkan key di <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold)">aistudio.google.com</a> · Gratis 1500 req/hari</div>
+    <button class="btn btn-primary" onclick="saveApiKey()">Simpan Key →</button>
+  </div>
+</div>
+
+<!-- ADD WORK MODAL -->
+<div class="modal-overlay modal-lg" id="modal-add-work" style="max-width:100%">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">Tambah Karya Baru</div>
+      <button class="close-btn" onclick="closeModal('modal-add-work')">×</button>
+    </div>
+    <div id="upload-zone" class="upload-zone" onclick="document.getElementById('work-file').click()" ondragover="dragOver(event)" ondrop="dropFile(event)">
+      <div class="upload-icon" id="upload-icon">⬆</div>
+      <div id="upload-text" style="font-size:13px;color:var(--text2)">Klik atau seret gambar / screenshot video di sini</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">JPG, PNG, GIF, WebP · maks 10MB per file</div>
+    </div>
+    <input type="file" id="work-file" accept="image/*,video/mp4,video/webm" multiple style="display:none" onchange="previewFiles(event)">
+    <div id="file-previews" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
+    <div style="height:1px;background:var(--border);margin:18px 0"></div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="form-group">
+        <label class="form-label">Judul Karya</label>
+        <input class="input" id="wk-title" placeholder="mis. Sketsa wajah hari ke-7">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tanggal</label>
+        <input type="date" class="input" id="wk-date">
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select class="input" id="wk-cat">
+          <option value="gesture">Gesture Drawing</option>
+          <option value="figure">Figure / Manusia</option>
+          <option value="portrait">Potret / Wajah</option>
+          <option value="anatomy">Anatomi</option>
+          <option value="still-life">Still Life</option>
+          <option value="landscape">Lanskap</option>
+          <option value="character">Character Design</option>
+          <option value="anime">Anime / Manga</option>
+          <option value="study">Master Study / Copy</option>
+          <option value="sketch">Sketsa Bebas</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Level Saat Ini</label>
+        <select class="input" id="wk-level">
+          <option value="beginner">Pemula</option>
+          <option value="intermediate">Menengah</option>
+          <option value="advanced">Mahir</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="form-group">
+        <label class="form-label">Durasi Latihan (menit)</label>
+        <input type="number" class="input" id="wk-duration" value="30" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Style</label>
+        <select class="input" id="wk-style">
+          <option value="sketch">Sketch / Ilustrasi</option>
+          <option value="anime">Anime / Manga</option>
+          <option value="realism">Realism</option>
+          <option value="character">Character Design</option>
+          <option value="digital">Digital Painting</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Catatan Jurnal — Apa yang kamu pelajari? Apa yang sulit?</label>
+      <textarea class="textarea" id="wk-notes" placeholder="Hari ini aku mencoba menggambar pose dinamis. Yang paling sulit adalah..."></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">Rating Diri Sendiri</label>
+      <div class="stars" id="work-stars">
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="saveWork()">Simpan ke Galeri & Jurnal →</button>
+      <button class="btn" onclick="closeModal('modal-add-work')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW WORK MODAL -->
+<div class="modal-overlay" id="modal-view-work">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="view-title">Judul Karya</div>
+      <button class="close-btn" onclick="closeModal('modal-view-work')">×</button>
+    </div>
+    <div id="view-body"></div>
+  </div>
+</div>
+
+<!-- SUBMIT ASSIGNMENT MODAL -->
+<div class="modal-overlay" id="modal-submit">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="submit-title">Kumpulkan Tugas</div>
+      <button class="close-btn" onclick="closeModal('modal-submit')">×</button>
+    </div>
+    <div id="submit-body"></div>
+  </div>
+</div>
+
+<!-- GRADING RESULT MODAL -->
+<div class="modal-overlay" id="modal-grade">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">Hasil Penilaian Sensei</div>
+      <button class="close-btn" onclick="closeModal('modal-grade')">×</button>
+    </div>
+    <div id="grade-body"></div>
+  </div>
+</div>
+
+<!-- TIMER MODAL (floating) -->
+<div id="floating-timer" style="display:none;position:fixed;bottom:24px;right:24px;z-index:200;background:var(--bg2);border:1px solid var(--gold);border-radius:var(--radius);padding:14px 18px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+  <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:4px" id="ft-task-name">Sesi Latihan</div>
+  <div class="timer-display" id="ft-display" style="font-size:36px">25:00</div>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn btn-sm" onclick="toggleTimer()" id="ft-toggle">▶ Mulai</button>
+    <button class="btn btn-sm" onclick="resetTimer()">↺ Reset</button>
+    <button class="btn btn-sm" onclick="closeFloatingTimer()">×</button>
+  </div>
+</div>
+
+<audio id="timer-alarm" preload="auto">
+  <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA..." type="audio/wav">
+</audio>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// ⚙️ KONFIGURASI API KEY — PASTE KEY-MU DI SINI
+// ═══════════════════════════════════════════════════════════
+const GEMINI_API_KEY = "PASTE_GEMINI_KEY_DISINI"; // ← ganti ini
+
+// ═══════════════════════════════════════════════════════════
+// DATA & STATE
+// ═══════════════════════════════════════════════════════════
+const DB = {
+  get: (k, def=null) => { try { const v = localStorage.getItem('atelier_'+k); return v ? JSON.parse(v) : def; } catch { return def; } },
+  set: (k, v) => { try { localStorage.setItem('atelier_'+k, JSON.stringify(v)); } catch { alert('Storage penuh! Export dulu datamu.'); } }
+};
+
+let STATE = {
+  works: DB.get('works', []),
+  journal: DB.get('journal', []),
+  tasks: DB.get('tasks', []),
+  submissions: DB.get('submissions', {}),
+  skills: DB.get('skills', {}),
+  goals: DB.get('goals', []),
+  streak: DB.get('streak', []),
+  chatHistory: DB.get('chatHistory', []),
+  currentWeek: DB.get('currentWeek', 1),
+  apiKey: DB.get('apiKey', ''),
+  workRating: 0,
+  pendingFiles: [],
+  timerSec: 25*60,
+  timerRunning: false,
+  timerInterval: null,
+  timerTaskName: 'Sesi Latihan',
+  currentTask: null,
+  currentPage: 'dashboard'
+};
+
+function save(key) { DB.set(key, STATE[key]); }
+
+// ═══════════════════════════════════════════════════════════
+// CURRICULUM DATA (Referenced: Drawabox, Proko, Loomis, Hampton, Bridgman, Kim Jung Gi)
+// ═══════════════════════════════════════════════════════════
+const CURRICULUM = [
+  {
+    week: 1, title: "Garis, Ellips & Kotak",
+    desc: "Fondasi absolut menggambar — kontrol alat tulis seperti seniman pro",
+    ref: "Drawabox Lesson 1 · Peter Han Dynamic Sketching",
+    lessons: [
+      "Ghost Method: gerakan bebas sebelum gores kertas (Drawabox)",
+      "Garis lurus dengan elbow pivot, bukan wrist",
+      "Ellips: degree & orientation, ghost 2x sebelum gores",
+      "Kotak dalam 2-point perspective, line weight variation",
+      "Hatching paralel: spacing konsisten = seniman profesional"
+    ],
+    exercises: [
+      { title: "250 Garis Lurus", duration: 30, desc: "Buat 250 garis lurus panjang dari titik A ke B. Kecepatan = kelurusan. Ini latihan wajib Drawabox." },
+      { title: "100 Ellips", duration: 20, desc: "50 ellips bebas + 50 ellips dalam kotak. Variasikan degree 15°–90°." },
+      { title: "Kotak Perspektif", duration: 25, desc: "Gambar 30 kotak random dalam 2-point perspective tanpa penggaris. Cek dengan garis konvergensi." }
+    ],
+    assignment: {
+      title: "250 Box Challenge (Mini)",
+      desc: "Gambar 50 kotak 3D dalam perspektif bebas menggunakan ghost method. Tandai vanishing points dengan garis tipis. Scan/foto dan upload.",
+      rubric: ["Konsistensi line weight", "Konvergensi ke vanishing point", "Variasi ukuran & sudut", "Kebersihan garis (ghost method)"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 2, title: "Proporsi & Sight-Sizing",
+    desc: "Lihat dunia dengan mata seniman — teknik mengukur proporsi akurat",
+    ref: "Betty Edwards 'Drawing on the Right Side of the Brain' · Sight-Size Method",
+    lessons: [
+      "Negative space drawing — gambar bentuk di sekitar objek",
+      "Blind contour drawing — jangan lihat kertas saat menggambar",
+      "Sight-sizing: gunakan pensil sebagai alat ukur",
+      "Plumb lines & angles: ukur vertikal dan diagonal",
+      "Proportion comparison: bagi objek jadi unit terukur"
+    ],
+    exercises: [
+      { title: "Negative Space Chair", duration: 20, desc: "Gambar hanya ruang kosong di dalam/sekitar kursi. Hasilnya akan menjadi kursi." },
+      { title: "Blind Contour 5x", duration: 15, desc: "Gambar tanganmu sendiri 5x tanpa melihat kertas. Sangat aneh, sangat berguna." },
+      { title: "Still Life Terukur", duration: 40, desc: "Pilih 3 benda. Ukur dengan pensil. Gambar dengan proporsi seakurat mungkin." }
+    ],
+    assignment: {
+      title: "Studi Benda Terukur",
+      desc: "Pilih 3 objek berbeda ukuran di sekitarmu. Susun dan gambar menggunakan sight-sizing method. Sertakan foto referensi benda aslinya di samping gambarmu.",
+      rubric: ["Akurasi proporsi antar objek", "Penggunaan negative space", "Plumb lines konsisten", "Foto referensi disertakan"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 3, title: "Value, Cahaya & Bayangan",
+    desc: "Ilusi 3D dengan tonal — teknik shading dari master seperti Rembrandt",
+    ref: "James Gurney 'Color and Light' · Proko Shadow Drawing · Watts Atelier Value Studies",
+    lessons: [
+      "Value scale 10 level: dari putih kertas sampai hitam pekat",
+      "Form shadow vs Cast shadow — bedakan keduanya selalu",
+      "Terminator line: transisi cahaya ke bayangan",
+      "Occlusion shadow: bayangan terdalam di kontak permukaan",
+      "Reflected light: cahaya bouncing di area shadow",
+      "5-value approach: highlight, light, halftone, shadow, cast shadow"
+    ],
+    exercises: [
+      { title: "Value Scale 10 Level", duration: 15, desc: "Buat kotak 10 level dari putih ke hitam menggunakan pensil. Gradasi harus smooth." },
+      { title: "Sphere Shading Classic", duration: 30, desc: "Gambar 3 bola dengan sumber cahaya berbeda. Tunjukkan semua 5 zone: highlight, light, halftone, shadow, reflected light, cast shadow." },
+      { title: "Kubus & Silinder", duration: 25, desc: "Gambar kubus + silinder dengan 3 value plane yang jelas: light face, middle face, shadow face." }
+    ],
+    assignment: {
+      title: "Still Life 3-Value & 5-Value",
+      desc: "Gambar 1 still life dua kali: (1) versi 3-value simplified (light/mid/dark) dan (2) versi 5-value lengkap. Objek bebas pilih.",
+      rubric: ["Terminasi cahaya ke shadow jelas", "Reflected light ada di shadow", "Cast shadow akurat", "Gradasi 5 value smooth"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 4, title: "Gesture & Line of Action",
+    desc: "Menangkap kehidupan dan energi tubuh manusia — Kim Jung Gi method",
+    ref: "Proko Figure Drawing · Vilppu Drawing Manual · Hampton 'Figure Drawing: Design and Invention'",
+    lessons: [
+      "Line of Action: garis ritmis satu tarikan yang jadi tulang punggung pose",
+      "C-curve & S-curve poses — pose dinamis vs statis",
+      "Gesture vs Contour drawing — perbedaan fundamental",
+      "30-second gesture: tangkap esensi, bukan detail",
+      "Proportional mannequin: 7.5 kepala untuk tubuh ideal",
+      "Rhythm line: sambungkan bahu ke pinggul ke kaki"
+    ],
+    exercises: [
+      { title: "30-Second Gestures × 20", duration: 25, desc: "Gunakan Line of Action (line-of-action.com) atau foto majalah. 20 pose, 30 detik each. Fokus pada C/S curve." },
+      { title: "2-Minute Poses × 10", duration: 25, desc: "10 pose, 2 menit each. Mulai dari line of action, tambahkan volume dengan oval-oval." },
+      { title: "Mannequin Figure × 5", duration: 30, desc: "Gambar 5 figur mannequin penuh dari kepala sampai kaki. Ukur 7.5 unit kepala." }
+    ],
+    assignment: {
+      title: "Lembar Gesture 30 Pose",
+      desc: "Isi 1 halaman A4 penuh dengan 30 gesture 30-detik dari referensi manusia nyata. Bisa dari Line of Action website, majalah, atau video YouTube pause-gambar.",
+      rubric: ["Line of action dinamis di setiap pose", "C dan S curve teridentifikasi", "Volume tubuh terbaca meski cepat", "30 pose penuh tergambar"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 5, title: "Kepala & Wajah (Loomis Method)",
+    desc: "Konstruksi kepala manusia yang tepat secara anatomi",
+    ref: "Andrew Loomis 'Drawing the Head and Hands' · Proko Head Drawing · Bridgman Anatomy",
+    lessons: [
+      "Loomis head: bola + plane potong + garis tengah",
+      "Thirds wajah: hairline–brow, brow–base nose, nose–chin",
+      "Penempatan mata: setengah kepala, 1 mata jarak antar mata",
+      "Hidung konstruktif: wedge shape + nostrils",
+      "Mulut: tuberkulum, philtrum, lip corner shadow",
+      "Telinga: antara brow dan nose base",
+      "Head turns: 3/4 view, profile, 3/4 back"
+    ],
+    exercises: [
+      { title: "Loomis Ball × 10", duration: 25, desc: "Gambar 10 kepala Loomis dalam sudut berbeda: front, 3/4, profile, 3/4 tilted. Hanya konstruksi, belum fitur." },
+      { title: "Feature Placement", duration: 30, desc: "Pada 5 kepala Loomis, tambahkan fitur dengan aturan thirds. Jangan meniru foto — konstruksikan." },
+      { title: "Self Portrait Construction", duration: 45, desc: "Gunakan cermin atau foto diri. Gambar dengan Loomis method — mulai dari bola, potong, baru fitur." }
+    ],
+    assignment: {
+      title: "Portrait 3/4 View — Loomis Method",
+      desc: "Gambar portrait 3/4 view menggunakan Loomis method dari referensi nyata (foto diri atau foto orang lain). Tampilkan garis konstruksi (jangan hapus). Upload bersama referensi foto.",
+      rubric: ["Loomis ball construction terlihat", "Fitur pada thirds yang benar", "3/4 view skull shape akurat", "Foto referensi disertakan"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 6, title: "Karakter & Character Design",
+    desc: "Menciptakan karakter orisinal dengan silhouette yang kuat",
+    ref: "Character Design Quarterly · Stephen Silver Method · The Art of Character Design (Disney/DreamWorks)",
+    lessons: [
+      "Silhouette readability: bisa dibaca dari bayangan hitam",
+      "Shape language: squares=strong, circles=friendly, triangles=danger",
+      "Thumbnail sketching: 20 thumbnail sebelum pilih 1",
+      "Character archetypes: hero, villain, sidekick, mentor",
+      "Costume & props sebagai character storytelling",
+      "Anime vs Western cartoon proportion comparison",
+      "Turn-around sheet: front, 3/4, side, back"
+    ],
+    exercises: [
+      { title: "20 Silhouette Thumbnails", duration: 30, desc: "Isi dengan 20 silhouette karakter hanya dengan marker hitam. Jangan detail — cari bentuk yang menarik." },
+      { title: "Shape Language Study", duration: 25, desc: "Gambar 3 versi karakter sama: versi square, circle, triangle. Bandingkan personality yang muncul." },
+      { title: "Character Turn-Around", duration: 60, desc: "Pilih 1 karakter, gambar dalam 4 sudut: front, 3/4, side, back. Proporsi harus konsisten." }
+    ],
+    assignment: {
+      title: "Karakter Orisinal — Turnaround Sheet",
+      desc: "Buat 1 karakter orisinalmu sendiri. Gambar dalam pose front dan 3/4. Tambahkan color flat (bisa digital atau manual). Ceritakan konsep karakternya di kolom catatan.",
+      rubric: ["Silhouette terbaca jelas", "Shape language konsisten", "Proporsi front vs 3/4 konsisten", "Konsep karakter diceritakan"],
+      deadline_days: 14
+    }
+  },
+  {
+    week: 7, title: "Anatomi: Torso & Tangan",
+    desc: "Anatomi fungsional ala Bridgman — bukan hafal nama otot, tapi mengerti BENTUK",
+    ref: "George Bridgman 'Complete Guide to Drawing from Life' · Proko Anatomy · Hampton Anatomy",
+    lessons: [
+      "Bridgman blocks: torso sebagai 3 unit (chest, abdomen, pelvis)",
+      "Rib cage: egg shape, angle perubahan saat pose",
+      "Pelvis: bucket shape, tilt saat weight shift",
+      "Spinal rhythm: C curve atau S curve saat pose",
+      "Tangan: kotak telapak + 4 jari unit + ibu jari",
+      "Finger joints: taper dari MCP ke fingertip",
+      "Gesture tangan: cupboard, pinch, point, grip"
+    ],
+    exercises: [
+      { title: "Bridgman Torso × 8", duration: 35, desc: "Gambar 8 torso dalam pose berbeda menggunakan 3 block Bridgman. Tunjukkan rib cage-pelvis angle relationship." },
+      { title: "Hand Study × 10", duration: 40, desc: "Gambar tanganmu sendiri dalam 10 pose berbeda. Mulai dari kotak telapak, baru detail jari." },
+      { title: "Contrapposto Figure", duration: 45, desc: "Gambar 1 figur dalam contrapposto pose (berat di satu kaki). Tunjukkan shoulder-hip counter-tilt." }
+    ],
+    assignment: {
+      title: "Studi Tangan & Torso",
+      desc: "Gambar: (1) 6 pose tangan dari tanganmu sendiri, (2) 2 torso dari referensi figure drawing. Tampilkan konstruksi/blocking. Upload sebagai 1 sheet.",
+      rubric: ["Kotak telapak tangan teridentifikasi", "Torso Bridgman blocks jelas", "Contrapposto shoulder-hip tilt", "Konstruksi tidak dihapus"],
+      deadline_days: 7
+    }
+  },
+  {
+    week: 8, title: "Anime & Manga Style Deep Dive",
+    desc: "Teknik resmi dari studio Shonen Jump — konstruksi gaya anime dari dasar yang benar",
+    ref: "How to Draw Manga (Shogakukan) · Yusuke Murata Technique · Studio Ghibli Layout Guide",
+    lessons: [
+      "Anime head: lebih besar, chin pointed, eyes large (1/4 face)",
+      "Eye anatomy manga: iris construction, highlight placement",
+      "Anime proportion: 6–7 head height, longer legs",
+      "Clean lineart: think lines, not hairy lines (inking technique)",
+      "Speed lines & motion blur manga technique",
+      "Panel composition: close-up, medium, wide shot",
+      "SD/Chibi: 2–3 head proportion, simplified features"
+    ],
+    exercises: [
+      { title: "Anime Eye Construction × 10", duration: 25, desc: "Gambar 10 mata anime berbeda style: shonen, shojo, realistic anime. Perhatikan iris shape dan highlight." },
+      { title: "Anime Head × 6 Angles", duration: 30, desc: "6 kepala anime: front, 3/4, side, 3/4 up, 3/4 down, back. Pakai face-cross guide." },
+      { title: "Full Anime Character", duration: 60, desc: "1 karakter anime full body dengan clean lineart. Fokus pada proportion dan line quality." }
+    ],
+    assignment: {
+      title: "Anime Character — Clean Lineart",
+      desc: "Gambar 1 karakter anime full body dengan clean, confident lineart. Boleh gunakan referensi tapi bukan copy paste. Tunjukkan garis konstruksi di layer terpisah atau dengan pensil terang.",
+      rubric: ["Proporsi anime konsisten", "Clean lineart tanpa garis hairy", "Eye construction akurat", "Silhouette terbaca jelas"],
+      deadline_days: 7
+    }
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+// SKILL TREE (Referenced dari multiple sources)
+// ═══════════════════════════════════════════════════════════
+const SKILL_TREE = [
+  {
+    category: "Fundamental",
+    desc: "Drawabox + Peter Han Dynamic Sketching",
+    skills: [
+      { key: "line_control", name: "Line Control", desc: "Ghost method, consistent pressure, straight lines", ref: "Drawabox Lesson 1" },
+      { key: "ellipse", name: "Ellipses", desc: "Degree, orientation, ellipse in planes", ref: "Drawabox Lesson 1" },
+      { key: "box_perspective", name: "Box & Perspective", desc: "1pt, 2pt, 3pt perspective, foreshortening", ref: "Drawabox Lesson 2" },
+    ]
+  },
+  {
+    category: "Proporsi & Observasi",
+    desc: "Betty Edwards + Sight-Size Classical Method",
+    skills: [
+      { key: "sight_sizing", name: "Sight-Sizing", desc: "Mengukur proporsi dengan pensil, plumb lines", ref: "Betty Edwards" },
+      { key: "negative_space", name: "Negative Space", desc: "Menggambar ruang kosong, relasi antar bentuk", ref: "Betty Edwards" },
+      { key: "observation", name: "Observational Drawing", desc: "Akurasi dari referensi nyata", ref: "Sight-Size Method" },
+    ]
+  },
+  {
+    category: "Value & Cahaya",
+    desc: "James Gurney + Watts Atelier + Proko",
+    skills: [
+      { key: "value_scale", name: "Value Scale", desc: "10-level value, consistent graduation", ref: "James Gurney 'Color and Light'" },
+      { key: "form_shadow", name: "Form & Cast Shadow", desc: "Terminasi shadow, occlusion, reflected light", ref: "Proko Shadow Drawing" },
+      { key: "rendering", name: "Rendering", desc: "5-value approach, smooth gradation, texture", ref: "Watts Atelier" },
+    ]
+  },
+  {
+    category: "Gesture & Figure",
+    desc: "Proko + Vilppu + Hampton",
+    skills: [
+      { key: "gesture", name: "Gesture Drawing", desc: "Line of action, C/S curve, 30-sec capture", ref: "Vilppu Drawing Manual" },
+      { key: "figure_proportion", name: "Figure Proportion", desc: "7.5-head figure, mannequin, weight balance", ref: "Hampton Figure Drawing" },
+      { key: "rhythm", name: "Figure Rhythm", desc: "Contrapposto, shoulder-hip tilt, movement flow", ref: "Proko Figure Drawing" },
+    ]
+  },
+  {
+    category: "Kepala & Wajah",
+    desc: "Andrew Loomis + Proko + Bridgman",
+    skills: [
+      { key: "loomis_head", name: "Loomis Head Construction", desc: "Ball + cut plane, three thirds", ref: "Andrew Loomis 'Drawing the Head'" },
+      { key: "feature_placement", name: "Feature Placement", desc: "Akurasi posisi mata, hidung, mulut, telinga", ref: "Loomis Method" },
+      { key: "head_turns", name: "Head in Different Angles", desc: "Front, 3/4, profile, tilts", ref: "Bridgman Head & Neck" },
+    ]
+  },
+  {
+    category: "Anatomi",
+    desc: "Bridgman + Hampton + Proko Anatomy Series",
+    skills: [
+      { key: "bridgman_torso", name: "Torso Blocks (Bridgman)", desc: "Chest-abdomen-pelvis 3-block system", ref: "Bridgman Complete Guide" },
+      { key: "hands", name: "Hands", desc: "Box palm + finger tapering + gestures", ref: "Bridgman + Loomis Hands" },
+      { key: "legs_feet", name: "Legs & Feet", desc: "Femur angle, knee construction, foot wedge", ref: "Hampton Anatomy" },
+    ]
+  },
+  {
+    category: "Character Design",
+    desc: "Stephen Silver + Disney/DreamWorks + Character Design Quarterly",
+    skills: [
+      { key: "silhouette", name: "Silhouette Readability", desc: "Strong readable silhouette dari bayangan hitam", ref: "Stephen Silver Method" },
+      { key: "shape_language", name: "Shape Language", desc: "Square/circle/triangle personality coding", ref: "Disney Character Design" },
+      { key: "character_design", name: "Character Construction", desc: "Thumbnail → refined → turnaround sheet", ref: "Character Design Quarterly" },
+    ]
+  },
+  {
+    category: "Anime / Manga",
+    desc: "Shogakukan Manga Guide + Studio Technique",
+    skills: [
+      { key: "anime_head", name: "Anime Head & Face", desc: "Pointed chin, large eyes, face-cross system", ref: "How to Draw Manga (Shogakukan)" },
+      { key: "anime_eyes", name: "Manga Eye Construction", desc: "Iris, pupil, highlight, eyelash", ref: "Yusuke Murata Technique" },
+      { key: "clean_lineart", name: "Clean Lineart", desc: "Confident single strokes, line weight variation", ref: "Studio Inking Technique" },
+    ]
+  },
+  {
+    category: "Digital Painting",
+    desc: "CTRL+Paint + Marco Bucci + Sinix Design",
+    skills: [
+      { key: "digital_basics", name: "Digital Tool Basics", desc: "Brush settings, opacity, hardness, pen pressure", ref: "CTRL+PAINT.com" },
+      { key: "color_theory", name: "Color Theory", desc: "Hue, value, saturation, temperature, complementary", ref: "James Gurney + Marco Bucci" },
+      { key: "digital_rendering", name: "Digital Rendering", desc: "Layer modes, blending, texture brushes", ref: "Sinix Design YouTube" },
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+const PAGE_TITLES = { dashboard:'Dashboard', journal:'Jurnal', gallery:'Galeri', curriculum:'Kurikulum', tasks:'Tugas & Timer', timer:'Timer Latihan', skills:'Skill Tree', sensei:'Sensei AI' };
+
+function goTo(page) {
+  STATE.currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const btn = document.querySelector(`.nav-item[onclick="goTo('${page}')"]`);
+  if (btn) btn.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[page] || page;
+  const content = document.getElementById('app-content');
+  content.className = 'page-content fade-in';
+  void content.offsetWidth;
+  PAGES[page]();
+  updateSidebar();
+  if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+function updateSidebar() {
+  const streak = calcStreak();
+  document.getElementById('sidebar-streak').textContent = streak;
+  const pending = STATE.tasks.filter(t => !t.done).length;
+  document.getElementById('badge-tasks').textContent = pending;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAGES
+// ═══════════════════════════════════════════════════════════
+const PAGES = {
+  dashboard() {
+    const streak = calcStreak();
+    const totalWorks = STATE.works.length;
+    const totalMins = STATE.works.reduce((a,w) => a+(parseInt(w.duration)||0), 0);
+    const submittedCount = Object.keys(STATE.submissions).length;
+    const avgGrade = Object.values(STATE.submissions).filter(s=>s.total).length
+      ? Math.round(Object.values(STATE.submissions).filter(s=>s.total).reduce((a,s,_,arr)=>a+s.total/arr.length,0)) : null;
+    const week = CURRICULUM[STATE.currentWeek-1];
+    const days90 = Array.from({length:90},(_,i)=>{
+      const d=new Date(); d.setDate(d.getDate()-(89-i));
+      const ds = d.toISOString().slice(0,10);
+      const count = STATE.works.filter(w=>w.date===ds).length;
+      return {ds, count};
+    });
+
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Selamat datang di Ateliermu</div>
+    <div class="page-sub">Minggu ${STATE.currentWeek} · ${week?.title}</div>
+    
+    <div class="grid4" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-val">${totalWorks}</div><div class="stat-lbl">Total Karya</div></div>
+      <div class="stat-card"><div class="stat-val">${streak}d</div><div class="stat-lbl">Streak</div></div>
+      <div class="stat-card"><div class="stat-val">${Math.round(totalMins/60*10)/10}j</div><div class="stat-lbl">Jam Latihan</div></div>
+      <div class="stat-card"><div class="stat-val">${avgGrade||'—'}</div><div class="stat-lbl">Rata Nilai</div></div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="section-title">Aktivitas 90 Hari</div>
+        <div class="heatmap">${renderHeatmap(days90)}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px;font-family:var(--font-mono)">Lebih gelap = lebih banyak karya hari itu</div>
+      </div>
+      <div class="card card-gold">
+        <div class="section-title">Pelajaran Minggu Ini</div>
+        <div class="card-title">${week?.title}</div>
+        <div style="font-size:12px;color:var(--text2);margin:8px 0;line-height:1.7">${week?.desc}</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-bottom:12px">📚 Ref: ${week?.ref}</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm btn-primary" onclick="goTo('curriculum')">Lihat Detail →</button>
+          <button class="btn btn-sm" onclick="goTo('tasks')">Lihat Tugas</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="section-title">Karya Terbaru</div>
+        ${STATE.works.length === 0 ? `<div class="empty-state"><div class="empty-icon">◈</div><div>Belum ada karya</div><button class="btn btn-sm btn-primary" style="margin-top:12px" onclick="openModal('modal-add-work')">Upload Karya Pertama</button></div>` :
+          STATE.works.slice(-3).reverse().map(w=>`
+          <div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+            <div style="width:44px;height:44px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3)">
+              ${w.files?.length ? `<img src="${w.files[0]}" style="width:100%;height:100%;object-fit:cover">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:18px">◈</div>'}
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.title}</div>
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${w.date} · ${w.duration}m</div>
+            </div>
+            <span class="tag tag-gold">${w.cat||'sketch'}</span>
+          </div>`).join('')
+        }
+      </div>
+      <div class="card">
+        <div class="section-title">Target Minggu Ini</div>
+        <div id="goals-list"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input class="input" id="new-goal" placeholder="Tambah target..." onkeydown="if(event.key==='Enter')addGoal()">
+          <button class="btn btn-sm" onclick="addGoal()">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="section-title" style="margin:0">Progress Kurikulum</div>
+        <span class="tag tag-gold">${submittedCount}/${CURRICULUM.length} Tugas</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${CURRICULUM.map(w=>{
+          const done = STATE.submissions[w.week];
+          const active = w.week === STATE.currentWeek;
+          return `<div style="width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--font-mono);cursor:pointer;border:1px solid ${done?'var(--gold)':active?'var(--border2)':'var(--border)'};background:${done?'var(--gold-dim)':active?'var(--bg3)':'var(--bg)'};color:${done?'var(--gold)':active?'var(--text)':'var(--text3)'}" onclick="goTo('curriculum')" title="Minggu ${w.week}: ${w.title}">${done?'✓':w.week}</div>`;
+        }).join('')}
+      </div>
+      <div class="progress-bar" style="margin-top:10px;height:6px"><div class="progress-fill" style="width:${submittedCount/CURRICULUM.length*100}%"></div></div>
+    </div>`;
+
+    renderGoals();
+  },
+
+  journal() {
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Jurnal</div>
+    <div class="page-sub">Catatan perjalanan belajarmu</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+      <button class="btn btn-primary" onclick="openModal('modal-add-work')">+ Tambah Entri</button>
+    </div>
+    <div id="journal-timeline">
+    ${STATE.journal.length === 0 ? `<div class="empty-state"><div class="empty-icon">✍</div><div style="font-size:14px">Belum ada entri jurnal</div><div style="font-size:12px;margin-top:6px;color:var(--text3)">Upload karya pertamamu untuk membuat jurnal otomatis</div></div>` :
+      [...STATE.journal].reverse().map(j=>`
+      <div class="journal-entry ${j.files?.length?'has-work':''}">
+        <div class="journal-date">${j.date} · ${j.category||''} · ${j.duration||0} menit</div>
+        <div class="journal-title">${j.title}</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+          <span class="tag tag-gold">${j.style||''}</span>
+          <span class="tag tag-blue">${j.level||''}</span>
+          ${j.rating?`<span style="color:var(--gold);font-size:13px">${'★'.repeat(j.rating)}</span>`:''}
+        </div>
+        ${j.files?.length?`<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">${j.files.map(f=>`<img src="${f}" style="height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewImage('${f}')">`).join('')}</div>`:''}
+        <div class="journal-body">${j.notes||'<em style="color:var(--text3)">Tidak ada catatan</em>'}</div>
+        ${j.grade?`<div style="margin-top:10px;display:flex;align-items:center;gap:10px"><span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">${j.grade}</span><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">${j.total}/100</span></div>`:''}
+      </div>`).join('')
+    }
+    </div>`;
+  },
+
+  gallery() {
+    const cats = ['Semua','gesture','figure','portrait','anatomy','still-life','landscape','character','anime','study','sketch'];
+    let filter = 'Semua';
+
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Galeri</div>
+    <div class="page-sub">Portofolio & koleksi karya</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="filter-bar">
+        ${cats.map(c=>`<button class="btn btn-sm ${c==='Semua'?'btn-primary':''}" onclick="filterGallery('${c}',this)">${c}</button>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="downloadAll()">⬇ Download Semua</button>
+        <button class="btn btn-sm btn-primary" onclick="openModal('modal-add-work')">+ Upload</button>
+      </div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>`;
+
+    renderGallery('Semua');
+  },
+
+  curriculum() {
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Kurikulum</div>
+    <div class="page-sub">8 Minggu · dari nol ke karakter orisinalmu</div>
+    <div style="margin-bottom:20px">
+      ${CURRICULUM.map(week=>{
+        const done = STATE.submissions[week.week];
+        const active = week.week === STATE.currentWeek;
+        return `
+        <div class="week-card ${active?'active-week':''}">
+          <div class="week-header" onclick="toggleWeek(${week.week})">
+            <div class="week-num ${done?'done':active?'current':''}">${done?'✓':week.week}</div>
+            <div style="flex:1">
+              <div style="font-size:14px;color:${active?'var(--text)':done?'var(--text2)':'var(--text3)'}">Minggu ${week.week}: ${week.title}</div>
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-top:2px">${week.ref}</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              ${done?`<span class="tag tag-green">Selesai ${done.grade}</span>`:''}
+              ${active?'<span class="tag tag-gold">Aktif</span>':''}
+              <span style="color:var(--text3)">›</span>
+            </div>
+          </div>
+          <div class="week-body" id="week-body-${week.week}">
+            <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.7">${week.desc}</div>
+            <div style="margin-bottom:14px">
+              <div class="section-title">Materi Pelajaran</div>
+              ${week.lessons.map(l=>`<div style="font-size:12px;color:var(--text2);padding:4px 0;display:flex;gap:8px"><span style="color:var(--gold)">◆</span>${l}</div>`).join('')}
+            </div>
+            <div style="margin-bottom:14px">
+              <div class="section-title">Latihan Harian</div>
+              ${week.exercises.map((ex,i)=>`
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:6px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div style="font-size:13px;color:var(--text)">${ex.title}</div>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <span class="tag tag-blue">${ex.duration}m</span>
+                    <button class="btn btn-sm" onclick="startExerciseTimer(${week.week},${i})">▶ Timer</button>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:var(--text3);margin-top:4px">${ex.desc}</div>
+              </div>`).join('')}
+            </div>
+            <div class="highlight-box" style="margin-bottom:14px">
+              <div class="section-title">Tugas Minggu Ini</div>
+              <div style="font-size:14px;color:var(--text);margin-bottom:4px">${week.assignment.title}</div>
+              <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px">${week.assignment.desc}</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                ${!active?`<button class="btn btn-sm" onclick="STATE.currentWeek=${week.week};DB.set('currentWeek',${week.week});goTo('curriculum')">Aktifkan Minggu Ini</button>`:''}
+                ${done?`<button class="btn btn-sm btn-green" onclick="viewGrade(${week.week})">Lihat Nilai</button>`:`<button class="btn btn-sm btn-primary" onclick="openSubmit(${week.week})">Kumpulkan Tugas →</button>`}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+    // Auto-open current week
+    setTimeout(() => toggleWeek(STATE.currentWeek, true), 100);
+  },
+
+  tasks() {
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Tugas & Timer</div>
+    <div class="page-sub">Task per minggu + timer batas waktu</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="generateTasks()">✦ Generate Tugas AI</button>
+      <button class="btn" onclick="openModal('modal-add-work')">+ Upload Hasil</button>
+    </div>
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="section-title">Timer Sesi Aktif</div>
+        <div class="timer-display" id="main-timer-display">25:00</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin:8px 0" id="timer-task-label">—</div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="toggleTimer()" id="main-timer-btn">▶ Mulai</button>
+          <button class="btn" onclick="resetTimer()">↺ Reset</button>
+          <select class="input" id="timer-preset" onchange="setPreset(this.value)" style="width:auto">
+            <option value="1500">Pomodoro 25m</option>
+            <option value="600">Gesture 10m</option>
+            <option value="1800">Sesi 30m</option>
+            <option value="2700">Sesi 45m</option>
+            <option value="3600">Sesi 1j</option>
+            <option value="300">Istirahat 5m</option>
+          </select>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6">
+          💡 <b>Pomodoro:</b> 25m fokus → 5m istirahat → ulangi 4x → istirahat 30m
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Quick Timer per Latihan</div>
+        ${CURRICULUM[STATE.currentWeek-1]?.exercises.map((ex,i)=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:12px;color:var(--text)">${ex.title}</div>
+            <div style="font-size:10px;color:var(--text3)">${ex.duration} menit</div>
+          </div>
+          <button class="btn btn-sm" onclick="startExerciseTimer(${STATE.currentWeek},${i})">▶ Mulai</button>
+        </div>`).join('')||''}
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="section-title" style="margin:0">Daftar Tugas</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm btn-danger" onclick="clearDoneTasks()">Hapus Selesai</button>
+        </div>
+      </div>
+      <div id="task-list"></div>
+    </div>`;
+    renderTasks();
+    syncTimerDisplay();
+  },
+
+  timer() { goTo('tasks'); },
+
+  skills() {
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Skill Tree</div>
+    <div class="page-sub">Track kemampuanmu berdasarkan referensi sumber terpercaya</div>
+    <div style="margin-bottom:20px;padding:12px 16px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);font-size:12px;color:var(--text2)">
+      📚 Referensi: Drawabox · Betty Edwards · James Gurney · Proko · Vilppu · Hampton · Andrew Loomis · Bridgman · Stephen Silver · Shogakukan · CTRL+PAINT · Marco Bucci
+    </div>
+    ${SKILL_TREE.map(cat=>`
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div class="card-title">${cat.category}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${cat.desc}</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${cat.skills.map(s=>{
+          const val = STATE.skills[s.key]||0;
+          const level = val<20?"Belum":val<40?"Tahu":val<60?"Bisa":val<80?"Mahir":"Master";
+          return `
+          <div class="skill-node ${val>=80?'mastered':''}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="skill-node-name">${s.name}</div>
+                <div class="skill-node-src">📖 ${s.ref}</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:2px">${s.desc}</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;margin-left:12px">
+                <div class="skill-pct">${val}%</div>
+                <div style="font-size:9px;color:var(--text3)">${level}</div>
+              </div>
+            </div>
+            <input type="range" min="0" max="100" step="5" value="${val}"
+              oninput="updateSkill('${s.key}',this.value)"
+              style="width:100%;margin-top:8px;accent-color:var(--gold)">
+            <div class="progress-bar"><div class="progress-fill" style="width:${val}%"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('')}`;
+  },
+
+  sensei() {
+    document.getElementById('app-content').innerHTML = `
+    <div class="page-title">Sensei AI</div>
+    <div class="page-sub">Guru menggambar AI · bisa lihat gambarmu</div>
+    <div class="chat-area">
+      <div class="chat-messages" id="chat-messages">
+        ${STATE.chatHistory.length===0?`
+        <div style="text-align:center;padding:40px 20px">
+          <div style="font-size:48px;margin-bottom:16px">◉</div>
+          <div style="font-size:15px;color:var(--text2);margin-bottom:8px;font-family:var(--font-display)">Sensei siap membimbingmu</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:24px">Tanya apa saja · upload gambar untuk feedback visual · minta latihan harian</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto">
+            ${["Dari mana aku harus mulai belajar menggambar?","Berikan aku latihan gesture 10 menit","Apa perbedaan gesture dan contour drawing?","Bagaimana cara konstruksi wajah dengan Loomis?","Kenapa garisiku selalu goyang? Tips apa?","Generate tugas untuk skill gesturedrawingku"].map(q=>`
+            <button onclick="quickAsk('${q}')" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:10px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-family:var(--font-body);text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">${q}</button>`).join('')}
+          </div>
+        </div>`:STATE.chatHistory.map(m=>renderChatMsg(m)).join('')}
+      </div>
+      <div class="chat-input-area">
+        <div id="sensei-img-preview" style="margin-bottom:8px"></div>
+        <div class="chat-input-row">
+          <button class="btn btn-icon" onclick="document.getElementById('sensei-img').click()" title="Upload gambar untuk feedback">◈</button>
+          <input type="file" id="sensei-img" accept="image/*" style="display:none" onchange="previewSenseiImg(event)">
+          <input class="input" id="sensei-input" placeholder="Tanya Sensei... atau upload gambar untuk feedback visual" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendToSensei()}">
+          <button class="btn btn-primary" onclick="sendToSensei()" id="sensei-send-btn">Kirim →</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-sm" onclick="clearChat()">Hapus Chat</button>
+        </div>
+      </div>
+    </div>`;
+    scrollChat();
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// HEATMAP FIX
+// ═══════════════════════════════════════════════════════════
+function renderHeatmap(days90) {
+  return days90.map(d => {
+    let cls = 'heatmap-day';
+    if (d.count === 1) cls += ' level1';
+    else if (d.count === 2) cls += ' level2';
+    else if (d.count >= 3) cls += ' level3';
+    return `<div class="${cls}" title="${d.ds}: ${d.count} karya"></div>`;
+  }).join('');
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// GEMINI API HELPER
+// ═══════════════════════════════════════════════════════════
+async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
+  const key = STATE.apiKey || GEMINI_API_KEY;
+  if (!key || key === 'PASTE_GEMINI_KEY_DISINI') throw new Error('API key belum diset! Klik tombol API Key di kanan atas.');
+  
+  const contents = [];
+  if (systemPrompt) {
+    contents.push({ role: 'user', parts: [{ text: 'System instruction: ' + systemPrompt }] });
+    contents.push({ role: 'model', parts: [{ text: 'Siap, aku mengerti instruksi tersebut.' }] });
+  }
+  contents.push({ role: 'user', parts });
+
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents,
+      generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 }
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Tidak ada respons.';
+}
+
+async function callGeminiWithHistory(history, systemPrompt, maxTokens = 1000) {
+  const key = STATE.apiKey || GEMINI_API_KEY;
+  if (!key || key === 'PASTE_GEMINI_KEY_DISINI') throw new Error('API key belum diset!');
+
+  const contents = [];
+  if (systemPrompt) {
+    contents.push({ role: 'user', parts: [{ text: 'System: ' + systemPrompt }] });
+    contents.push({ role: 'model', parts: [{ text: 'Siap.' }] });
+  }
+  for (const m of history) {
+    const parts = [];
+    if (m.image) {
+      const b64 = m.image.split(',')[1];
+      const mt = m.image.split(';')[0].split(':')[1];
+      parts.push({ inlineData: { mimeType: mt, data: b64 } });
+    }
+    if (m.text) parts.push({ text: m.text });
+    if (parts.length) contents.push({ role: m.role === 'sensei' ? 'model' : 'user', parts });
+  }
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 } })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Tidak ada respons.';
+}
+
+// ═══════════════════════════════════════════════════════════
+// GOALS
+// ═══════════════════════════════════════════════════════════
+function renderGoals() {
+  const el = document.getElementById('goals-list');
+  if (!el) return;
+  if (!STATE.goals.length) { el.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">Belum ada target — tambah di bawah</div>'; return; }
+  el.innerHTML = STATE.goals.map((g,i)=>`
+  <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+    <input type="checkbox" ${g.done?'checked':''} onchange="toggleGoal(${i})" style="accent-color:var(--gold);width:14px;height:14px;flex-shrink:0">
+    <span style="flex:1;font-size:13px;color:${g.done?'var(--text3)':'var(--text2)'};text-decoration:${g.done?'line-through':'none'}">${g.text}</span>
+    <button onclick="removeGoal(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px">×</button>
+  </div>`).join('');
+}
+
+function addGoal() {
+  const inp = document.getElementById('new-goal');
+  if (!inp?.value.trim()) return;
+  STATE.goals.push({ text: inp.value.trim(), done: false });
+  inp.value = '';
+  save('goals');
+  renderGoals();
+}
+function toggleGoal(i) { STATE.goals[i].done = !STATE.goals[i].done; save('goals'); renderGoals(); }
+function removeGoal(i) { STATE.goals.splice(i, 1); save('goals'); renderGoals(); }
+
+// ═══════════════════════════════════════════════════════════
+// WORKS / GALLERY
+// ═══════════════════════════════════════════════════════════
+let pendingFiles = [];
+let workRating = 0;
+
+function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
+function dropFile(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  previewFilesFromList(e.dataTransfer.files);
+}
+function previewFiles(e) { previewFilesFromList(e.target.files); }
+
+function previewFilesFromList(files) {
+  pendingFiles = [];
+  const container = document.getElementById('file-previews');
+  container.innerHTML = '';
+  Array.from(files).slice(0, 6).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingFiles.push(ev.target.result);
+      const isVid = file.type.startsWith('video/');
+      const el = document.createElement('div');
+      el.style.cssText = 'position:relative;width:90px;height:90px;flex-shrink:0';
+      el.innerHTML = isVid
+        ? `<video src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--border)"></video>`
+        : `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--border)">`;
+      container.appendChild(el);
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('upload-icon').textContent = '✓';
+  document.getElementById('upload-text').textContent = `${files.length} file siap`;
+}
+
+function setRating(n) {
+  workRating = n;
+  document.querySelectorAll('#work-stars .star').forEach((s,i)=>s.classList.toggle('active',i<n));
+}
+
+function openAddWork() {
+  pendingFiles = []; workRating = 0;
+  document.getElementById('file-previews').innerHTML = '';
+  document.getElementById('upload-icon').textContent = '⬆';
+  document.getElementById('upload-text').textContent = 'Klik atau seret gambar / screenshot video di sini';
+  document.getElementById('wk-date').value = new Date().toISOString().slice(0,10);
+  document.querySelectorAll('#work-stars .star').forEach(s=>s.classList.remove('active'));
+  openModal('modal-add-work');
+}
+
+function saveWork() {
+  const title = document.getElementById('wk-title').value.trim();
+  if (!title) { alert('Masukkan judul karya!'); return; }
+  const work = {
+    id: Date.now(),
+    title,
+    date: document.getElementById('wk-date').value || new Date().toISOString().slice(0,10),
+    cat: document.getElementById('wk-cat').value,
+    level: document.getElementById('wk-level').value,
+    duration: parseInt(document.getElementById('wk-duration').value)||30,
+    style: document.getElementById('wk-style').value,
+    notes: document.getElementById('wk-notes').value,
+    rating: workRating,
+    files: [...pendingFiles]
+  };
+  STATE.works.push(work);
+  save('works');
+  // Journal entry
+  const jEntry = { ...work, type: 'work' };
+  STATE.journal.push(jEntry);
+  save('journal');
+  // Streak
+  addStreak();
+  closeModal('modal-add-work');
+  document.getElementById('wk-title').value = '';
+  document.getElementById('wk-notes').value = '';
+  pendingFiles = []; workRating = 0;
+  goTo(STATE.currentPage);
+}
+
+function renderGallery(filter) {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid) return;
+  const works = filter === 'Semua' ? STATE.works : STATE.works.filter(w=>w.cat===filter);
+  if (!works.length) { grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">◈</div><div>Belum ada karya</div></div>'; return; }
+  grid.innerHTML = [...works].reverse().map(w=>`
+  <div class="gallery-card" onclick="viewWork(${w.id})">
+    <div class="gallery-thumb">
+      ${w.files?.length
+        ? (w.files[0].startsWith('data:video') ? `<video src="${w.files[0]}" style="width:100%;height:100%;object-fit:cover"></video>` : `<img src="${w.files[0]}" alt="${w.title}">`)
+        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:32px">◈</div>'}
+    </div>
+    <div class="gallery-info">
+      <div class="gallery-title">${w.title}</div>
+      <div class="gallery-meta">${w.date} · ${w.duration}m</div>
+      <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
+        <span class="tag tag-gold">${w.cat}</span>
+        ${w.rating?`<span style="font-size:11px;color:var(--gold)">${'★'.repeat(w.rating)}</span>`:''}
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function filterGallery(cat, btn) {
+  document.querySelectorAll('#filter-bar .btn').forEach(b=>b.classList.remove('btn-primary'));
+  btn.classList.add('btn-primary');
+  renderGallery(cat);
+}
+
+function viewWork(id) {
+  const w = STATE.works.find(x=>x.id===id);
+  if (!w) return;
+  document.getElementById('view-title').textContent = w.title;
+  document.getElementById('view-body').innerHTML = `
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+    ${w.files?.map(f=>f.startsWith('data:video')
+      ?`<video src="${f}" controls style="max-height:280px;max-width:100%;border-radius:4px">`
+      :`<img src="${f}" style="max-height:280px;max-width:100%;border-radius:4px;cursor:zoom-in" onclick="previewImage('${f}')">`
+    ).join('')||''}
+  </div>
+  <div class="grid2" style="margin-bottom:14px">
+    <div><span class="tag tag-blue">${w.cat}</span> <span class="tag tag-gold">${w.level}</span> <span class="tag">${w.style}</span></div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">${w.date} · ${w.duration} menit ${w.rating?'· '+'★'.repeat(w.rating):''}</div>
+  </div>
+  ${w.notes?`<div style="font-size:13px;color:var(--text2);line-height:1.8;background:var(--bg3);padding:12px;border-radius:4px;margin-bottom:14px">${w.notes}</div>`:''}
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    ${w.files?.map((f,i)=>`<a class="btn btn-sm" href="${f}" download="karya-${w.title}-${i+1}.png">⬇ Download ${i+1}</a>`).join('')||''}
+    <button class="btn btn-sm btn-danger" onclick="deleteWork(${id})">Hapus</button>
+    <button class="btn btn-sm" onclick="closeModal('modal-view-work')">Tutup</button>
+  </div>`;
+  openModal('modal-view-work');
+}
+
+function deleteWork(id) {
+  if (!confirm('Hapus karya ini?')) return;
+  STATE.works = STATE.works.filter(w=>w.id!==id);
+  STATE.journal = STATE.journal.filter(j=>j.id!==id);
+  save('works'); save('journal');
+  closeModal('modal-view-work');
+  if (STATE.currentPage==='gallery') renderGallery('Semua');
+}
+
+function downloadAll() {
+  STATE.works.forEach((w,i) => {
+    w.files?.forEach((f,j) => {
+      const a = document.createElement('a');
+      a.href = f; a.download = `atelier-${w.title}-${i}-${j}.png`;
+      a.click();
+    });
+  });
+}
+
+function previewImage(src) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  ov.onclick = () => document.body.removeChild(ov);
+  ov.innerHTML = `<img src="${src}" style="max-width:95vw;max-height:95vh;border-radius:4px">`;
+  document.body.appendChild(ov);
+}
+
+// ═══════════════════════════════════════════════════════════
+// ASSIGNMENTS
+// ═══════════════════════════════════════════════════════════
+let submitFiles = [];
+let submitWeekNum = 1;
+
+function openSubmit(weekNum) {
+  submitFiles = []; submitWeekNum = weekNum;
+  const week = CURRICULUM[weekNum-1];
+  document.getElementById('submit-title').textContent = `W${weekNum}: ${week.assignment.title}`;
+  document.getElementById('submit-body').innerHTML = `
+  <div class="highlight-box" style="margin-bottom:16px">
+    <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:10px">${week.assignment.desc}</div>
+    <div>
+      <div class="section-title">Rubrik Penilaian</div>
+      ${week.assignment.rubric.map(r=>`<div style="font-size:12px;color:var(--text3);padding:3px 0;display:flex;gap:8px"><span style="color:var(--gold)">◆</span>${r}</div>`).join('')}
+    </div>
+  </div>
+  <div id="submit-upload-zone" class="upload-zone" onclick="document.getElementById('submit-file').click()">
+    <div class="upload-icon" id="sub-icon">⬆</div>
+    <div id="sub-text" style="font-size:13px;color:var(--text2)">Upload foto / scan karyamu di sini</div>
+  </div>
+  <input type="file" id="submit-file" accept="image/*" multiple style="display:none" onchange="previewSubmitFile(event)">
+  <div id="submit-previews" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+  <div class="form-group" style="margin:14px 0">
+    <label class="form-label">Catatan untuk Sensei (opsional)</label>
+    <textarea class="textarea" id="submit-notes" placeholder="Ceritakan prosesmu, apa yang sulit, apa yang kamu pelajari..."></textarea>
+  </div>
+  <div id="submit-error" style="color:var(--red);font-size:12px;margin-bottom:10px"></div>
+  <button class="btn btn-primary" id="submit-btn" onclick="submitAssignment()">Kumpulkan & Minta Penilaian AI ✦</button>`;
+  openModal('modal-submit');
+}
+
+function previewSubmitFile(e) {
+  submitFiles = [];
+  const container = document.getElementById('submit-previews');
+  container.innerHTML = '';
+  Array.from(e.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      submitFiles.push(ev.target.result);
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      img.style.cssText = 'height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border)';
+      container.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('sub-icon').textContent = '✓';
+  document.getElementById('sub-text').textContent = `${e.target.files.length} file siap dikumpulkan`;
+}
+
+async function submitAssignment() {
+  if (!submitFiles.length) { document.getElementById('submit-error').textContent = 'Upload gambar karyamu dulu!'; return; }
+  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { document.getElementById('submit-error').textContent = 'Set Gemini API key dulu di tombol kanan atas!'; return; }
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = '⟳ Sensei sedang menilai...'; btn.disabled = true;
+  document.getElementById('submit-error').textContent = '';
+
+  const week = CURRICULUM[submitWeekNum-1];
+  const notes = document.getElementById('submit-notes').value;
+  const rubricText = week.assignment.rubric.map((r,i)=>`${i+1}. ${r}`).join('\n');
+
+  try {
+    const base64 = submitFiles[0].split(',')[1];
+    const mediaType = submitFiles[0].split(';')[0].split(':')[1];
+    const prompt = `Nilai karya seni ini untuk tugas MINGGU ${submitWeekNum}: "${week.assignment.title}".
+
+Kurikulum: ${week.title} (${week.desc})
+Referensi: ${week.ref}
+
+Deskripsi tugas: ${week.assignment.desc}
+
+Rubrik penilaian:
+${rubricText}
+
+${notes?`Catatan murid: ${notes}`:''}
+
+INI ADALAH PEMULA TOTAL yang baru mulai menggambar. Nilai secara konstruktif dan encouragin. Fokus pada progress, bukan kesempurnaan.`;
+
+    const gradingSystem = `Kamu adalah penilai karya seni yang ahli dan konstruktif. Nilai karya berdasarkan rubrik.
+Respond HANYA dengan JSON valid ini (tanpa teks lain, tanpa markdown):
+{"scores":{"kriteria1":85,"kriteria2":70,"kriteria3":90,"kriteria4":75},"total":80,"grade":"B+","strengths":["kelebihan 1","kelebihan 2"],"improvements":["perbaikan 1","perbaikan 2"],"sensei_note":"Catatan personal encouraging 2-3 kalimat","next_focus":"1 hal spesifik untuk difokuskan"}
+Grade: 95+=A+, 90=A, 85=A-, 80=B+, 75=B, 70=B-, 65=C+, 60=C, <60=D`;
+    const parts = [
+      { inlineData: { mimeType: mediaType, data: base64 } },
+      { text: prompt }
+    ];
+    const text = await callGemini(parts, gradingSystem, 1500);
+    let parsed;
+    try { parsed = JSON.parse(text.replace(/```json|```/g,'').trim()); }
+    catch { parsed = { total:75, grade:'B', strengths:['Sudah mengerjakan tugas'], improvements:['Terus berlatih'], sensei_note:text, next_focus:'Terus latihan setiap hari' }; }
+
+    const submission = { weekNum: submitWeekNum, files: submitFiles, notes, submittedAt: new Date().toISOString(), ...parsed };
+    STATE.submissions[submitWeekNum] = submission;
+    save('submissions');
+    // Add to journal
+    const jEntry = { id: Date.now(), type:'submission', date: new Date().toISOString().slice(0,10), title:`[Tugas W${submitWeekNum}] ${week.assignment.title}`, notes, files: submitFiles, grade: parsed.grade, total: parsed.total, cat:'study', level:'beginner', style:'sketch', duration:0, rating:0 };
+    STATE.journal.push(jEntry);
+    save('journal');
+    addStreak();
+    closeModal('modal-submit');
+    viewGrade(submitWeekNum);
+  } catch(e) {
+    document.getElementById('submit-error').textContent = 'Error: '+e.message;
+    btn.textContent = 'Coba Lagi'; btn.disabled = false;
+  }
+}
+
+function viewGrade(weekNum) {
+  const sub = STATE.submissions[weekNum];
+  if (!sub) return;
+  const week = CURRICULUM[weekNum-1];
+  document.getElementById('grade-body').innerHTML = `
+  <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${sub.files?.map(f=>`<img src="${f}" style="height:100px;width:100px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">`).join('')||''}
+    </div>
+    <div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-bottom:4px">MINGGU ${weekNum} · ${week.title}</div>
+      <div class="grade-circle" style="margin-bottom:10px">
+        <div class="grade-letter">${sub.grade}</div>
+        <div class="grade-score">${sub.total}/100</div>
+      </div>
+    </div>
+  </div>
+  ${sub.scores?`
+  <div style="margin-bottom:16px">
+    <div class="section-title">Skor per Kriteria</div>
+    ${Object.entries(sub.scores).map(([k,v])=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <div style="font-size:11px;color:var(--text2);width:180px;flex-shrink:0">${k}</div>
+      <div style="flex:1;height:5px;background:var(--bg3);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${v}%;background:${v>=80?'var(--gold)':v>=60?'var(--blue)':'var(--red)'};border-radius:2px"></div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text2);width:30px;text-align:right">${v}</div>
+    </div>`).join('')}
+  </div>`:''}
+  <div class="grid2" style="margin-bottom:16px">
+    ${sub.strengths?`<div class="green-box"><div class="section-title">Kelebihan</div>${sub.strengths.map(s=>`<div style="font-size:12px;color:var(--text2);padding:3px 0">✓ ${s}</div>`).join('')}</div>`:''}
+    ${sub.improvements?`<div class="red-box"><div class="section-title">Perlu Diperbaiki</div>${sub.improvements.map(s=>`<div style="font-size:12px;color:var(--text2);padding:3px 0">→ ${s}</div>`).join('')}</div>`:''}
+  </div>
+  ${sub.sensei_note?`<div class="highlight-box" style="margin-bottom:14px;font-size:13px;color:var(--text);line-height:1.8;font-style:italic">"${sub.sensei_note}"</div>`:''}
+  ${sub.next_focus?`<div style="font-size:13px;color:var(--text2)"><span style="color:var(--gold)">◆ Fokus berikutnya:</span> ${sub.next_focus}</div>`:''}
+  <div style="margin-top:16px;display:flex;gap:8px">
+    <button class="btn btn-sm" onclick="closeModal('modal-grade');openSubmit(${weekNum})">Kumpul Ulang</button>
+    <button class="btn btn-sm" onclick="closeModal('modal-grade')">Tutup</button>
+  </div>`;
+  openModal('modal-grade');
+}
+
+// ═══════════════════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════════════════
+function renderTasks() {
+  const el = document.getElementById('task-list');
+  if (!el) return;
+  const tasks = STATE.tasks;
+  if (!tasks.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">✦</div><div>Belum ada tugas. Klik "Generate Tugas AI" untuk membuat tugas personalmu!</div></div>';
+    return;
+  }
+  el.innerHTML = tasks.map((t,i)=>`
+  <div class="task-card ${t.active?'active':''} ${t.done?'done':''}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})" style="accent-color:var(--gold);width:14px;height:14px;flex-shrink:0">
+          <div class="task-card-title" style="${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.title}</div>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-left:22px;line-height:1.6">${t.desc}</div>
+        <div style="display:flex;gap:6px;margin-top:8px;margin-left:22px;flex-wrap:wrap">
+          <span class="tag task-timer">⏱ ${t.duration}m</span>
+          ${t.week?`<span class="tag tag-blue">W${t.week}</span>`:''}
+          ${t.skill?`<span class="tag tag-gold">${t.skill}</span>`:''}
+          ${t.deadline?`<span class="tag ${isOverdue(t.deadline)?'tag-red':''}">📅 ${t.deadline}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        ${!t.done?`<button class="btn btn-sm btn-primary" onclick="activateTask(${i})">▶ Timer</button>`:''}
+        <button class="btn btn-sm btn-danger" onclick="deleteTask(${i})">×</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function isOverdue(deadline) { return deadline && new Date(deadline) < new Date(); }
+
+function toggleTask(i) {
+  STATE.tasks[i].done = !STATE.tasks[i].done;
+  STATE.tasks[i].active = false;
+  save('tasks'); renderTasks(); updateSidebar();
+}
+
+function deleteTask(i) {
+  STATE.tasks.splice(i,1);
+  save('tasks'); renderTasks(); updateSidebar();
+}
+
+function clearDoneTasks() {
+  STATE.tasks = STATE.tasks.filter(t=>!t.done);
+  save('tasks'); renderTasks(); updateSidebar();
+}
+
+function activateTask(i) {
+  STATE.tasks.forEach(t=>t.active=false);
+  STATE.tasks[i].active = true;
+  STATE.timerSec = (STATE.tasks[i].duration||25)*60;
+  STATE.timerTaskName = STATE.tasks[i].title;
+  save('tasks');
+  renderTasks();
+  syncTimerDisplay();
+  document.getElementById('floating-timer').style.display = 'block';
+  document.getElementById('ft-task-name').textContent = STATE.timerTaskName;
+}
+
+async function generateTasks() {
+  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { alert('Set Gemini API key dulu di tombol kanan atas!'); return; }
+  const week = CURRICULUM[STATE.currentWeek-1];
+  const skills = Object.entries(STATE.skills).map(([k,v])=>`${k}:${v}%`).join(', ');
+  const btn = document.querySelector('[onclick="generateTasks()"]');
+  btn.textContent = '⟳ Generating...'; btn.disabled = true;
+
+  try {
+    const taskSystemPrompt = `Generate drawing practice tasks. Respond ONLY with valid JSON array, no other text:
+[{"title":"nama latihan","desc":"deskripsi detail cara melakukan","duration":25,"week":1,"skill":"gesture","deadline":"2026-06-01"}]`;
+    const taskPrompt = `Generate 6 drawing tasks untuk:
+- Minggu kurikulum: ${STATE.currentWeek} (${week.title})
+- Level: Pemula total
+- Skill saat ini: ${skills||'semua 0%'}
+- Style target: Anime, Realism, Character Design, Digital Painting, Sketch
+- Referensi: ${week.ref}
+
+Buat tasks yang bervariasi: ada yang 10 menit, 25 menit, dan 45 menit. Jelaskan CARA melakukannya dengan detail. Deadline 1-2 minggu dari sekarang (${new Date().toISOString().slice(0,10)}).`;
+    const text = await callGemini([{ text: taskPrompt }], taskSystemPrompt, 1000);
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    STATE.tasks = [...STATE.tasks, ...parsed];
+    save('tasks');
+    renderTasks(); updateSidebar();
+  } catch(e) { alert('Error: '+e.message); }
+  btn.textContent = '✦ Generate Tugas AI'; btn.disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════════
+function syncTimerDisplay() {
+  const m = Math.floor(STATE.timerSec/60);
+  const s = STATE.timerSec%60;
+  const str = `${m<10?'0':''}${m}:${s<10?'0':''}${s}`;
+  const md = document.getElementById('main-timer-display');
+  const fd = document.getElementById('ft-display');
+  if (md) { md.textContent = str; md.className = 'timer-display'+(STATE.timerSec<60?' urgent':''); }
+  if (fd) { fd.textContent = str; fd.className = 'timer-display'+(STATE.timerSec<60?' urgent':''); }
+  const btn = document.getElementById('main-timer-btn');
+  const fbtn = document.getElementById('ft-toggle');
+  const lbl = STATE.timerRunning ? '⏸ Pause' : '▶ Mulai';
+  if (btn) btn.textContent = lbl;
+  if (fbtn) fbtn.textContent = lbl;
+  const lbl2 = document.getElementById('timer-task-label');
+  if (lbl2) lbl2.textContent = STATE.timerTaskName || '—';
+  const ftname = document.getElementById('ft-task-name');
+  if (ftname) ftname.textContent = STATE.timerTaskName || 'Sesi Latihan';
+}
+
+function toggleTimer() {
+  if (STATE.timerRunning) {
+    clearInterval(STATE.timerInterval);
+    STATE.timerRunning = false;
+  } else {
+    STATE.timerRunning = true;
+    STATE.timerInterval = setInterval(() => {
+      STATE.timerSec--;
+      if (STATE.timerSec <= 0) {
+        clearInterval(STATE.timerInterval);
+        STATE.timerRunning = false;
+        STATE.timerSec = 0;
+        playAlarm();
+        alert('⏰ Waktu habis! ' + (STATE.timerTaskName||'Sesi latihan') + ' selesai.');
+      }
+      syncTimerDisplay();
+    }, 1000);
+  }
+  syncTimerDisplay();
+}
+
+function resetTimer() {
+  clearInterval(STATE.timerInterval); STATE.timerRunning = false;
+  const preset = document.getElementById('timer-preset');
+  STATE.timerSec = preset ? parseInt(preset.value) : 1500;
+  syncTimerDisplay();
+}
+
+function setPreset(val) { clearInterval(STATE.timerInterval); STATE.timerRunning = false; STATE.timerSec = parseInt(val); syncTimerDisplay(); }
+
+function startExerciseTimer(weekNum, exIdx) {
+  const ex = CURRICULUM[weekNum-1]?.exercises[exIdx];
+  if (!ex) return;
+  STATE.timerSec = ex.duration * 60;
+  STATE.timerTaskName = ex.title;
+  if (STATE.timerRunning) { clearInterval(STATE.timerInterval); STATE.timerRunning = false; }
+  syncTimerDisplay();
+  document.getElementById('floating-timer').style.display = 'block';
+  document.getElementById('ft-task-name').textContent = ex.title;
+  goTo('tasks');
+}
+
+function closeFloatingTimer() {
+  clearInterval(STATE.timerInterval); STATE.timerRunning = false;
+  document.getElementById('floating-timer').style.display = 'none';
+  syncTimerDisplay();
+}
+
+function playAlarm() {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.3,0.6,0.9].forEach(t => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(0.5, ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+t+0.25);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.25);
+    });
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// SKILLS
+// ═══════════════════════════════════════════════════════════
+function updateSkill(key, val) {
+  STATE.skills[key] = parseInt(val);
+  save('skills');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SENSEI AI
+// ═══════════════════════════════════════════════════════════
+let senseiImgData = null;
+
+function renderChatMsg(m) {
+  return `<div class="chat-msg ${m.role}">
+    <div class="chat-avatar ${m.role==='user'?'user':'sensei'}">${m.role==='user'?'✎':'◉'}</div>
+    <div class="chat-bubble ${m.role==='sensei'?'sensei':''}">
+      ${m.image?`<img src="${m.image}" style="max-width:100%;max-height:200px;border-radius:4px;margin-bottom:8px;display:block">`:''}
+      ${m.text}
+    </div>
+  </div>`;
+}
+
+function scrollChat() { setTimeout(()=>{const c=document.getElementById('chat-messages');if(c)c.scrollTop=c.scrollHeight;},100); }
+
+function previewSenseiImg(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    senseiImgData = ev.target.result;
+    document.getElementById('sensei-img-preview').innerHTML = `
+    <div style="position:relative;display:inline-block">
+      <img src="${senseiImgData}" style="height:60px;border-radius:4px">
+      <button onclick="senseiImgData=null;document.getElementById('sensei-img-preview').innerHTML=''" style="position:absolute;top:-6px;right:-6px;background:var(--bg2);border:1px solid var(--border2);color:var(--text3);border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:10px">×</button>
+    </div>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function quickAsk(q) { document.getElementById('sensei-input').value = q; sendToSensei(); }
+
+async function sendToSensei() {
+  const inp = document.getElementById('sensei-input');
+  const text = inp?.value.trim();
+  if (!text && !senseiImgData) return;
+  if (!(STATE.apiKey || GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI')) { alert('Set Gemini API key dulu di tombol kanan atas!'); return; }
+
+  const userMsg = { role:'user', text, image: senseiImgData };
+  STATE.chatHistory.push(userMsg);
+  save('chatHistory');
+  if (inp) inp.value = '';
+  const imgCopy = senseiImgData; senseiImgData = null;
+  document.getElementById('sensei-img-preview').innerHTML = '';
+
+  const container = document.getElementById('chat-messages');
+  if (container) {
+    container.insertAdjacentHTML('beforeend', renderChatMsg(userMsg));
+    container.insertAdjacentHTML('beforeend', `<div class="chat-msg sensei" id="typing-indicator"><div class="chat-avatar sensei">◉</div><div class="chat-bubble sensei" style="color:var(--text3)">Sensei sedang berpikir...</div></div>`);
+    scrollChat();
+  }
+
+  const btn = document.getElementById('sensei-send-btn');
+  if (btn) { btn.textContent = '...'; btn.disabled = true; }
+
+  try {
+    const messages = STATE.chatHistory.map(m => {
+      const content = [];
+      if (m.image) { const b64=m.image.split(',')[1]; const mt=m.image.split(';')[0].split(':')[1]; content.push({type:'image',source:{type:'base64',media_type:mt,data:b64}}); }
+      if (m.text) content.push({type:'text',text:m.text});
+      if (m.role==='sensei') return {role:'assistant',content:m.text};
+      return {role:'user',content};
+    }).filter(m=>m.content?.length||typeof m.content==='string');
+
+    const senseiSystem = `Kamu adalah Sensei — guru menggambar AI yang ahli, inspiratif, dan sabar. Muridmu adalah pemula total yang ingin menguasai: Anime/Manga, Realism, Character Design, Digital Painting, Sketch.
+
+Referensi pedagogimu: Drawabox, Betty Edwards, James Gurney, Proko, Vilppu, Hampton, Andrew Loomis, Bridgman, Stephen Silver, Shogakukan Manga Guide, CTRL+PAINT, Marco Bucci, Kim Jung Gi.
+
+Karaktermu:
+- Hangat, encouraging, tapi jujur dan spesifik
+- Selalu kasih feedback berdasarkan referensi sumber terpercaya
+- Sering kasih "latihan mikro" 5-15 menit yang bisa langsung dilakukan
+- Gunakan analogi visual yang mudah dipahami
+- Kalau lihat gambar: berikan critique detail + actionable improvements
+- Selalu akhiri dengan 1 actionable tip yang bisa dipraktekkan HARI INI
+- Sesekali referensikan teknik dari Loomis, Bridgman, Proko, dll
+
+Balas dalam Bahasa Indonesia. Format sederhana dengan paragraf, bukan bullet berlebihan. Max 4 paragraf kecuali diminta detail.`;
+    const replyText = await callGeminiWithHistory(STATE.chatHistory, senseiSystem, 1000);
+    const senseiMsg = { role:'sensei', text: replyText };
+    STATE.chatHistory.push(senseiMsg);
+    save('chatHistory');
+    addStreak();
+    document.getElementById('typing-indicator')?.remove();
+    if (container) { container.insertAdjacentHTML('beforeend', renderChatMsg(senseiMsg)); scrollChat(); }
+  } catch(e) {
+    document.getElementById('typing-indicator')?.remove();
+    const errMsg = { role:'sensei', text:`Maaf, ada error: ${e.message}. Cek API key dan koneksi internet.` };
+    STATE.chatHistory.push(errMsg);
+    save('chatHistory');
+    if (container) { container.insertAdjacentHTML('beforeend', renderChatMsg(errMsg)); scrollChat(); }
+  }
+  if (btn) { btn.textContent = 'Kirim →'; btn.disabled = false; }
+}
+
+function clearChat() { if (!confirm('Hapus seluruh riwayat chat?')) return; STATE.chatHistory = []; save('chatHistory'); goTo('sensei'); }
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function calcStreak() {
+  let count = 0; const d = new Date();
+  while (true) {
+    const ds = d.toISOString().slice(0,10);
+    if (STATE.streak.includes(ds)) { count++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return count;
+}
+
+function addStreak() {
+  const today = new Date().toISOString().slice(0,10);
+  if (!STATE.streak.includes(today)) { STATE.streak.push(today); save('streak'); }
+  updateSidebar();
+}
+
+function openModal(id) { document.getElementById(id)?.classList.add('open'); }
+function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+
+function toggleWeek(num, forceOpen=false) {
+  const body = document.getElementById(`week-body-${num}`);
+  if (!body) return;
+  if (forceOpen) body.classList.add('open');
+  else body.classList.toggle('open');
+}
+
+function saveApiKey() {
+  const k = document.getElementById('api-key-input').value.trim();
+  if (!k) return;
+  STATE.apiKey = k; DB.set('apiKey', k);
+  closeModal('modal-api');
+  alert('Gemini API key tersimpan! Sensei AI, generate tugas, dan penilaian karya siap digunakan.');
+}
+
+function exportData() {
+  const data = JSON.stringify({
+    works: STATE.works, journal: STATE.journal, tasks: STATE.tasks,
+    submissions: STATE.submissions, skills: STATE.skills, goals: STATE.goals,
+    streak: STATE.streak, currentWeek: STATE.currentWeek,
+    exportedAt: new Date().toISOString()
+  }, null, 2);
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
+  a.download = `atelier-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function importData(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.works) { STATE.works=data.works; save('works'); }
+      if (data.journal) { STATE.journal=data.journal; save('journal'); }
+      if (data.tasks) { STATE.tasks=data.tasks; save('tasks'); }
+      if (data.submissions) { STATE.submissions=data.submissions; save('submissions'); }
+      if (data.skills) { STATE.skills=data.skills; save('skills'); }
+      if (data.goals) { STATE.goals=data.goals; save('goals'); }
+      if (data.streak) { STATE.streak=data.streak; save('streak'); }
+      if (data.currentWeek) { STATE.currentWeek=data.currentWeek; DB.set('currentWeek',data.currentWeek); }
+      alert('Data berhasil diimport!'); goTo(STATE.currentPage);
+    } catch(e) { alert('File tidak valid: '+e.message); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// Load API key input if set
+window.addEventListener('load', () => {
+  if (STATE.apiKey) document.getElementById('api-key-input').value = STATE.apiKey;
+  goTo('dashboard');
+  if (!STATE.apiKey) setTimeout(()=>openModal('modal-api'), 500);
+});
+
+</script>
+</body>
+</html>
