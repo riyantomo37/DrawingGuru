@@ -1045,7 +1045,7 @@ const PAGES = {
           <span class="tag tag-blue">${j.level||''}</span>
           ${j.rating?`<span style="color:var(--gold);font-size:13px">${'★'.repeat(j.rating)}</span>`:''}
         </div>
-        ${j.files?.length?`<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">${j.files.map(f=>`<img src="${f}" style="height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewImage('${f}')">`).join('')}</div>`:''}
+        ${j.files?.length?'<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">'+j.files.map(f=>'<img src="'+f+'" style="height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewImage(''+f+'')">').join('')+'</div>':''}
         <div class="journal-body">${j.notes||'<em style="color:var(--text3)">Tidak ada catatan</em>'}</div>
         ${j.grade?`<div style="margin-top:10px;display:flex;align-items:center;gap:10px"><span style="font-family:var(--font-display);font-size:18px;color:var(--gold)">${j.grade}</span><span style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">${j.total}/100</span></div>`:''}
       </div>`).join('')
@@ -1121,7 +1121,7 @@ const PAGES = {
               <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px">${week.assignment.desc}</div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 ${!active?`<button class="btn btn-sm" onclick="STATE.currentWeek=${week.week};DB.set('currentWeek',${week.week});goTo('curriculum')">Aktifkan Minggu Ini</button>`:''}
-                ${done?`<button class="btn btn-sm btn-green" onclick="viewGrade(${week.week})">Lihat Nilai</button>`:`<button class="btn btn-sm btn-primary" onclick="openSubmit(${week.week})">Kumpulkan Tugas →</button>`}
+                ${done?'<button class="btn btn-sm btn-green" onclick="viewGrade('+week.week+')">Lihat Nilai</button>':'<button class="btn btn-sm btn-primary" onclick="openSubmit('+week.week+')">Kumpulkan Tugas →</button>'}
               </div>
             </div>
           </div>
@@ -1449,7 +1449,7 @@ function renderGallery(filter) {
   <div class="gallery-card" onclick="viewWork(${w.id})">
     <div class="gallery-thumb">
       ${w.files?.length
-        ? (w.files[0].startsWith('data:video') ? `<video src="${w.files[0]}" style="width:100%;height:100%;object-fit:cover"></video>` : `<img src="${w.files[0]}" alt="${w.title}">`)
+        ? (w.files[0].startsWith('data:video') ? '<video src="'+w.files[0]+'" style="width:100%;height:100%;object-fit:cover"></video>' : '<img src="'+w.files[0]+'" alt="'+w.title+'">')
         : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:32px">◈</div>'}
     </div>
     <div class="gallery-info">
@@ -1475,10 +1475,7 @@ function viewWork(id) {
   document.getElementById('view-title').textContent = w.title;
   document.getElementById('view-body').innerHTML = `
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-    ${w.files?.map(f=>f.startsWith('data:video')
-      ?`<video src="${f}" controls style="max-height:280px;max-width:100%;border-radius:4px">`
-      :`<img src="${f}" style="max-height:280px;max-width:100%;border-radius:4px;cursor:zoom-in" onclick="previewImage('${f}')">`
-    ).join('')||''}
+    ${w.files?.map(f=>f.startsWith('data:video')?'<video src="'+f+'" controls style="max-height:280px;max-width:100%;border-radius:4px">':'<img src="'+f+'" style="max-height:280px;max-width:100%;border-radius:4px;cursor:zoom-in" onclick="previewImage(''+f+'')">').join('')||''}
   </div>
   <div class="grid2" style="margin-bottom:14px">
     <div><span class="tag tag-blue">${w.cat}</span> <span class="tag tag-gold">${w.level}</span> <span class="tag">${w.style}</span></div>
@@ -1486,7 +1483,7 @@ function viewWork(id) {
   </div>
   ${w.notes?`<div style="font-size:13px;color:var(--text2);line-height:1.8;background:var(--bg3);padding:12px;border-radius:4px;margin-bottom:14px">${w.notes}</div>`:''}
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    ${w.files?.map((f,i)=>`<a class="btn btn-sm" href="${f}" download="karya-${w.title}-${i+1}.png">⬇ Download ${i+1}</a>`).join('')||''}
+    ${w.files?.map((f,i)=>'<a class="btn btn-sm" href="'+f+'" download="karya-'+w.title+'-'+(i+1)+'.png">⬇ Download '+(i+1)+'</a>').join('')||''}
     <button class="btn btn-sm btn-danger" onclick="deleteWork(${id})">Hapus</button>
     <button class="btn btn-sm" onclick="closeModal('modal-view-work')">Tutup</button>
   </div>`;
@@ -1660,8 +1657,8 @@ function viewGrade(weekNum) {
     </div>`).join('')}
   </div>`:''}
   <div class="grid2" style="margin-bottom:16px">
-    ${sub.strengths?`<div class="green-box"><div class="section-title">Kelebihan</div>${sub.strengths.map(s=>`<div style="font-size:12px;color:var(--text2);padding:3px 0">✓ ${s}</div>`).join('')}</div>`:''}
-    ${sub.improvements?`<div class="red-box"><div class="section-title">Perlu Diperbaiki</div>${sub.improvements.map(s=>`<div style="font-size:12px;color:var(--text2);padding:3px 0">→ ${s}</div>`).join('')}</div>`:''}
+    ${sub.strengths?'<div class="green-box"><div class="section-title">Kelebihan</div>'+sub.strengths.map(s=>'<div style="font-size:12px;color:var(--text2);padding:3px 0">✓ '+s+'</div>').join('')+'</div>':''}
+    ${sub.improvements?'<div class="red-box"><div class="section-title">Perlu Diperbaiki</div>'+sub.improvements.map(s=>'<div style="font-size:12px;color:var(--text2);padding:3px 0">→ '+s+'</div>').join('')+'</div>':''}
   </div>
   ${sub.sensei_note?`<div class="highlight-box" style="margin-bottom:14px;font-size:13px;color:var(--text);line-height:1.8;font-style:italic">"${sub.sensei_note}"</div>`:''}
   ${sub.next_focus?`<div style="font-size:13px;color:var(--text2)"><span style="color:var(--gold)">◆ Fokus berikutnya:</span> ${sub.next_focus}</div>`:''}
