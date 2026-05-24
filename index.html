@@ -581,7 +581,7 @@ select.input, select.select { background-image: url("data:image/svg+xml,%3Csvg x
 // ═══════════════════════════════════════════════════════════
 // ⚙️ KONFIGURASI API KEY — PASTE KEY-MU DI SINI
 // ═══════════════════════════════════════════════════════════
-const GEMINI_API_KEY = "AIzaSyD2wAEkT79SE2GHVhUxCwoeu52CHkHQeoY"; // ← ganti ini
+const GEMINI_API_KEY = "PASTE_GEMINI_KEY_DISINI"; // ← ganti ini
 
 // ═══════════════════════════════════════════════════════════
 // DATA & STATE
@@ -1288,7 +1288,7 @@ async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
   }
   contents.push({ role: 'user', parts });
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -1320,7 +1320,7 @@ async function callGeminiWithHistory(history, systemPrompt, maxTokens = 1000) {
     if (m.text) parts.push({ text: m.text });
     if (parts.length) contents.push({ role: m.role === 'sensei' ? 'model' : 'user', parts });
   }
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 } })
