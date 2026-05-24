@@ -381,7 +381,8 @@ select.input, select.select { background-image: url("data:image/svg+xml,%3Csvg x
       <div class="nav-label">Utama</div>
       <button class="nav-item active" onclick="goTo('dashboard')"><span class="nav-icon">⌂</span> Dashboard</button>
       <button class="nav-item" onclick="goTo('journal')"><span class="nav-icon">✍</span> Jurnal</button>
-      <button class="nav-item" onclick="goTo('gallery')"><span class="nav-icon">◈</span> Galeri</button>
+      <button class="nav-item" onclick="goTo('gallery')"><span class="nav-icon">◈</span> Portofolio</button>
+
     </div>
     <div class="nav-section">
       <div class="nav-label">Belajar</div>
@@ -399,6 +400,10 @@ select.input, select.select { background-image: url("data:image/svg+xml,%3Csvg x
         <div class="streak-num" id="sidebar-streak">0</div>
         <div class="streak-label">Hari streak aktif</div>
       </div>
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button class="btn btn-sm" style="flex:1;font-size:9px;padding:5px" onclick="exportData()">⬇ Backup</button>
+        <button class="btn btn-sm" style="flex:1;font-size:9px;padding:5px" onclick="document.getElementById('importFile').click()">⬆ Restore</button>
+      </div>
     </div>
   </aside>
 
@@ -407,13 +412,13 @@ select.input, select.select { background-image: url("data:image/svg+xml,%3Csvg x
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <span class="topbar-title" id="topbar-title">Dashboard</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:15px;color:var(--gold);letter-spacing:1px">riyantomo37</div>
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase">Portfolio Progress</div>
+        </div>
       </div>
       <div class="topbar-actions">
-        <button class="btn btn-sm" onclick="exportData()">⬇ Export</button>
-        <button class="btn btn-sm" onclick="document.getElementById('importFile').click()">⬆ Import</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-        <button class="btn btn-sm btn-primary" onclick="openModal('modal-api')">⚙ Gemini Key</button>
       </div>
     </div>
     <div class="page-content fade-in" id="app-content"></div>
@@ -904,7 +909,7 @@ const SKILL_TREE = [
 // ═══════════════════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════════════════
-const PAGE_TITLES = { dashboard:'Dashboard', journal:'Jurnal', gallery:'Galeri', curriculum:'Kurikulum', tasks:'Tugas & Timer', timer:'Timer Latihan', skills:'Skill Tree', sensei:'Sensei AI' };
+const PAGE_TITLES = { dashboard:'Dashboard', journal:'Jurnal', gallery:'Portofolio', curriculum:'Kurikulum', tasks:'Tugas & Timer', timer:'Timer Latihan', skills:'Skill Tree', sensei:'Sensei AI' };
 
 function goTo(page) {
   STATE.currentPage = page;
@@ -980,7 +985,7 @@ const PAGES = {
     <div class="grid2" style="margin-bottom:20px">
       <div class="card">
         <div class="section-title">Karya Terbaru</div>
-        ${STATE.works.length === 0 ? `<div class="empty-state"><div class="empty-icon">◈</div><div>Belum ada karya</div><button class="btn btn-sm btn-primary" style="margin-top:12px" onclick="openModal('modal-add-work')">Upload Karya Pertama</button></div>` :
+        ${STATE.works.length === 0 ? `<div class="empty-state"><div class="empty-icon">◈</div><div>Belum ada karya</div><button class="btn btn-sm btn-primary" style="margin-top:12px" onclick="goTo('tasks')">Mulai Tugas Pertama →</button></div>` :
           STATE.works.slice(-3).reverse().map(w=>`
           <div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
             <div style="width:44px;height:44px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3)">
@@ -1026,8 +1031,8 @@ const PAGES = {
     document.getElementById('app-content').innerHTML = `
     <div class="page-title">Jurnal</div>
     <div class="page-sub">Catatan perjalanan belajarmu</div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
-      <button class="btn btn-primary" onclick="openModal('modal-add-work')">+ Tambah Entri</button>
+    <div style="margin-bottom:20px;padding:10px 14px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);font-size:12px;color:var(--text3)">
+      ✦ Jurnal otomatis tercatat setiap kamu mengumpulkan tugas di halaman <b style="color:var(--text2)">Tugas & Timer</b>
     </div>
     <div id="journal-timeline">
     ${STATE.journal.length === 0 ? `<div class="empty-state"><div class="empty-icon">✍</div><div style="font-size:14px">Belum ada entri jurnal</div><div style="font-size:12px;margin-top:6px;color:var(--text3)">Upload karya pertamamu untuk membuat jurnal otomatis</div></div>` :
@@ -1053,15 +1058,14 @@ const PAGES = {
     let filter = 'Semua';
 
     document.getElementById('app-content').innerHTML = `
-    <div class="page-title">Galeri</div>
-    <div class="page-sub">Portofolio & koleksi karya</div>
+    <div class="page-title">Portofolio</div>
+    <div class="page-sub">Semua karya yang sudah dikumpulkan</div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="filter-bar">
         ${cats.map(c=>`<button class="btn btn-sm ${c==='Semua'?'btn-primary':''}" onclick="filterGallery('${c}',this)">${c}</button>`).join('')}
       </div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-sm" onclick="downloadAll()">⬇ Download Semua</button>
-        <button class="btn btn-sm btn-primary" onclick="openModal('modal-add-work')">+ Upload</button>
       </div>
     </div>
     <div class="gallery-grid" id="gallery-grid"></div>`;
@@ -1134,7 +1138,6 @@ const PAGES = {
     <div class="page-sub">Task per minggu + timer batas waktu</div>
     <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="generateTasks()">✦ Generate Tugas AI</button>
-      <button class="btn" onclick="openModal('modal-add-work')">+ Upload Hasil</button>
     </div>
     <div class="grid2" style="margin-bottom:20px">
       <div class="card">
@@ -1278,7 +1281,7 @@ function renderHeatmap(days90) {
 // GEMINI API HELPER
 // ═══════════════════════════════════════════════════════════
 async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
-  const key = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  const key = (typeof GEMINI_API_KEY !== 'undefined' && GEMINI_API_KEY && GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI') ? GEMINI_API_KEY : STATE.apiKey;
   if (!key) throw new Error('API key kosong!');
   
   const contents = [];
@@ -1288,7 +1291,7 @@ async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
   }
   contents.push({ role: 'user', parts });
 
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${key}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -1302,7 +1305,7 @@ async function callGemini(parts, systemPrompt = '', maxTokens = 1000) {
 }
 
 async function callGeminiWithHistory(history, systemPrompt, maxTokens = 1000) {
-  const key = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  const key = (typeof GEMINI_API_KEY !== 'undefined' && GEMINI_API_KEY && GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI') ? GEMINI_API_KEY : STATE.apiKey;
   if (!key) throw new Error('API key kosong!');
 
   const contents = [];
@@ -1320,7 +1323,7 @@ async function callGeminiWithHistory(history, systemPrompt, maxTokens = 1000) {
     if (m.text) parts.push({ text: m.text });
     if (parts.length) contents.push({ role: m.role === 'sensei' ? 'model' : 'user', parts });
   }
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${key}`, {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 } })
@@ -1620,6 +1623,7 @@ Grade: 95+=A+, 90=A, 85=A-, 80=B+, 75=B, 70=B-, 65=C+, 60=C, <60=D`;
     addStreak();
     closeModal('modal-submit');
     viewGrade(submitWeekNum);
+    // Karya otomatis masuk Portofolio
   } catch(e) {
     document.getElementById('submit-error').textContent = 'Error: '+e.message;
     btn.textContent = 'Coba Lagi'; btn.disabled = false;
@@ -2024,7 +2028,7 @@ function importData(e) {
 
 // Load API key input if set
 window.addEventListener('load', () => {
-  const displayKey = GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI' ? GEMINI_API_KEY : STATE.apiKey;
+  const displayKey = (typeof GEMINI_API_KEY !== 'undefined' && GEMINI_API_KEY && GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI') ? GEMINI_API_KEY : STATE.apiKey;
   if (displayKey) document.getElementById('api-key-input').value = displayKey;
   goTo('dashboard');
   if (!STATE.apiKey && GEMINI_API_KEY === 'PASTE_GEMINI_KEY_DISINI') setTimeout(()=>openModal('modal-api'), 500);
