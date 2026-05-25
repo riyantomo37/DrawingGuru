@@ -278,7 +278,7 @@ async function gemini(userParts, system, maxTok=1000){
     contents.push({role:'model',parts:[{text:'Siap, saya mengerti.'}]});
   }
   contents.push({role:'user',parts:userParts});
-  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})
   });
@@ -300,7 +300,7 @@ async function geminiChat(history, system, maxTok=1000){
     if(m.text) parts.push({text:m.text});
     if(parts.length) contents.push({role:m.role==='sensei'?'model':'user',parts});
   }
-  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})
   });
