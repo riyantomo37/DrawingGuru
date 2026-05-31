@@ -3,1026 +3,1256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>riyantomo37 — Drawing Progress</title>
+<title>riyantomo37 — Creative Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080810;--bg2:#0d0d18;--bg3:#12121f;--border:#1e1e30;--border2:#2a2a40;--gold:#c9a84c;--gold2:#e8c97a;--golddim:rgba(201,168,76,0.12);--text:#e2ddd4;--text2:#9994a0;--text3:#554f66;--green:#4caf82;--red:#c95a5a;--blue:#5a8ac9;--r:8px;--fd:'Playfair Display',Georgia,serif;--fb:'Lora',Georgia,serif;--fm:'DM Mono',monospace}
+:root{
+  --bg:#07070f;--bg2:#0c0c18;--bg3:#11111e;--bg4:#161624;
+  --border:#1a1a2e;--border2:#252540;
+  --gold:#c9a84c;--gold2:#e8c97a;--golddim:rgba(201,168,76,0.1);
+  --pink:#e86fa0;--pinkdim:rgba(232,111,160,0.1);
+  --blue:#5a8ac9;--bluedim:rgba(90,138,201,0.1);
+  --green:#4caf82;--greendim:rgba(76,175,130,0.1);
+  --red:#c95a5a;--reddim:rgba(201,90,90,0.1);
+  --purple:#9b6fc9;--purpledim:rgba(155,111,201,0.1);
+  --text:#e2ddd4;--text2:#9994a0;--text3:#4a4560;
+  --r:8px;--fd:'Playfair Display',Georgia,serif;--fb:'Lora',Georgia,serif;--fm:'DM Mono',monospace;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* LAYOUT */
 .shell{display:flex;min-height:100vh}
-.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s}
-.main{margin-left:220px;flex:1}
-.topbar{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;justify-content:space-between;position:sticky;top:0;z-index:50}
-.page-content{padding:28px;max-width:980px}
-.logo-wrap{padding:22px 20px 14px;border-bottom:1px solid var(--border)}
-.logo{font-family:var(--fd);font-size:21px;color:var(--gold);letter-spacing:1px}
+.sidebar{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s;overflow-y:auto}
+.main{margin-left:230px;flex:1}
+.topbar{height:54px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;justify-content:space-between;position:sticky;top:0;z-index:50}
+.content{padding:28px;max-width:1000px}
+/* SIDEBAR */
+.logo-wrap{padding:20px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo{font-family:var(--fd);font-size:20px;color:var(--gold);letter-spacing:1px}
 .logo-sub{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-top:2px}
-.nav-sec{padding:10px 0}
-.nav-lbl{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;padding:0 20px;margin-bottom:4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;color:var(--text3);font-size:13px;transition:all .15s;position:relative;font-family:var(--fb);border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{color:var(--text);background:var(--bg3)}
-.nav-item.active{color:var(--gold);background:var(--golddim)}
-.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:60%;width:2px;background:var(--gold);border-radius:0 1px 1px 0}
-.nav-icon{font-size:15px;width:18px;text-align:center}
-.nav-badge{margin-left:auto;background:var(--gold);color:var(--bg);font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:999px;font-weight:500}
-.sidebar-footer{margin-top:auto;padding:14px 20px;border-top:1px solid var(--border)}
-.streak-widget{background:var(--golddim);border:1px solid var(--border2);border-radius:var(--r);padding:10px 12px}
-.streak-num{font-family:var(--fd);font-size:28px;color:var(--gold);line-height:1}
-.streak-lbl{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-top:2px}
+.nav-sec{padding:8px 0}
+.nav-lbl{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;padding:6px 18px 4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;color:var(--text3);font-size:13px;transition:all .15s;position:relative;font-family:var(--fb);border:none;background:none;width:100%;text-align:left;white-space:nowrap}
+.ni:hover{color:var(--text);background:var(--bg3)}
+.ni.active{color:var(--gold);background:var(--golddim)}
+.ni.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:60%;width:2px;background:var(--gold);border-radius:0 1px 1px 0}
+.ni.pink.active{color:var(--pink);background:var(--pinkdim)}
+.ni.pink.active::before{background:var(--pink)}
+.ni.blue.active{color:var(--blue);background:var(--bluedim)}
+.ni.blue.active::before{background:var(--blue)}
+.ni-icon{font-size:14px;width:16px;text-align:center}
+.ni-badge{margin-left:auto;font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:999px;font-weight:500}
+.badge-gold{background:var(--gold);color:var(--bg)}
+.badge-pink{background:var(--pink);color:var(--bg)}
+.badge-blue{background:var(--blue);color:var(--bg)}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);flex-shrink:0}
+.streak-w{background:var(--golddim);border:1px solid rgba(201,168,76,0.2);border-radius:var(--r);padding:10px 12px;margin-bottom:8px}
+.streak-n{font-family:var(--fd);font-size:26px;color:var(--gold);line-height:1}
+.streak-l{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-top:2px}
+/* CARDS */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
-.card-gold{border-color:rgba(201,168,76,0.3)}
+.card-pink{border-color:rgba(232,111,160,0.25);background:rgba(232,111,160,0.03)}
+.card-blue{border-color:rgba(90,138,201,0.25);background:rgba(90,138,201,0.03)}
+.card-gold{border-color:rgba(201,168,76,0.25)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* TYPOGRAPHY */
 .page-title{font-family:var(--fd);font-size:26px;color:var(--gold2);margin-bottom:4px}
+.page-title.pink{color:var(--pink)}
+.page-title.blue{color:var(--blue)}
 .page-sub{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-bottom:24px}
-.sec-title{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-bottom:14px}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
-.stat-val{font-family:var(--fd);font-size:32px;color:var(--gold);line-height:1.1}
-.stat-lbl{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-top:4px}
-.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border2);border-radius:4px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:var(--fm);letter-spacing:1px;color:var(--text2);background:var(--bg3);transition:all .15s;text-decoration:none}
+.sec-title{font-family:var(--fm);font-size:10px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-bottom:12px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.stat-v{font-family:var(--fd);font-size:30px;line-height:1.1}
+.stat-l{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-top:4px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border2);border-radius:4px;padding:7px 14px;cursor:pointer;font-size:12px;font-family:var(--fm);letter-spacing:1px;color:var(--text2);background:var(--bg3);transition:all .15s;text-decoration:none}
 .btn:hover{border-color:var(--gold);color:var(--gold)}
-.btn-primary{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:500}
-.btn-primary:hover{background:var(--gold2);border-color:var(--gold2);color:var(--bg)}
+.btn-gold{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:500}
+.btn-gold:hover{background:var(--gold2);border-color:var(--gold2);color:var(--bg)}
+.btn-pink{background:var(--pink);color:var(--bg);border-color:var(--pink)}
+.btn-pink:hover{opacity:.85;color:var(--bg)}
+.btn-blue{background:var(--blue);color:var(--bg);border-color:var(--blue)}
+.btn-blue:hover{opacity:.85;color:var(--bg)}
 .btn-danger{border-color:var(--red);color:var(--red)}
-.btn-danger:hover{background:rgba(201,90,90,0.1)}
-.btn-green{border-color:var(--green);color:var(--green)}
-.btn-sm{padding:5px 10px;font-size:11px}
-.inp,.ta,.sel{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;border-radius:4px;font-family:var(--fb);font-size:13px;outline:none;transition:border-color .15s}
+.btn-danger:hover{background:var(--reddim)}
+.btn-sm{padding:4px 10px;font-size:11px}
+/* INPUTS */
+.inp,.ta,.sel{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:8px 11px;border-radius:4px;font-family:var(--fb);font-size:13px;outline:none;transition:border-color .15s}
 .inp:focus,.ta:focus,.sel:focus{border-color:var(--gold)}
-.ta{resize:vertical;min-height:80px}
-.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23554f66'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
-.fg{display:flex;flex-direction:column;gap:6px}
+.ta{resize:vertical;min-height:70px}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a4560'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.fg{display:flex;flex-direction:column;gap:5px}
 .flbl{font-family:var(--fm);font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pbar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:6px}
-.pfill{height:100%;background:var(--gold);border-radius:2px;transition:width .5s}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* PROGRESS */
+.pbar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:5px}
+.pfill{height:100%;border-radius:2px;transition:width .5s;background:var(--gold)}
+.pfill.pink{background:var(--pink)}
+.pfill.blue{background:var(--blue)}
 .pfill.green{background:var(--green)}
+/* TAGS */
 .tag{display:inline-flex;align-items:center;font-family:var(--fm);font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:999px;text-transform:uppercase}
-.tag-gold{background:var(--golddim);color:var(--gold);border:1px solid rgba(201,168,76,0.2)}
-.tag-green{background:rgba(76,175,130,0.1);color:var(--green);border:1px solid rgba(76,175,130,0.2)}
-.tag-blue{background:rgba(90,138,201,0.1);color:var(--blue);border:1px solid rgba(90,138,201,0.2)}
-.tag-red{background:rgba(201,90,90,0.1);color:var(--red);border:1px solid rgba(201,90,90,0.2)}
+.tg{background:var(--golddim);color:var(--gold);border:1px solid rgba(201,168,76,0.2)}
+.tp{background:var(--pinkdim);color:var(--pink);border:1px solid rgba(232,111,160,0.2)}
+.tb{background:var(--bluedim);color:var(--blue);border:1px solid rgba(90,138,201,0.2)}
+.tr{background:var(--reddim);color:var(--red);border:1px solid rgba(201,90,90,0.2)}
+.tgr{background:var(--greendim);color:var(--green);border:1px solid rgba(76,175,130,0.2)}
+.tpu{background:var(--purpledim);color:var(--purple);border:1px solid rgba(155,111,201,0.2)}
+/* HEATMAP */
 .heatmap{display:flex;gap:3px;flex-wrap:wrap}
-.hd{width:14px;height:14px;border-radius:2px;background:var(--bg3)}
-.hd.l1{background:rgba(201,168,76,0.25)}.hd.l2{background:rgba(201,168,76,0.55)}.hd.l3{background:var(--gold)}
-.modal-ov{display:none;position:fixed;inset:0;background:rgba(8,8,16,.88);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-ov.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:28px;width:90%;max-width:560px;max-height:90vh;overflow-y:auto}
-.modal-lg{max-width:700px}
-.modal-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
-.modal-title{font-family:var(--fd);font-size:18px;color:var(--gold2)}
-.close-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px;line-height:1;padding:2px}
-.close-btn:hover{color:var(--text)}
-.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.hd{width:13px;height:13px;border-radius:2px;background:var(--bg3)}
+.hd.l1{background:rgba(201,168,76,0.2)}.hd.l2{background:rgba(201,168,76,0.5)}.hd.l3{background:var(--gold)}
+.hd.p1{background:rgba(232,111,160,0.2)}.hd.p2{background:rgba(232,111,160,0.5)}.hd.p3{background:var(--pink)}
+/* MODALS */
+.mov{display:none;position:fixed;inset:0;background:rgba(7,7,15,.9);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:26px;width:90%;max-width:580px;max-height:92vh;overflow-y:auto}
+.modal-lg{max-width:720px}
+.mhdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.mtitle{font-family:var(--fd);font-size:17px;color:var(--gold2)}
+.mtitle.pink{color:var(--pink)}
+.xbtn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px;line-height:1;padding:2px}
+.xbtn:hover{color:var(--text)}
+/* GALLERY */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
 .gc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s}
 .gc:hover{border-color:var(--gold);transform:translateY(-2px)}
-.gt{height:140px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center}
+.gc.pink:hover{border-color:var(--pink)}
+.gt{height:130px;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center}
 .gt img,.gt video{width:100%;height:100%;object-fit:cover}
-.gi{padding:10px 12px}
-.gi-title{font-size:13px;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gi-meta{font-family:var(--fm);font-size:10px;color:var(--text3)}
-.chat-area{display:flex;flex-direction:column;height:calc(100vh - 170px);min-height:500px}
-.chat-msgs{flex:1;overflow-y:auto;padding:16px 0;display:flex;flex-direction:column;gap:16px}
-.chat-msg{display:flex;gap:12px;align-items:flex-start}
-.chat-msg.user{flex-direction:row-reverse}
-.chat-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
-.chat-av.sensei{background:var(--golddim);border:1px solid rgba(201,168,76,0.3);color:var(--gold)}
-.chat-av.user{background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
-.chat-bub{max-width:78%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;font-size:13px;line-height:1.75;white-space:pre-wrap}
-.chat-bub.sensei{border-color:rgba(201,168,76,0.15);background:rgba(201,168,76,0.04)}
-.chat-inp-area{padding-top:14px;border-top:1px solid var(--border)}
-.timer-disp{font-family:var(--fm);font-size:56px;color:var(--gold);text-align:center;letter-spacing:4px;line-height:1}
-.timer-disp.urgent{color:var(--red);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
-.skill-node{padding:12px 14px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);transition:all .2s}
-.skill-node:hover{border-color:var(--gold)}
-.skill-node.mastered{border-color:rgba(201,168,76,0.4);background:var(--golddim)}
-.je{border-left:2px solid var(--border2);padding:0 0 20px 18px;position:relative;margin-bottom:4px}
+.gi{padding:9px 11px}
+.gi-t{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gi-m{font-family:var(--fm);font-size:9px;color:var(--text3);margin-top:2px}
+/* CHAT */
+.chat-area{display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:480px}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px 0;display:flex;flex-direction:column;gap:14px}
+.cmsg{display:flex;gap:10px;align-items:flex-start}
+.cmsg.user{flex-direction:row-reverse}
+.cav{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+.cav.sensei{background:var(--golddim);border:1px solid rgba(201,168,76,0.3);color:var(--gold)}
+.cav.user{background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
+.cbub{max-width:80%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;font-size:13px;line-height:1.75;white-space:pre-wrap}
+.cbub.sensei{border-color:rgba(201,168,76,0.12);background:rgba(201,168,76,0.03)}
+/* TIMER */
+.tdisp{font-family:var(--fm);font-size:52px;color:var(--gold);text-align:center;letter-spacing:4px;line-height:1}
+.tdisp.urgent{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+/* PROJECT */
+.proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px;transition:all .2s;cursor:pointer}
+.proj-card:hover{border-color:var(--border2)}
+.asset-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:4px;background:var(--bg3);margin-bottom:6px;transition:all .15s}
+.asset-row:hover{background:var(--bg4)}
+.asset-row.done{opacity:.5}
+/* YUURA */
+.yuura-banner{background:linear-gradient(135deg,rgba(232,111,160,0.08),rgba(155,111,201,0.08));border:1px solid rgba(232,111,160,0.2);border-radius:var(--r);padding:20px;margin-bottom:20px;text-align:center}
+.yuura-title{font-family:var(--fd);font-size:22px;color:var(--pink);margin-bottom:4px}
+.yuura-sub{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase}
+/* SKILL */
+.sk-node{padding:11px 13px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);transition:all .2s;margin-bottom:8px}
+.sk-node.mastered{border-color:rgba(201,168,76,0.35);background:var(--golddim)}
+/* JOURNAL */
+.je{border-left:2px solid var(--border2);padding:0 0 18px 16px;position:relative}
 .je::before{content:'';position:absolute;left:-5px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--bg2);border:2px solid var(--border2)}
-.je.hw::before{border-color:var(--gold);background:var(--golddim)}
-.je-date{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:6px}
-.je-title{font-family:var(--fd);font-size:15px;color:var(--text);margin-bottom:6px}
-.task-card{border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);padding:16px 18px;margin-bottom:10px;transition:border-color .2s}
-.task-card.active{border-color:rgba(201,168,76,0.4);background:var(--golddim)}
-.task-card.done{opacity:0.5}
-.upload-zone{border:1px dashed var(--border2);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s}
-.upload-zone:hover,.upload-zone.dragover{border-color:var(--gold);background:var(--golddim)}
-.grade-circle{width:80px;height:80px;border-radius:50%;border:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--golddim)}
-.grade-letter{font-family:var(--fd);font-size:28px;color:var(--gold);line-height:1}
-.grade-score{font-family:var(--fm);font-size:9px;color:var(--text3)}
-.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px}
-.tab-btn{padding:10px 18px;cursor:pointer;font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);border:none;background:none;border-bottom:2px solid transparent;transition:all .15s}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.stars{display:flex;gap:4px}
-.star{font-size:22px;cursor:pointer;color:var(--border2);transition:color .1s}
-.star.active{color:var(--gold)}
-.wk-card{border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);margin-bottom:10px;overflow:hidden}
-.wk-card.cur{border-color:rgba(201,168,76,0.4)}
-.wk-hdr{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer}
-.wk-num{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3)}
-.wk-num.done{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-.wk-num.cur{border-color:var(--gold);color:var(--gold)}
-.wk-body{padding:0 18px 16px 64px;display:none}
-.wk-body.open{display:block}
-.hl-box{background:var(--golddim);border:1px solid rgba(201,168,76,0.2);border-radius:var(--r);padding:14px 16px}
-.green-box{background:rgba(76,175,130,0.07);border:1px solid rgba(76,175,130,0.2);border-radius:var(--r);padding:14px 16px}
-.red-box{background:rgba(201,90,90,0.07);border:1px solid rgba(201,90,90,0.2);border-radius:var(--r);padding:14px 16px}
-.divider{height:1px;background:var(--border);margin:16px 0}
-.empty{text-align:center;padding:48px 20px;color:var(--text3)}
-.empty-icon{font-size:40px;margin-bottom:12px;opacity:.4}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.fade-in{animation:fadeIn .3s ease}
-.menu-toggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:20px}
-@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}.menu-toggle{display:block}.g2{grid-template-columns:1fr}}
+.je.gold::before{border-color:var(--gold);background:var(--golddim)}
+.je.pink::before{border-color:var(--pink);background:var(--pinkdim)}
+.je.blue::before{border-color:var(--blue);background:var(--bluedim)}
+.je-date{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.je-title{font-family:var(--fd);font-size:14px;color:var(--text);margin-bottom:5px}
+/* STARS */
+.stars{display:flex;gap:3px}
+.star{font-size:20px;cursor:pointer;color:var(--border2);transition:color .1s}
+.star.on{color:var(--gold)}
+/* UPLOAD ZONE */
+.upzone{border:1px dashed var(--border2);border-radius:var(--r);padding:30px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.upzone:hover,.upzone.over{border-color:var(--gold);background:var(--golddim)}
+/* MISC */
+.divider{height:1px;background:var(--border);margin:14px 0}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.ei{font-size:36px;margin-bottom:10px;opacity:.35}
+.hlbox{background:var(--golddim);border:1px solid rgba(201,168,76,0.18);border-radius:var(--r);padding:13px 15px}
+.pinkbox{background:var(--pinkdim);border:1px solid rgba(232,111,160,0.2);border-radius:var(--r);padding:13px 15px}
+.bluebox{background:var(--bluedim);border:1px solid rgba(90,138,201,0.2);border-radius:var(--r);padding:13px 15px}
+.greenbox{background:var(--greendim);border:1px solid rgba(76,175,130,0.2);border-radius:var(--r);padding:13px 15px}
+.redbox{background:var(--reddim);border:1px solid rgba(201,90,90,0.2);border-radius:var(--r);padding:13px 15px}
+/* FLOATING TIMER */
+#ft{display:none;position:fixed;bottom:22px;right:22px;z-index:200;background:var(--bg2);border:1px solid var(--gold);border-radius:var(--r);padding:14px 16px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+/* RESPONSIVE */
+.mtoggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:20px}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}.mtoggle{display:block}}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadein .3s ease}
+
+/* PRIORITY COLORS */
+.pri-high{color:var(--red)}
+.pri-med{color:var(--gold)}
+.pri-low{color:var(--green)}
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="sidebar" id="sidebar">
-    <div class="logo-wrap">
-      <div class="logo">riyantomo37</div>
-      <div class="logo-sub">Drawing Progress</div>
-    </div>
-    <div class="nav-sec">
-      <div class="nav-lbl">Utama</div>
-      <button class="nav-item active" onclick="goTo('dashboard')"><span class="nav-icon">⌂</span>Dashboard</button>
-      <button class="nav-item" onclick="goTo('journal')"><span class="nav-icon">✍</span>Jurnal</button>
-      <button class="nav-item" onclick="goTo('portfolio')"><span class="nav-icon">◈</span>Portofolio</button>
-    </div>
-    <div class="nav-sec">
-      <div class="nav-lbl">Belajar</div>
-      <button class="nav-item" onclick="goTo('curriculum')"><span class="nav-icon">◎</span>Kurikulum</button>
-      <button class="nav-item" onclick="goTo('tasks')"><span class="nav-icon">✦</span>Tugas <span class="nav-badge" id="badge-tasks">0</span></button>
-      <button class="nav-item" onclick="goTo('sensei')"><span class="nav-icon">◉</span>Sensei AI</button>
-    </div>
-    <div class="nav-sec">
-      <div class="nav-lbl">Skill</div>
-      <button class="nav-item" onclick="goTo('skills')"><span class="nav-icon">◆</span>Skill Tree</button>
-    </div>
-    <div class="sidebar-footer">
-      <div class="streak-widget">
-        <div class="streak-num" id="sb-streak">0</div>
-        <div class="streak-lbl">Hari streak aktif</div>
-      </div>
-      <div style="display:flex;gap:6px;margin-top:10px">
-        <button class="btn btn-sm" style="flex:1;font-size:9px;padding:5px" onclick="exportData()">⬇ Backup</button>
-        <button class="btn btn-sm" style="flex:1;font-size:9px;padding:5px" onclick="document.getElementById('importFile').click()">⬆ Restore</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      </div>
-    </div>
-  </aside>
 
-  <div class="main">
-    <div class="topbar">
-      <div style="display:flex;align-items:center;gap:12px">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <div>
-          <div style="font-family:var(--fd);font-size:15px;color:var(--gold);letter-spacing:1px">riyantomo37</div>
-          <div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase" id="topbar-sub">Portfolio Progress</div>
-        </div>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-wrap">
+    <div class="logo">riyantomo37</div>
+    <div class="logo-sub">Creative Studio</div>
+  </div>
+
+  <div class="nav-sec">
+    <div class="nav-lbl">Overview</div>
+    <button class="ni active" onclick="go('home')"><span class="ni-icon">⌂</span>Dashboard</button>
+    <button class="ni" onclick="go('journal')"><span class="ni-icon">✍</span>Jurnal</button>
+  </div>
+
+  <div class="nav-sec">
+    <div class="nav-lbl">Belajar Gambar</div>
+    <button class="ni" onclick="go('learn')"><span class="ni-icon">◎</span>Kurikulum</button>
+    <button class="ni" onclick="go('tasks')"><span class="ni-icon">✦</span>Tugas <span class="ni-badge badge-gold" id="badge-tasks">0</span></button>
+    <button class="ni" onclick="go('skills')"><span class="ni-icon">◆</span>Skill Tree</button>
+    <button class="ni" onclick="go('sensei')"><span class="ni-icon">◉</span>Sensei AI</button>
+  </div>
+
+  <div class="nav-sec">
+    <div class="nav-lbl">Projects</div>
+    <button class="ni blue" onclick="go('projects')"><span class="ni-icon">◈</span>Project Tracker <span class="ni-badge badge-blue" id="badge-proj">0</span></button>
+  </div>
+
+  <div class="nav-sec">
+    <div class="nav-lbl">Yuura Yozakura</div>
+    <button class="ni pink" onclick="go('yuura')"><span class="ni-icon">✿</span>Galeri Dedikasi <span class="ni-badge badge-pink" id="badge-yuura">0</span></button>
+    <button class="ni pink" onclick="go('yuura-tasks')"><span class="ni-icon">♡</span>Yuura Tasks</button>
+  </div>
+
+  <div class="sb-footer">
+    <div class="streak-w">
+      <div class="streak-n" id="sb-streak">0</div>
+      <div class="streak-l">Hari streak aktif</div>
+    </div>
+    <div style="display:flex;gap:5px">
+      <button class="btn btn-sm" style="flex:1;font-size:9px;padding:4px" onclick="exportData()">⬇ Backup</button>
+      <button class="btn btn-sm" style="flex:1;font-size:9px;padding:4px" onclick="document.getElementById('importF').click()">⬆ Restore</button>
+      <input type="file" id="importF" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="mtoggle" onclick="toggleSB()">☰</button>
+      <div>
+        <div style="font-family:var(--fd);font-size:14px;color:var(--gold);letter-spacing:1px">riyantomo37</div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase" id="topbar-sub">Creative Studio</div>
       </div>
     </div>
-    <div class="page-content fade-in" id="app"></div>
+    <div style="font-family:var(--fm);font-size:10px;color:var(--text3)" id="topbar-date"></div>
   </div>
+  <div class="content fadein" id="app"></div>
+</div>
 </div>
 
 <!-- MODALS -->
-<div class="modal-ov" id="m-submit">
-  <div class="modal modal-lg">
-    <div class="modal-hdr">
-      <div class="modal-title" id="m-submit-title">Kumpulkan Tugas</div>
-      <button class="close-btn" onclick="closeM('m-submit')">×</button>
-    </div>
-    <div id="m-submit-body"></div>
-  </div>
-</div>
-
-<div class="modal-ov" id="m-grade">
-  <div class="modal modal-lg">
-    <div class="modal-hdr">
-      <div class="modal-title">Hasil Penilaian Sensei ✦</div>
-      <button class="close-btn" onclick="closeM('m-grade')">×</button>
-    </div>
-    <div id="m-grade-body"></div>
-  </div>
-</div>
-
-<div class="modal-ov" id="m-work">
-  <div class="modal modal-lg">
-    <div class="modal-hdr">
-      <div class="modal-title" id="m-work-title">Karya</div>
-      <button class="close-btn" onclick="closeM('m-work')">×</button>
-    </div>
-    <div id="m-work-body"></div>
-  </div>
-</div>
+<div class="mov" id="m-submit"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle" id="m-submit-t">Kumpulkan Tugas</div><button class="xbtn" onclick="closeM('m-submit')">×</button></div><div id="m-submit-b"></div></div></div>
+<div class="mov" id="m-grade"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle">Hasil Penilaian ✦</div><button class="xbtn" onclick="closeM('m-grade')">×</button></div><div id="m-grade-b"></div></div></div>
+<div class="mov" id="m-work"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle" id="m-work-t">Karya</div><button class="xbtn" onclick="closeM('m-work')">×</button></div><div id="m-work-b"></div></div></div>
+<div class="mov" id="m-addproj"><div class="modal"><div class="mhdr"><div class="mtitle blue">Buat Project Baru</div><button class="xbtn" onclick="closeM('m-addproj')">×</button></div><div id="m-addproj-b"></div></div></div>
+<div class="mov" id="m-proj"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle blue" id="m-proj-t">Project</div><button class="xbtn" onclick="closeM('m-proj')">×</button></div><div id="m-proj-b"></div></div></div>
+<div class="mov" id="m-addasset"><div class="modal"><div class="mhdr"><div class="mtitle blue">Tambah Asset</div><button class="xbtn" onclick="closeM('m-addasset')">×</button></div><div id="m-addasset-b"></div></div></div>
+<div class="mov" id="m-yuura"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle pink">Upload Karya Yuura</div><button class="xbtn" onclick="closeM('m-yuura')">×</button></div><div id="m-yuura-b"></div></div></div>
+<div class="mov" id="m-viewyuura"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle pink" id="m-vy-t">Karya</div><button class="xbtn" onclick="closeM('m-viewyuura')">×</button></div><div id="m-vy-b"></div></div></div>
+<div class="mov" id="m-aiproj"><div class="modal modal-lg"><div class="mhdr"><div class="mtitle blue">AI Project Manager ◈</div><button class="xbtn" onclick="closeM('m-aiproj')">×</button></div><div id="m-aiproj-b"></div></div></div>
 
 <!-- FLOATING TIMER -->
-<div id="ft" style="display:none;position:fixed;bottom:24px;right:24px;z-index:200;background:var(--bg2);border:1px solid var(--gold);border-radius:var(--r);padding:14px 18px;min-width:210px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
-  <div style="font-family:var(--fm);font-size:10px;color:var(--text3);margin-bottom:4px" id="ft-name">Sesi Latihan</div>
-  <div class="timer-disp" id="ft-disp" style="font-size:38px">25:00</div>
-  <div style="display:flex;gap:8px;margin-top:10px">
-    <button class="btn btn-sm btn-primary" onclick="toggleTimer()" id="ft-btn">▶ Mulai</button>
+<div id="ft">
+  <div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-bottom:3px" id="ft-name">Sesi Latihan</div>
+  <div class="tdisp" id="ft-disp" style="font-size:34px">25:00</div>
+  <div style="display:flex;gap:6px;margin-top:8px">
+    <button class="btn btn-sm btn-gold" onclick="toggleTimer()" id="ft-btn">▶ Mulai</button>
     <button class="btn btn-sm" onclick="resetTimer()">↺</button>
     <button class="btn btn-sm" onclick="document.getElementById('ft').style.display='none'">×</button>
   </div>
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
-const GEMINI_API_KEY = "AIzaSyD2wAEkT79SE2GHVhUxCwoeu52CHkHQeoY";
+// ══════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════
+const GEMINI_API_KEY = "AQ.Ab8RN6IY3lIQXwGrWpSYrMA3VlSR4sw4sORLHuNUFV3VpKDPwQ";
+const GEMINI_MODEL = "gemini-2.0-flash-lite";
 
-// ─── DB ───────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// DB
+// ══════════════════════════════════════════════════
 const DB = {
-  get(k,d=null){try{const v=localStorage.getItem('atelier_'+k);return v?JSON.parse(v):d}catch{return d}},
-  set(k,v){try{localStorage.setItem('atelier_'+k,JSON.stringify(v))}catch{alert('Storage penuh! Backup dulu.')}}
+  get(k,d=null){try{const v=localStorage.getItem('cs_'+k);return v?JSON.parse(v):d}catch{return d}},
+  set(k,v){try{localStorage.setItem('cs_'+k,JSON.stringify(v))}catch{alert('Storage penuh! Backup dulu.')}}
 };
 
-// ─── STATE ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
 const S = {
-  works:    DB.get('works',[]),
-  journal:  DB.get('journal',[]),
-  tasks:    DB.get('tasks',[]),
-  subs:     DB.get('subs',{}),
-  skills:   DB.get('skills',{}),
-  goals:    DB.get('goals',[]),
-  streak:   DB.get('streak',[]),
-  chat:     DB.get('chat',[]),
-  week:     DB.get('week',1),
-  apiKey:   DB.get('apiKey',''),
-  timerSec: 25*60,
-  timerOn:  false,
-  timerIv:  null,
-  timerName:'Sesi Latihan',
-  rating:   0,
-  subFiles: [],
-  subWeek:  1,
-  page:     'dashboard'
+  // Learning
+  works:   DB.get('works',[]),
+  journal: DB.get('journal',[]),
+  tasks:   DB.get('tasks',[]),
+  subs:    DB.get('subs',{}),
+  skills:  DB.get('skills',{}),
+  goals:   DB.get('goals',[]),
+  streak:  DB.get('streak',[]),
+  chat:    DB.get('chat',[]),
+  week:    DB.get('week',1),
+  // Projects
+  projects: DB.get('projects',[]),
+  // Yuura
+  yuura:   DB.get('yuura',[]),
+  yuuraChat: DB.get('yuuraChat',[]),
+  yuuraTasks: DB.get('yuuraTasks',[]),
+  // Timer
+  timerSec: 1500, timerOn: false, timerIv: null, timerName: 'Sesi Latihan',
+  // UI
+  page: 'home', rating: 0,
+  subFiles: [], subWeek: 1,
+  yuuraFiles: [], yuuraRating: 0,
+  activeProjectId: null
 };
-function sv(k){DB.set(k,S[k])}
+function sv(k){DB.set(k,S[k]);}
 
-// ─── GEMINI ───────────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// GEMINI API
+// ══════════════════════════════════════════════════
 function getKey(){
-  const k = (GEMINI_API_KEY && GEMINI_API_KEY !== 'PASTE_GEMINI_KEY_DISINI') ? GEMINI_API_KEY : S.apiKey;
-  if(!k) throw new Error('API key kosong! Isi di baris GEMINI_API_KEY di kode HTML.');
+  const k = (GEMINI_API_KEY && GEMINI_API_KEY !== 'PASTE_KEY') ? GEMINI_API_KEY : S.apiKey;
+  if(!k) throw new Error('API key kosong!');
   return k;
 }
+const GURL = () => 'https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent?key='+getKey();
 
-async function gemini(userParts, system, maxTok=1000){
-  const key = getKey();
+async function gemini(parts, sys='', maxTok=1000){
   const contents = [];
-  if(system){
-    contents.push({role:'user',parts:[{text:'Instruksi sistem:\n'+system}]});
-    contents.push({role:'model',parts:[{text:'Siap, saya mengerti.'}]});
-  }
-  contents.push({role:'user',parts:userParts});
-  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})
-  });
+  if(sys){contents.push({role:'user',parts:[{text:'Sistem:\n'+sys}]});contents.push({role:'model',parts:[{text:'Siap.'}]});}
+  contents.push({role:'user',parts});
+  const r = await fetch(GURL(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})});
   const d = await r.json();
   if(d.error) throw new Error(d.error.message);
-  return d.candidates?.[0]?.content?.parts?.[0]?.text||'Tidak ada respons.';
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
 
-async function geminiChat(history, system, maxTok=1000){
-  const key = getKey();
-  const contents = [];
-  if(system){
-    contents.push({role:'user',parts:[{text:'Instruksi sistem:\n'+system}]});
-    contents.push({role:'model',parts:[{text:'Siap.'}]});
-  }
+async function geminiChat(history, sys='', maxTok=1000){
+  const contents=[];
+  if(sys){contents.push({role:'user',parts:[{text:'Sistem:\n'+sys}]});contents.push({role:'model',parts:[{text:'Siap.'}]});}
   for(const m of history){
     const parts=[];
     if(m.img){const b=m.img.split(',')[1],mt=m.img.split(';')[0].split(':')[1];parts.push({inlineData:{mimeType:mt,data:b}});}
     if(m.text) parts.push({text:m.text});
-    if(parts.length) contents.push({role:m.role==='sensei'?'model':'user',parts});
+    if(parts.length) contents.push({role:m.role==='ai'?'model':'user',parts});
   }
-  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})
-  });
+  const r = await fetch(GURL(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}})});
   const d = await r.json();
   if(d.error) throw new Error(d.error.message);
-  return d.candidates?.[0]?.content?.parts?.[0]?.text||'Tidak ada respons.';
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
 
-// ─── CURRICULUM ───────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// CURRICULUM
+// ══════════════════════════════════════════════════
 const CUR = [
-  {w:1,title:'Garis, Ellips & Kotak',desc:'Fondasi absolut menggambar — kontrol alat tulis seperti seniman pro',ref:'Drawabox Lesson 1 · Peter Han Dynamic Sketching',
-   lessons:['Ghost Method: gerakan bebas sebelum gores kertas','Garis lurus dengan elbow pivot, bukan wrist','Ellips: degree & orientation','Kotak 2-point perspective, line weight variation','Hatching paralel: spacing konsisten'],
-   exs:[{t:'250 Garis Lurus',d:30,desc:'250 garis lurus dari A ke B. Kecepatan = kelurusan.'},{t:'100 Ellips',d:20,desc:'50 ellips bebas + 50 dalam kotak.'},{t:'Kotak Perspektif',d:25,desc:'30 kotak random 2-point tanpa penggaris.'}],
-   asgn:{title:'250 Box Challenge (Mini)',desc:'Gambar 50 kotak 3D perspektif bebas, ghost method, tandai vanishing points.',rubric:['Konsistensi line weight','Konvergensi vanishing point','Variasi ukuran & sudut','Kebersihan garis'],days:7}},
-  {w:2,title:'Proporsi & Sight-Sizing',desc:'Lihat dunia dengan mata seniman',ref:'Betty Edwards · Sight-Size Method',
-   lessons:['Negative space drawing','Blind contour drawing','Sight-sizing: pensil sebagai alat ukur','Plumb lines & angles','Proportion comparison'],
-   exs:[{t:'Negative Space Chair',d:20,desc:'Gambar hanya ruang kosong di dalam/sekitar kursi.'},{t:'Blind Contour 5x',d:15,desc:'Gambar tangan tanpa lihat kertas.'},{t:'Still Life Terukur',d:40,desc:'3 benda dengan sight-sizing.'}],
-   asgn:{title:'Studi Benda Terukur',desc:'3 objek berbeda ukuran, gambar dengan sight-sizing + foto referensi.',rubric:['Akurasi proporsi','Negative space','Plumb lines','Foto referensi'],days:7}},
-  {w:3,title:'Value, Cahaya & Bayangan',desc:'Ilusi 3D dengan tonal — teknik shading master',ref:'James Gurney · Watts Atelier · Proko',
-   lessons:['Value scale 10 level','Form shadow vs Cast shadow','Terminator line','Occlusion shadow','Reflected light','5-value approach'],
-   exs:[{t:'Value Scale 10 Level',d:15,desc:'10 kotak putih ke hitam, gradasi smooth.'},{t:'Sphere Shading × 3',d:30,desc:'3 bola, sumber cahaya berbeda, 5 zone.'},{t:'Kubus & Silinder',d:25,desc:'3 value plane jelas di tiap bentuk.'}],
-   asgn:{title:'Still Life 3-Value & 5-Value',desc:'1 still life dua kali: versi 3-value dan versi 5-value lengkap.',rubric:['Terminasi cahaya jelas','Reflected light ada','Cast shadow akurat','Gradasi smooth'],days:7}},
-  {w:4,title:'Gesture & Line of Action',desc:'Menangkap kehidupan dan energi tubuh',ref:'Proko · Vilppu · Hampton',
-   lessons:['Line of Action','C-curve & S-curve poses','Gesture vs Contour','30-second gesture','Proporsi 7.5 kepala','Rhythm line'],
-   exs:[{t:'30-sec Gestures × 20',d:25,desc:'20 pose dari line-of-action.com, fokus C/S curve.'},{t:'2-min Poses × 10',d:25,desc:'10 pose, mulai dari line of action.'},{t:'Mannequin × 5',d:30,desc:'5 figur 7.5 kepala penuh.'}],
-   asgn:{title:'Lembar Gesture 30 Pose',desc:'Isi A4 penuh 30 gesture 30-detik dari referensi nyata.',rubric:['Line of action dinamis','C/S curve teridentifikasi','Volume terbaca','30 pose penuh'],days:7}},
-  {w:5,title:'Kepala & Wajah (Loomis)',desc:'Konstruksi kepala yang tepat secara anatomi',ref:'Andrew Loomis · Proko · Bridgman',
-   lessons:['Loomis head: bola + plane potong','Thirds wajah','Penempatan mata','Hidung konstruktif','Mulut & bibir','Telinga','Head turns 4 sudut'],
-   exs:[{t:'Loomis Ball × 10',d:25,desc:'10 kepala Loomis berbeda sudut, hanya konstruksi.'},{t:'Feature Placement × 5',d:30,desc:'5 kepala + fitur dengan aturan thirds.'},{t:'Self Portrait',d:45,desc:'Cermin/foto diri, Loomis method.'}],
-   asgn:{title:'Portrait 3/4 View — Loomis',desc:'Portrait 3/4 dari referensi nyata, tampilkan garis konstruksi + foto referensi.',rubric:['Loomis construction terlihat','Fitur thirds benar','3/4 skull akurat','Foto referensi'],days:7}},
-  {w:6,title:'Character Design',desc:'Karakter orisinal dengan silhouette kuat',ref:'Stephen Silver · Disney · Character Design Quarterly',
-   lessons:['Silhouette readability','Shape language: square/circle/triangle','Thumbnail 20 sketches','Character archetypes','Costume & props','Anime vs Western proportion'],
-   exs:[{t:'20 Silhouette',d:30,desc:'20 silhouette hitam, cari bentuk menarik.'},{t:'Shape Language × 3',d:25,desc:'Karakter sama dalam 3 versi: square, circle, triangle.'},{t:'Turn-Around',d:60,desc:'1 karakter, 4 sudut: front/3/4/side/back.'}],
-   asgn:{title:'Karakter Orisinal — Turnaround',desc:'1 karakter orisinal front + 3/4 view + color flat. Ceritakan konsepnya.',rubric:['Silhouette terbaca','Shape language konsisten','Proporsi konsisten','Konsep diceritakan'],days:14}},
-  {w:7,title:'Anatomi: Torso & Tangan',desc:'Anatomi fungsional ala Bridgman',ref:'Bridgman · Proko Anatomy · Hampton',
-   lessons:['Bridgman blocks: chest-abdomen-pelvis','Rib cage egg shape','Pelvis bucket & tilt','Spinal rhythm','Tangan: kotak telapak + jari','Gesture tangan'],
-   exs:[{t:'Bridgman Torso × 8',d:35,desc:'8 torso 3-block, rib cage-pelvis angle.'},{t:'Hand Study × 10',d:40,desc:'Tangan sendiri 10 pose, mulai dari kotak telapak.'},{t:'Contrapposto Figure',d:45,desc:'1 figur contrapposto, shoulder-hip counter-tilt.'}],
-   asgn:{title:'Studi Tangan & Torso',desc:'6 pose tangan + 2 torso dari referensi, tampilkan konstruksi.',rubric:['Kotak telapak tangan','Torso Bridgman blocks','Contrapposto tilt','Konstruksi tidak dihapus'],days:7}},
-  {w:8,title:'Anime & Manga Style',desc:'Teknik resmi dari studio Shonen Jump',ref:'Shogakukan Manga Guide · Yusuke Murata · Studio Ghibli',
-   lessons:['Anime head: chin pointed, eyes 1/4 face','Eye anatomy manga','Anime proportion 6-7 head','Clean lineart technique','Speed lines & motion blur','Panel composition','SD/Chibi'],
-   exs:[{t:'Anime Eye × 10',d:25,desc:'10 mata anime berbeda style: shonen, shojo, realistic.'},{t:'Anime Head × 6 Angles',d:30,desc:'6 sudut dengan face-cross guide.'},{t:'Full Anime Character',d:60,desc:'1 karakter full body clean lineart.'}],
-   asgn:{title:'Anime Character — Clean Lineart',desc:'1 karakter anime full body clean lineart, tampilkan garis konstruksi.',rubric:['Proporsi anime konsisten','Clean lineart','Eye construction akurat','Silhouette terbaca'],days:7}}
+  {w:1,title:'Garis, Ellips & Kotak',ref:'Drawabox · Peter Han',desc:'Fondasi absolut — kontrol alat tulis seperti pro',
+   lessons:['Ghost Method: gerakan bebas sebelum gores','Garis lurus dengan elbow pivot','Ellips: degree & orientation','Kotak 2-point perspective','Hatching paralel konsisten'],
+   exs:[{t:'250 Garis Lurus',d:30,desc:'250 garis A ke B. Kecepatan = kelurusan.'},{t:'100 Ellips',d:20,desc:'50 bebas + 50 dalam kotak.'},{t:'Kotak Perspektif',d:25,desc:'30 kotak random 2-point.'}],
+   asgn:{title:'250 Box Challenge Mini',desc:'50 kotak 3D, ghost method, tandai vanishing points.',rubric:['Line weight konsisten','Konvergensi vanishing point','Variasi ukuran','Kebersihan garis'],days:7}},
+  {w:2,title:'Proporsi & Sight-Sizing',ref:'Betty Edwards · Sight-Size',desc:'Lihat dunia dengan mata seniman',
+   lessons:['Negative space drawing','Blind contour drawing','Sight-sizing: pensil sebagai ukuran','Plumb lines & angles','Proportion comparison'],
+   exs:[{t:'Negative Space Chair',d:20,desc:'Gambar ruang kosong di sekitar kursi.'},{t:'Blind Contour 5x',d:15,desc:'Tangan tanpa lihat kertas.'},{t:'Still Life Terukur',d:40,desc:'3 benda dengan sight-sizing.'}],
+   asgn:{title:'Studi Benda Terukur',desc:'3 objek, gambar dengan sight-sizing + foto referensi.',rubric:['Akurasi proporsi','Negative space','Plumb lines','Foto referensi'],days:7}},
+  {w:3,title:'Value, Cahaya & Bayangan',ref:'James Gurney · Proko · Watts',desc:'Ilusi 3D dengan tonal',
+   lessons:['Value scale 10 level','Form vs Cast shadow','Terminator line','Occlusion shadow','Reflected light'],
+   exs:[{t:'Value Scale',d:15,desc:'10 kotak putih ke hitam.'},{t:'Sphere Shading × 3',d:30,desc:'3 bola, 5 zone cahaya.'},{t:'Kubus & Silinder',d:25,desc:'3 value plane.'}],
+   asgn:{title:'Still Life 3-Value & 5-Value',desc:'1 still life, dua versi: 3-value & 5-value.',rubric:['Terminasi jelas','Reflected light','Cast shadow','Gradasi smooth'],days:7}},
+  {w:4,title:'Gesture & Line of Action',ref:'Proko · Vilppu · Hampton',desc:'Menangkap energi tubuh manusia',
+   lessons:['Line of Action','C-curve & S-curve poses','Gesture vs Contour','30-sec gesture','Proporsi 7.5 kepala'],
+   exs:[{t:'30-sec Gestures × 20',d:25,desc:'20 pose, fokus C/S curve.'},{t:'2-min Poses × 10',d:25,desc:'10 pose, tambah volume.'},{t:'Mannequin × 5',d:30,desc:'5 figur 7.5 kepala.'}],
+   asgn:{title:'Lembar Gesture 30 Pose',desc:'A4 penuh, 30 gesture 30-detik dari referensi nyata.',rubric:['Line of action dinamis','C/S curve','Volume terbaca','30 pose penuh'],days:7}},
+  {w:5,title:'Kepala & Wajah — Loomis',ref:'Andrew Loomis · Proko · Bridgman',desc:'Konstruksi kepala yang tepat secara anatomi',
+   lessons:['Loomis head: bola + plane potong','Thirds wajah','Penempatan mata & hidung','Mulut & telinga','Head turns 4 sudut'],
+   exs:[{t:'Loomis Ball × 10',d:25,desc:'10 kepala, berbeda sudut.'},{t:'Feature Placement × 5',d:30,desc:'5 kepala + fitur thirds.'},{t:'Self Portrait',d:45,desc:'Dari cermin/foto, Loomis method.'}],
+   asgn:{title:'Portrait 3/4 View Loomis',desc:'Portrait 3/4 dari referensi nyata, tampilkan konstruksi.',rubric:['Loomis construction terlihat','Fitur thirds benar','3/4 skull akurat','Foto referensi'],days:7}},
+  {w:6,title:'Character Design',ref:'Stephen Silver · Disney · CDQ',desc:'Karakter orisinal dengan silhouette kuat',
+   lessons:['Silhouette readability','Shape language','20 thumbnail sketches','Character archetypes','Anime vs Western proportion'],
+   exs:[{t:'20 Silhouette',d:30,desc:'20 silhouette hitam, cari bentuk menarik.'},{t:'Shape Language × 3',d:25,desc:'Square, circle, triangle version.'},{t:'Turn-Around',d:60,desc:'4 sudut konsisten.'}],
+   asgn:{title:'Karakter Orisinal Turnaround',desc:'Front + 3/4 view + color flat. Ceritakan konsepnya.',rubric:['Silhouette terbaca','Shape language','Proporsi konsisten','Konsep diceritakan'],days:14}},
+  {w:7,title:'Anatomi: Torso & Tangan',ref:'Bridgman · Proko · Hampton',desc:'Anatomi fungsional, bukan hafal nama otot',
+   lessons:['Bridgman 3-block torso','Rib cage egg shape','Pelvis bucket & tilt','Tangan: kotak telapak + jari','Gesture tangan'],
+   exs:[{t:'Bridgman Torso × 8',d:35,desc:'8 torso 3-block.'},{t:'Hand Study × 10',d:40,desc:'10 pose tangan dari tangan sendiri.'},{t:'Contrapposto Figure',d:45,desc:'Shoulder-hip counter-tilt.'}],
+   asgn:{title:'Studi Tangan & Torso',desc:'6 pose tangan + 2 torso dari referensi.',rubric:['Kotak telapak','Torso Bridgman blocks','Contrapposto','Konstruksi terlihat'],days:7}},
+  {w:8,title:'Anime & Manga Style',ref:'Shogakukan · Yusuke Murata · Ghibli',desc:'Teknik resmi studio Shonen Jump',
+   lessons:['Anime head: chin pointed, eyes 1/4 face','Eye anatomy manga','Anime proportion 6-7 head','Clean lineart','SD/Chibi proportion'],
+   exs:[{t:'Anime Eye × 10',d:25,desc:'10 mata: shonen, shojo, realistic.'},{t:'Anime Head × 6 Angles',d:30,desc:'6 sudut, face-cross guide.'},{t:'Full Anime Character',d:60,desc:'1 karakter full body clean lineart.'}],
+   asgn:{title:'Anime Character Clean Lineart',desc:'1 karakter full body, tampilkan konstruksi.',rubric:['Proporsi anime','Clean lineart','Eye construction','Silhouette terbaca'],days:7}}
 ];
 
 const SKILL_TREE = [
-  {cat:'Fundamental',ref:'Drawabox · Peter Han',skills:[
-    {k:'line',n:'Line Control',desc:'Ghost method, consistent pressure'},
-    {k:'ellipse',n:'Ellipses',desc:'Degree, orientation, ellipse in planes'},
-    {k:'perspective',n:'Perspective & Box',desc:'1pt, 2pt, 3pt, foreshortening'}]},
-  {cat:'Proporsi & Observasi',ref:'Betty Edwards · Sight-Size',skills:[
-    {k:'sight',n:'Sight-Sizing',desc:'Mengukur dengan pensil, plumb lines'},
-    {k:'negspace',n:'Negative Space',desc:'Menggambar ruang kosong'},
-    {k:'observe',n:'Observational Drawing',desc:'Akurasi dari referensi nyata'}]},
-  {cat:'Value & Cahaya',ref:'James Gurney · Proko · Watts',skills:[
-    {k:'value',n:'Value Scale',desc:'10-level value, gradasi konsisten'},
-    {k:'shadow',n:'Form & Cast Shadow',desc:'Terminasi, occlusion, reflected light'},
-    {k:'render',n:'Rendering',desc:'5-value, smooth gradation, texture'}]},
-  {cat:'Gesture & Figure',ref:'Proko · Vilppu · Hampton',skills:[
-    {k:'gesture',n:'Gesture Drawing',desc:'Line of action, C/S curve, 30-sec'},
-    {k:'figprop',n:'Figure Proportion',desc:'7.5-head, mannequin, weight balance'},
-    {k:'rhythm',n:'Figure Rhythm',desc:'Contrapposto, movement flow'}]},
-  {cat:'Kepala & Wajah',ref:'Andrew Loomis · Proko · Bridgman',skills:[
-    {k:'loomis',n:'Loomis Head',desc:'Ball + cut plane, three thirds'},
-    {k:'features',n:'Feature Placement',desc:'Akurasi posisi mata, hidung, mulut'},
-    {k:'headturns',n:'Head Angles',desc:'Front, 3/4, profile, tilts'}]},
-  {cat:'Anatomi',ref:'Bridgman · Hampton · Proko',skills:[
-    {k:'torso',n:'Torso (Bridgman)',desc:'Chest-abdomen-pelvis 3-block'},
-    {k:'hands',n:'Hands',desc:'Box palm + finger tapering'},
-    {k:'legs',n:'Legs & Feet',desc:'Femur angle, knee, foot wedge'}]},
-  {cat:'Character Design',ref:'Stephen Silver · Disney',skills:[
-    {k:'silhouette',n:'Silhouette',desc:'Readable dari bayangan hitam'},
-    {k:'shape',n:'Shape Language',desc:'Square/circle/triangle personality'},
-    {k:'chardes',n:'Character Construction',desc:'Thumbnail → refined → turnaround'}]},
-  {cat:'Anime / Manga',ref:'Shogakukan · Yusuke Murata',skills:[
-    {k:'animehead',n:'Anime Head & Face',desc:'Pointed chin, large eyes, face-cross'},
-    {k:'animeeye',n:'Manga Eye',desc:'Iris, pupil, highlight, eyelash'},
-    {k:'lineart',n:'Clean Lineart',desc:'Confident strokes, line weight variation'}]},
-  {cat:'Digital Painting',ref:'CTRL+PAINT · Marco Bucci · Sinix',skills:[
-    {k:'digibasic',n:'Digital Basics',desc:'Brush settings, opacity, pen pressure'},
-    {k:'color',n:'Color Theory',desc:'Hue, value, saturation, temperature'},
-    {k:'digirender',n:'Digital Rendering',desc:'Layer modes, blending, texture brushes'}]}
+  {cat:'Fundamental',ref:'Drawabox · Peter Han',skills:[{k:'line',n:'Line Control'},{k:'ellipse',n:'Ellipses'},{k:'persp',n:'Perspective & Box'}]},
+  {cat:'Proporsi',ref:'Betty Edwards',skills:[{k:'sight',n:'Sight-Sizing'},{k:'neg',n:'Negative Space'},{k:'obs',n:'Observational Drawing'}]},
+  {cat:'Value & Cahaya',ref:'James Gurney · Proko',skills:[{k:'value',n:'Value Scale'},{k:'shadow',n:'Form & Cast Shadow'},{k:'render',n:'Rendering'}]},
+  {cat:'Gesture & Figure',ref:'Vilppu · Hampton · Proko',skills:[{k:'gesture',n:'Gesture Drawing'},{k:'figprop',n:'Figure Proportion'},{k:'rhythm',n:'Figure Rhythm'}]},
+  {cat:'Kepala & Wajah',ref:'Loomis · Bridgman · Proko',skills:[{k:'loomis',n:'Loomis Head'},{k:'feat',n:'Feature Placement'},{k:'headturn',n:'Head Angles'}]},
+  {cat:'Anatomi',ref:'Bridgman · Hampton',skills:[{k:'torso',n:'Torso (Bridgman)'},{k:'hands',n:'Hands'},{k:'legs',n:'Legs & Feet'}]},
+  {cat:'Character Design',ref:'Stephen Silver · Disney',skills:[{k:'silh',n:'Silhouette'},{k:'shape',n:'Shape Language'},{k:'cdes',n:'Character Construction'}]},
+  {cat:'Anime / Manga',ref:'Shogakukan · Murata',skills:[{k:'animeh',n:'Anime Head'},{k:'animee',n:'Manga Eye'},{k:'lineart',n:'Clean Lineart'}]},
+  {cat:'Digital Painting',ref:'CTRL+PAINT · Marco Bucci',skills:[{k:'digi',n:'Digital Basics'},{k:'color',n:'Color Theory'},{k:'drender',n:'Digital Rendering'}]}
 ];
 
-// ─── NAV ──────────────────────────────────────────────────
-const TITLES = {dashboard:'Dashboard',journal:'Jurnal',portfolio:'Portofolio',curriculum:'Kurikulum',tasks:'Tugas & Timer',sensei:'Sensei AI',skills:'Skill Tree'};
-function goTo(page){
-  S.page = page;
-  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  const btn = document.querySelector('.nav-item[onclick="goTo(\''+page+'\')"]');
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+const TITLES = {home:'Dashboard',journal:'Jurnal',learn:'Kurikulum',tasks:'Tugas & Timer',skills:'Skill Tree',sensei:'Sensei AI',projects:'Project Tracker',yuura:'Galeri Yuura Yozakura','yuura-tasks':'Yuura Tasks'};
+
+function go(page){
+  S.page=page;
+  document.querySelectorAll('.ni').forEach(el=>el.classList.remove('active'));
+  const btn=document.querySelector('.ni[onclick="go(\''+page+'\')"]');
   if(btn) btn.classList.add('active');
-  document.getElementById('topbar-sub').textContent = TITLES[page]||page;
-  const el = document.getElementById('app');
-  el.className = 'page-content fade-in';
-  void el.offsetWidth;
-  RENDER[page]();
+  document.getElementById('topbar-sub').textContent=TITLES[page]||page;
+  const el=document.getElementById('app');
+  el.className='content fadein';void el.offsetWidth;
+  RENDER[page]?RENDER[page]():el.innerHTML='<div class="empty"><div class="ei">🚧</div><div>Halaman dalam pengembangan</div></div>';
   updateSB();
   if(window.innerWidth<768) document.getElementById('sidebar').classList.remove('open');
 }
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function toggleSB(){document.getElementById('sidebar').classList.toggle('open');}
 function updateSB(){
-  const s=calcStreak();
-  document.getElementById('sb-streak').textContent=s;
+  document.getElementById('sb-streak').textContent=calcStreak();
   document.getElementById('badge-tasks').textContent=S.tasks.filter(t=>!t.done).length;
+  document.getElementById('badge-proj').textContent=S.projects.length;
+  document.getElementById('badge-yuura').textContent=S.yuura.length;
+  const d=new Date();
+  document.getElementById('topbar-date').textContent=d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
 }
 
-// ─── HELPERS ──────────────────────────────────────────────
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function calcStreak(){
-  let c=0;const d=new Date();
-  while(true){const ds=d.toISOString().slice(0,10);if(S.streak.includes(ds)){c++;d.setDate(d.getDate()-1)}else break;}
-  return c;
-}
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function set(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function calcStreak(){let c=0;const d=new Date();while(true){const ds=d.toISOString().slice(0,10);if(S.streak.includes(ds)){c++;d.setDate(d.getDate()-1)}else break;}return c;}
 function addStreak(){const t=new Date().toISOString().slice(0,10);if(!S.streak.includes(t)){S.streak.push(t);sv('streak');}updateSB();}
-function openM(id){document.getElementById(id).classList.add('open')}
-function closeM(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll('.modal-ov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open')}));
+function today(){return new Date().toISOString().slice(0,10);}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
 function previewFull(src){
   const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:2000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
   ov.onclick=()=>document.body.removeChild(ov);
   const img=document.createElement('img');img.src=src;img.style.cssText='max-width:95vw;max-height:95vh;border-radius:4px';
   ov.appendChild(img);document.body.appendChild(ov);
 }
-function setRating(n){
-  S.rating=n;
-  document.querySelectorAll('#stars .star').forEach((s,i)=>s.classList.toggle('active',i<n));
-}
+function readFile(file){return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(file);});}
 
-// ─── RENDER PAGES ─────────────────────────────────────────
+// ══════════════════════════════════════════════════
+// RENDER: HOME DASHBOARD
+// ══════════════════════════════════════════════════
 const RENDER = {
-  dashboard(){
+  home(){
     const streak=calcStreak();
-    const mins=S.works.reduce((a,w)=>a+(parseInt(w.duration)||0),0);
+    const mins=S.works.reduce((a,w)=>a+(parseInt(w.duration)||0),0)+Object.values(S.subs).reduce((a,s)=>a+(parseInt(s.duration)||0),0);
     const subCount=Object.keys(S.subs).length;
     const grades=Object.values(S.subs).filter(s=>s.total);
     const avg=grades.length?Math.round(grades.reduce((a,s)=>a+s.total,0)/grades.length):null;
+    const pendingAssets=S.projects.reduce((a,p)=>a+p.assets.filter(x=>!x.done).length,0);
     const week=CUR[S.week-1];
 
-    // heatmap 90 days
-    let hmHTML='';
+    // heatmap
+    let hm='';
     for(let i=89;i>=0;i--){
       const d=new Date();d.setDate(d.getDate()-i);
       const ds=d.toISOString().slice(0,10);
-      const cnt=S.works.filter(w=>w.date===ds).length+Object.values(S.subs).filter(s=>s.date===ds).length;
-      const cls=cnt===0?'hd':cnt===1?'hd l1':cnt===2?'hd l2':'hd l3';
-      hmHTML+='<div class="'+cls+'" title="'+ds+': '+cnt+' aktivitas"></div>';
+      const learn=S.works.filter(w=>w.date===ds).length+Object.values(S.subs).filter(s=>s.date===ds).length;
+      const yuura=S.yuura.filter(y=>y.date===ds).length;
+      let cls='hd';
+      if(yuura>0) cls=yuura>=2?'hd p3':yuura===1?'hd p2':'hd p1';
+      else if(learn>0) cls=learn>=3?'hd l3':learn===2?'hd l2':'hd l1';
+      hm+='<div class="'+cls+'" title="'+ds+'"></div>';
     }
 
-    // recent works
+    // recent all activities
+    const allItems=[
+      ...S.works.map(w=>({...w,_type:'work',_color:'gold'})),
+      ...Object.values(S.subs).map(s=>({...s,_type:'sub',_color:'gold'})),
+      ...S.yuura.map(y=>({...y,_type:'yuura',_color:'pink'}))
+    ].sort((a,b)=>b.id-a.id).slice(0,5);
+
     let recentHTML='';
-    if(!S.works.length && !Object.keys(S.subs).length){
-      recentHTML='<div class="empty"><div class="empty-icon">◈</div><div>Belum ada karya — kerjakan tugas pertamamu!</div><button class="btn btn-sm btn-primary" style="margin-top:12px" onclick="goTo(\'tasks\')">Lihat Tugas →</button></div>';
+    if(!allItems.length){
+      recentHTML='<div class="empty" style="padding:20px"><div class="ei">◈</div><div style="font-size:12px">Mulai upload karya pertamamu!</div></div>';
     } else {
-      const all = [...S.works,...Object.values(S.subs).filter(s=>s.files)].sort((a,b)=>b.id-a.id).slice(0,3);
-      all.forEach(w=>{
-        const thumb = w.files&&w.files[0] ? '<img src="'+w.files[0]+'" style="width:100%;height:100%;object-fit:cover">' : '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:18px;color:var(--text3)">◈</div>';
-        recentHTML+='<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">'
-          +'<div style="width:44px;height:44px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3)">'+thumb+'</div>'
-          +'<div style="flex:1;min-width:0"><div style="font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(w.title)+'</div>'
-          +'<div style="font-size:10px;color:var(--text3);font-family:var(--fm)">'+(w.date||'')+'</div></div></div>';
+      allItems.forEach(w=>{
+        const thumb=w.files&&w.files[0]?'<img src="'+w.files[0]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:18px;color:var(--text3)">'+(w._type==='yuura'?'✿':'◈')+'</div>';
+        const col=w._type==='yuura'?'var(--pink)':'var(--gold)';
+        recentHTML+='<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">'
+          +'<div style="width:40px;height:40px;border-radius:4px;overflow:hidden;flex-shrink:0;background:var(--bg3)">'+thumb+'</div>'
+          +'<div style="flex:1;min-width:0">'
+          +'<div style="font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.title)+'</div>'
+          +'<div style="font-size:9px;color:var(--text3);font-family:var(--fm)">'+(w.date||'')+(w._type==='yuura'?' · ✿ Yuura':w._type==='sub'?' · Tugas':'')+'</div>'
+          +'</div></div>';
       });
     }
 
-    // goals
-    let goalsHTML='';
-    S.goals.forEach((g,i)=>{
-      goalsHTML+='<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">'
-        +'<input type="checkbox"'+(g.done?' checked':'')+ ' onchange="toggleGoal('+i+')" style="accent-color:var(--gold);width:14px;height:14px;flex-shrink:0">'
-        +'<span style="flex:1;font-size:13px;color:'+(g.done?'var(--text3)':'var(--text2)')+';text-decoration:'+(g.done?'line-through':'none')+'">'+esc(g.text)+'</span>'
-        +'<button onclick="removeGoal('+i+')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px">×</button></div>';
+    // project overview
+    let projOverview='';
+    S.projects.slice(0,3).forEach(p=>{
+      const done=p.assets.filter(a=>a.done).length;
+      const total=p.assets.length;
+      const pct=total?Math.round(done/total*100):0;
+      projOverview+='<div style="padding:8px 0;border-bottom:1px solid var(--border)">'
+        +'<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">'
+        +'<span style="color:var(--text)">'+esc(p.name)+'</span>'
+        +'<span style="font-family:var(--fm);font-size:10px;color:var(--blue)">'+done+'/'+total+' asset</span></div>'
+        +'<div class="pbar"><div class="pfill blue" style="width:'+pct+'%"></div></div></div>';
     });
-
-    // curriculum progress dots
-    let dotHTML='';
-    CUR.forEach(w=>{
-      const done=S.subs[w.w];const active=w.w===S.week;
-      dotHTML+='<div style="width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--fm);cursor:pointer;border:1px solid '+(done?'var(--gold)':active?'var(--border2)':'var(--border)')+';background:'+(done?'var(--golddim)':active?'var(--bg3)':'var(--bg)')+';color:'+(done?'var(--gold)':active?'var(--text)':'var(--text3)')+'" onclick="goTo(\'curriculum\')" title="Minggu '+w.w+': '+w.title+'">'+(done?'✓':w.w)+'</div>';
-    });
+    if(!S.projects.length) projOverview='<div style="font-size:12px;color:var(--text3);padding:8px 0">Belum ada project</div>';
 
     set('app',
-      '<div class="page-title">Ateliermu</div>'
-      +'<div class="page-sub">Minggu '+S.week+' · '+week.title+'</div>'
-      +'<div class="g4" style="margin-bottom:20px">'
-        +'<div class="stat-card"><div class="stat-val">'+S.works.length+'</div><div class="stat-lbl">Total Karya</div></div>'
-        +'<div class="stat-card"><div class="stat-val">'+streak+'d</div><div class="stat-lbl">Streak</div></div>'
-        +'<div class="stat-card"><div class="stat-val">'+Math.round(mins/60*10)/10+'j</div><div class="stat-lbl">Jam Latihan</div></div>'
-        +'<div class="stat-card"><div class="stat-val">'+(avg||'—')+'</div><div class="stat-lbl">Rata Nilai</div></div>'
+      '<div class="page-title">Creative Studio</div>'
+      +'<div class="page-sub">'+today()+'</div>'
+
+      +'<div class="g4" style="margin-bottom:18px">'
+      +'<div class="stat-card"><div class="stat-v" style="color:var(--gold)">'+streak+'</div><div class="stat-l">Hari Streak</div></div>'
+      +'<div class="stat-card"><div class="stat-v" style="color:var(--pink)">'+S.yuura.length+'</div><div class="stat-l">Karya Yuura</div></div>'
+      +'<div class="stat-card"><div class="stat-v" style="color:var(--blue)">'+pendingAssets+'</div><div class="stat-l">Asset Pending</div></div>'
+      +'<div class="stat-card"><div class="stat-v" style="color:var(--green)">'+(avg?avg:'—')+'</div><div class="stat-l">Rata Nilai</div></div>'
       +'</div>'
-      +'<div class="g2" style="margin-bottom:20px">'
-        +'<div class="card"><div class="sec-title">Aktivitas 90 Hari</div><div class="heatmap">'+hmHTML+'</div><div style="font-size:10px;color:var(--text3);margin-top:8px;font-family:var(--fm)">Lebih gelap = lebih aktif</div></div>'
-        +'<div class="card card-gold"><div class="sec-title">Pelajaran Minggu Ini</div><div style="font-family:var(--fd);font-size:15px;color:var(--text);margin-bottom:6px">'+week.title+'</div><div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:6px">'+week.desc+'</div><div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-bottom:12px">📚 '+week.ref+'</div><div style="display:flex;gap:8px"><button class="btn btn-sm btn-primary" onclick="goTo(\'curriculum\')">Detail →</button><button class="btn btn-sm" onclick="goTo(\'tasks\')">Tugas</button></div></div>'
+
+      +'<div class="g2" style="margin-bottom:18px">'
+      +'<div class="card"><div class="sec-title">Aktivitas 90 Hari</div><div class="heatmap">'+hm+'</div>'
+      +'<div style="display:flex;gap:14px;margin-top:8px;font-size:10px;font-family:var(--fm);color:var(--text3)">'
+      +'<span><span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:2px;margin-right:4px"></span>Belajar/Tugas</span>'
+      +'<span><span style="display:inline-block;width:10px;height:10px;background:var(--pink);border-radius:2px;margin-right:4px"></span>Yuura</span>'
+      +'</div></div>'
+
+      +'<div class="card card-gold"><div class="sec-title">Minggu '+S.week+' — '+esc(week.title)+'</div>'
+      +'<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px">'+esc(week.desc)+'</div>'
+      +'<div style="font-size:9px;color:var(--text3);font-family:var(--fm);margin-bottom:10px">📚 '+esc(week.ref)+'</div>'
+      +'<div style="display:flex;gap:8px"><button class="btn btn-sm btn-gold" onclick="go(\'learn\')">Detail →</button><button class="btn btn-sm" onclick="go(\'tasks\')">Tugas</button></div>'
+      +'</div></div>'
+
+      +'<div class="g2" style="margin-bottom:18px">'
+      +'<div class="card"><div class="sec-title">Aktivitas Terbaru</div>'+recentHTML+'</div>'
+      +'<div class="card card-blue"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+      +'<div class="sec-title" style="margin:0">Projects</div>'
+      +'<button class="btn btn-sm" onclick="go(\'projects\')">Lihat Semua →</button></div>'+projOverview+'</div>'
       +'</div>'
-      +'<div class="g2" style="margin-bottom:20px">'
-        +'<div class="card"><div class="sec-title">Karya Terbaru</div>'+recentHTML+'</div>'
-        +'<div class="card"><div class="sec-title">Target Minggu Ini</div><div id="goals-list">'+goalsHTML+'</div><div style="display:flex;gap:8px;margin-top:10px"><input class="inp" id="new-goal" placeholder="Tambah target..." onkeydown="if(event.key===\'Enter\')addGoal()"><button class="btn btn-sm" onclick="addGoal()">+</button></div></div>'
-      +'</div>'
-      +'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="sec-title" style="margin:0">Progress Kurikulum</div><span class="tag tag-gold">'+subCount+'/'+CUR.length+' Tugas</span></div>'
-        +'<div style="display:flex;gap:6px;flex-wrap:wrap">'+dotHTML+'</div>'
-        +'<div class="pbar" style="margin-top:10px;height:6px"><div class="pfill" style="width:'+Math.round(subCount/CUR.length*100)+'%"></div></div>'
-      +'</div>'
+
+      // Yuura highlight
+      +'<div class="pinkbox" style="margin-bottom:18px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+      +'<div><div style="font-family:var(--fd);font-size:15px;color:var(--pink)">✿ Yuura Yozakura</div>'
+      +'<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:2px">Dedicated Fan Art & Original Scene Journey</div></div>'
+      +'<div style="display:flex;gap:8px"><button class="btn btn-sm btn-pink" onclick="go(\'yuura\')">Galeri</button><button class="btn btn-sm" onclick="go(\'yuura-tasks\')">Tasks</button></div></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +'<div style="text-align:center;flex:1;min-width:80px;background:rgba(232,111,160,0.08);border-radius:4px;padding:10px"><div style="font-family:var(--fd);font-size:22px;color:var(--pink)">'+S.yuura.length+'</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">Total Karya</div></div>'
+      +'<div style="text-align:center;flex:1;min-width:80px;background:rgba(232,111,160,0.08);border-radius:4px;padding:10px"><div style="font-family:var(--fd);font-size:22px;color:var(--pink)">'+S.yuura.filter(y=>y.type==='fanart').length+'</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">Fan Art</div></div>'
+      +'<div style="text-align:center;flex:1;min-width:80px;background:rgba(232,111,160,0.08);border-radius:4px;padding:10px"><div style="font-family:var(--fd);font-size:22px;color:var(--pink)">'+S.yuura.filter(y=>y.type==='original').length+'</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">Original Scene</div></div>'
+      +'<div style="text-align:center;flex:1;min-width:80px;background:rgba(232,111,160,0.08);border-radius:4px;padding:10px"><div style="font-family:var(--fd);font-size:22px;color:var(--pink)">'+S.yuuraTasks.filter(t=>!t.done).length+'</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">Tasks Pending</div></div>'
+      +'</div></div>'
     );
   },
 
+  // ── JOURNAL ──────────────────────────────────────
   journal(){
-    let html='<div class="page-title">Jurnal</div><div class="page-sub">Catatan perjalanan belajarmu</div>'
-      +'<div style="margin-bottom:20px;padding:10px 14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);font-size:12px;color:var(--text3)">✦ Jurnal otomatis tercatat setiap kamu mengumpulkan tugas</div>';
-    if(!S.journal.length){
-      html+='<div class="empty"><div class="empty-icon">✍</div><div>Belum ada entri jurnal</div></div>';
+    let html='<div class="page-title">Jurnal</div><div class="page-sub">Catatan perjalanan kreatifmu</div>'
+      +'<div style="margin-bottom:16px;padding:10px 13px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);font-size:12px;color:var(--text3)">✦ Jurnal otomatis dari setiap submission tugas, upload Yuura, dan aktivitas belajar</div>';
+    const all=[...S.journal,...S.yuura.map(y=>({...y,_yuura:true}))].sort((a,b)=>b.id-a.id);
+    if(!all.length){
+      html+='<div class="empty"><div class="ei">✍</div><div>Belum ada entri jurnal</div></div>';
     } else {
-      const sorted=[...S.journal].reverse();
-      sorted.forEach(j=>{
+      all.forEach(j=>{
+        const col=j._yuura?'pink':j.type==='sub'?'gold':'';
         let imgs='';
         if(j.files&&j.files.length){
-          j.files.forEach(f=>{imgs+='<img src="'+f+'" style="height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewFull(\''+f+'\')">';});
-          imgs='<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">'+imgs+'</div>';
+          let imgItems='';
+          j.files.forEach(f=>{imgItems+='<img src="'+f+'" style="height:70px;width:70px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewFull(\''+f+'\')">';});
+          imgs='<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">'+imgItems+'</div>';
         }
-        html+='<div class="je '+(j.files&&j.files.length?'hw':'')+'"><div class="je-date">'+esc(j.date||'')+(j.cat?' · '+esc(j.cat):'')+(j.duration?' · '+j.duration+'m':'')+'</div>'
-          +'<div class="je-title">'+esc(j.title)+'</div>'
-          +'<div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">'+(j.style?'<span class="tag tag-gold">'+esc(j.style)+'</span>':'')+''+(j.level?'<span class="tag tag-blue">'+esc(j.level)+'</span>':'')+''+(j.rating?'<span style="color:var(--gold);font-size:12px">'+'★'.repeat(j.rating)+'</span>':'')+'</div>'
+        html+='<div class="je '+col+'" style="margin-bottom:4px">'
+          +'<div class="je-date">'+esc(j.date||'')+(j._yuura?' · ✿ Yuura':j.type==='sub'?' · Tugas W'+(j.weekNum||''):'')+(j.duration?' · '+j.duration+'m':'')+'</div>'
+          +'<div class="je-title">'+esc(j.title||'')+'</div>'
           +imgs
           +'<div style="font-size:12px;color:var(--text2);line-height:1.7">'+esc(j.notes||'Tidak ada catatan')+'</div>'
-          +(j.grade?'<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><span style="font-family:var(--fd);font-size:18px;color:var(--gold)">'+esc(j.grade)+'</span><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">'+j.total+'/100</span></div>':'')
+          +(j.grade?'<div style="margin-top:6px;display:flex;align-items:center;gap:8px"><span style="font-family:var(--fd);font-size:16px;color:var(--gold)">'+esc(j.grade)+'</span><span style="font-size:9px;color:var(--text3);font-family:var(--fm)">'+j.total+'/100</span></div>':'')
           +'</div>';
       });
     }
     set('app',html);
   },
 
-  portfolio(){
-    let html='<div class="page-title">Portofolio</div><div class="page-sub">Semua karya yang sudah dikumpulkan</div>'
-      +'<div style="display:flex;justify-content:flex-end;margin-bottom:16px"><button class="btn btn-sm" onclick="downloadAll()">⬇ Download Semua</button></div>'
-      +'<div class="gg" id="port-grid">';
-    const all=[...S.works,...Object.values(S.subs).filter(s=>s.files&&s.files.length)].sort((a,b)=>b.id-a.id);
-    if(!all.length){
-      html+='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">◈</div><div>Belum ada karya — kumpulkan tugas pertamamu!</div></div>';
-    } else {
-      all.forEach(w=>{
-        const f=w.files&&w.files[0];
-        const thumb=f?'<img src="'+f+'" alt="'+esc(w.title)+'">':'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:32px;color:var(--text3)">◈</div>';
-        html+='<div class="gc" onclick="viewWork('+w.id+')">'
-          +'<div class="gt">'+thumb+'</div>'
-          +'<div class="gi"><div class="gi-title">'+esc(w.title)+'</div>'
-          +'<div class="gi-meta">'+(w.date||'')+(w.duration?' · '+w.duration+'m':'')+'</div>'
-          +'<div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">'+(w.cat?'<span class="tag tag-gold">'+esc(w.cat)+'</span>':'')+(w.grade?'<span class="tag tag-green">'+esc(w.grade)+'</span>':'')+'</div>'
-          +'</div></div>';
-      });
-    }
-    html+='</div>';
-    set('app',html);
-  },
-
-  curriculum(){
-    let html='<div class="page-title">Kurikulum</div><div class="page-sub">8 Minggu — dari nol ke karakter orisinalmu</div>';
+  // ── CURRICULUM ───────────────────────────────────
+  learn(){
+    let html='<div class="page-title">Kurikulum</div><div class="page-sub">8 Minggu · dari nol ke karakter orisinalmu</div>';
     CUR.forEach(week=>{
       const done=S.subs[week.w];const active=week.w===S.week;
-      let lesHtml='',exHtml='';
-      week.lessons.forEach(l=>{lesHtml+='<div style="font-size:12px;color:var(--text2);padding:4px 0;display:flex;gap:8px"><span style="color:var(--gold)">◆</span>'+esc(l)+'</div>';});
+      let les='',exs='';
+      week.lessons.forEach(l=>{les+='<div style="font-size:12px;color:var(--text2);padding:3px 0;display:flex;gap:7px"><span style="color:var(--gold)">◆</span>'+esc(l)+'</div>';});
       week.exs.forEach((ex,i)=>{
-        exHtml+='<div style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:6px">'
-          +'<div style="display:flex;justify-content:space-between;align-items:center">'
-          +'<div style="font-size:13px;color:var(--text)">'+esc(ex.t)+'</div>'
-          +'<div style="display:flex;gap:6px;align-items:center"><span class="tag tag-blue">'+ex.d+'m</span>'
-          +'<button class="btn btn-sm" onclick="startExTimer('+week.w+','+i+')">▶ Timer</button></div></div>'
-          +'<div style="font-size:11px;color:var(--text3);margin-top:4px">'+esc(ex.desc)+'</div></div>';
+        exs+='<div style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:9px 11px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center">'
+          +'<div><div style="font-size:12px;color:var(--text)">'+esc(ex.t)+'</div><div style="font-size:10px;color:var(--text3);margin-top:2px">'+esc(ex.desc)+'</div></div>'
+          +'<div style="display:flex;gap:5px;flex-shrink:0;margin-left:10px"><span class="tag tb">'+ex.d+'m</span>'
+          +'<button class="btn btn-sm" onclick="startExTimer('+week.w+','+i+')">▶</button></div></div>';
       });
-      let btnHtml='';
-      if(!active) btnHtml+='<button class="btn btn-sm" onclick="setWeek('+week.w+')">Aktifkan</button> ';
-      if(done) btnHtml+='<button class="btn btn-sm btn-green" onclick="viewGrade('+week.w+')">Lihat Nilai</button>';
-      else btnHtml+='<button class="btn btn-sm btn-primary" onclick="openSubmit('+week.w+')">Kumpulkan Tugas →</button>';
-
-      html+='<div class="wk-card '+(active?'cur':'')+'">'
-        +'<div class="wk-hdr" onclick="toggleWk('+week.w+')">'
-        +'<div class="wk-num '+(done?'done':active?'cur':'')+'">'+( done?'✓':week.w)+'</div>'
-        +'<div style="flex:1"><div style="font-size:14px;color:'+(active?'var(--text)':done?'var(--text2)':'var(--text3)')+'">Minggu '+week.w+': '+esc(week.title)+'</div>'
-        +'<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:2px">'+esc(week.ref)+'</div></div>'
-        +'<div style="display:flex;gap:8px;align-items:center">'
-        +(done?'<span class="tag tag-green">✓ '+esc(done.grade)+'</span>':'')
-        +(active?'<span class="tag tag-gold">Aktif</span>':'')
-        +'<span style="color:var(--text3)">›</span></div></div>'
-        +'<div class="wk-body" id="wkb-'+week.w+'">'
-        +'<div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px">'+esc(week.desc)+'</div>'
-        +'<div style="margin-bottom:14px"><div class="sec-title">Materi</div>'+lesHtml+'</div>'
-        +'<div style="margin-bottom:14px"><div class="sec-title">Latihan Harian</div>'+exHtml+'</div>'
-        +'<div class="hl-box" style="margin-bottom:14px">'
-        +'<div class="sec-title">Tugas</div>'
-        +'<div style="font-size:14px;color:var(--text);margin-bottom:4px">'+esc(week.asgn.title)+'</div>'
+      let btns=(!active?'<button class="btn btn-sm" onclick="setWeek('+week.w+')">Aktifkan</button> ':'')
+        +(done?'<button class="btn btn-sm" style="border-color:var(--green);color:var(--green)" onclick="viewGrade('+week.w+')">Lihat Nilai ✓</button>':'<button class="btn btn-sm btn-gold" onclick="openSubmit('+week.w+')">Kumpulkan Tugas →</button>');
+      html+='<div style="border:1px solid '+(active?'rgba(201,168,76,0.3)':'var(--border)')+';border-radius:var(--r);background:var(--bg2);margin-bottom:9px;overflow:hidden">'
+        +'<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer" onclick="toggleWk('+week.w+')">'
+        +'<div style="width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;background:'+(done?'var(--gold)':active?'var(--bg3)':'var(--bg)')+';border:1px solid '+(done?'var(--gold)':active?'var(--gold)':'var(--border2)')+';color:'+(done?'var(--bg)':active?'var(--gold)':'var(--text3)')+'">'+( done?'✓':week.w)+'</div>'
+        +'<div style="flex:1"><div style="font-size:13px;color:'+(active?'var(--text)':done?'var(--text2)':'var(--text3)')+'">Minggu '+week.w+': '+esc(week.title)+'</div>'
+        +'<div style="font-size:9px;color:var(--text3);font-family:var(--fm);margin-top:2px">'+esc(week.ref)+'</div></div>'
+        +'<div style="display:flex;gap:6px;align-items:center">'+(done?'<span class="tag tgr">'+esc(done.grade)+'</span>':'')+(active?'<span class="tag tg">Aktif</span>':'')+'<span style="color:var(--text3)">›</span></div></div>'
+        +'<div id="wkb-'+week.w+'" style="display:none;padding:0 16px 14px 58px">'
+        +'<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">'+esc(week.desc)+'</div>'
+        +'<div style="margin-bottom:12px"><div class="sec-title">Materi</div>'+les+'</div>'
+        +'<div style="margin-bottom:12px"><div class="sec-title">Latihan Harian</div>'+exs+'</div>'
+        +'<div class="hlbox" style="margin-bottom:12px"><div class="sec-title">Tugas Minggu Ini</div>'
+        +'<div style="font-size:13px;color:var(--text);margin-bottom:4px">'+esc(week.asgn.title)+'</div>'
         +'<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:10px">'+esc(week.asgn.desc)+'</div>'
-        +'<div style="display:flex;gap:8px;flex-wrap:wrap">'+btnHtml+'</div></div></div></div>';
+        +'<div style="display:flex;gap:7px;flex-wrap:wrap">'+btns+'</div></div></div></div>';
     });
     set('app',html);
     setTimeout(()=>toggleWk(S.week,true),50);
   },
 
+  // ── TASKS ─────────────────────────────────────────
   tasks(){
-    let taskHtml='';
-    if(!S.tasks.length){
-      taskHtml='<div class="empty"><div class="empty-icon">✦</div><div>Belum ada tugas — klik "Generate Tugas AI"!</div></div>';
-    } else {
-      S.tasks.forEach((t,i)=>{
-        taskHtml+='<div class="task-card '+(t.active?'active':'')+(t.done?' done':'')+'">'
-          +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">'
-          +'<div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
-          +'<input type="checkbox"'+(t.done?' checked':'')+' onchange="toggleTask('+i+')" style="accent-color:var(--gold);width:14px;height:14px;flex-shrink:0">'
-          +'<div style="font-family:var(--fd);font-size:14px;'+(t.done?'text-decoration:line-through;color:var(--text3)':'')+'">'+esc(t.title)+'</div></div>'
-          +'<div style="font-size:12px;color:var(--text3);margin-left:22px;line-height:1.6">'+esc(t.desc)+'</div>'
-          +'<div style="display:flex;gap:6px;margin-top:8px;margin-left:22px;flex-wrap:wrap">'
-          +'<span class="tag tag-gold" style="font-family:var(--fm)">⏱ '+t.duration+'m</span>'
-          +(t.week?'<span class="tag tag-blue">W'+t.week+'</span>':'')
-          +(t.skill?'<span class="tag tag-blue">'+esc(t.skill)+'</span>':'')
-          +(t.deadline?'<span class="tag '+(new Date(t.deadline)<new Date()?'tag-red':'')+'">📅 '+esc(t.deadline)+'</span>':'')
-          +'</div></div>'
-          +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">'
-          +(!t.done?'<button class="btn btn-sm btn-primary" onclick="activateTask('+i+')">▶ Timer</button>':'')
-          +'<button class="btn btn-sm btn-danger" onclick="deleteTask('+i+')">×</button>'
-          +'</div></div></div>';
-      });
-    }
-
     const week=CUR[S.week-1];
-    let exTimerHtml='';
+    let exTimers='';
     week.exs.forEach((ex,i)=>{
-      exTimerHtml+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">'
+      exTimers+='<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">'
         +'<div><div style="font-size:12px;color:var(--text)">'+esc(ex.t)+'</div><div style="font-size:10px;color:var(--text3)">'+ex.d+' menit</div></div>'
         +'<button class="btn btn-sm" onclick="startExTimer('+S.week+','+i+')">▶ Mulai</button></div>';
     });
-
-    set('app',
-      '<div class="page-title">Tugas & Timer</div>'
-      +'<div class="page-sub">Latihan terjadwal + countdown timer</div>'
-      +'<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">'
-      +'<button class="btn btn-primary" id="gen-btn" onclick="generateTasks()">✦ Generate Tugas AI</button>'
-      +'<button class="btn btn-danger btn-sm" onclick="clearDone()">Hapus Selesai</button></div>'
-      +'<div class="g2" style="margin-bottom:20px">'
-        +'<div class="card"><div class="sec-title">Timer Sesi</div>'
-        +'<div class="timer-disp" id="main-td">25:00</div>'
-        +'<div style="font-size:11px;color:var(--text3);font-family:var(--fm);margin:8px 0" id="timer-lbl">'+esc(S.timerName)+'</div>'
-        +'<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">'
-        +'<button class="btn btn-primary" onclick="toggleTimer()" id="main-tbtn">▶ Mulai</button>'
-        +'<button class="btn" onclick="resetTimer()">↺ Reset</button>'
-        +'<select class="inp" id="timer-sel" onchange="setPreset(this.value)" style="width:auto">'
-        +'<option value="1500">Pomodoro 25m</option><option value="600">Gesture 10m</option>'
-        +'<option value="1800">Sesi 30m</option><option value="2700">Sesi 45m</option>'
-        +'<option value="3600">Sesi 1j</option><option value="300">Istirahat 5m</option></select></div>'
-        +'<div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6">💡 Pomodoro: 25m fokus → 5m istirahat → ulangi 4x</div></div>'
-        +'<div class="card"><div class="sec-title">Quick Timer Latihan Minggu Ini</div>'+exTimerHtml+'</div>'
-      +'</div>'
-      +'<div class="sec-title">Daftar Tugas</div>'
-      +'<div>'+taskHtml+'</div>'
-    );
-    syncTimer();
-  },
-
-  sensei(){
-    let msgsHtml='';
-    if(!S.chat.length){
-      msgsHtml='<div style="text-align:center;padding:40px 20px">'
-        +'<div style="font-size:48px;margin-bottom:16px">◉</div>'
-        +'<div style="font-size:15px;color:var(--text2);margin-bottom:8px;font-family:var(--fd)">Sensei siap membimbingmu</div>'
-        +'<div style="font-size:12px;color:var(--text3);margin-bottom:24px">Tanya apa saja · upload gambar untuk feedback</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto">';
-      ['Dari mana aku harus mulai belajar menggambar?','Berikan aku latihan gesture 10 menit','Bagaimana cara konstruksi wajah Loomis?','Kenapa garisiku selalu goyang? Tips?','Jelaskan perbedaan gesture vs contour drawing','Generate tugas untuk skill gesture drawingku'].forEach(q=>{
-        msgsHtml+='<button onclick="quickAsk(\''+q+'\')" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:10px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-family:var(--fb);text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--border)\'" >'+esc(q)+'</button>';
-      });
-      msgsHtml+='</div></div>';
+    let taskList='';
+    if(!S.tasks.length){
+      taskList='<div class="empty"><div class="ei">✦</div><div>Belum ada tugas — generate dengan AI!</div></div>';
     } else {
-      S.chat.forEach(m=>{msgsHtml+=renderMsg(m);});
-      msgsHtml+='<div id="typing" style="display:none" class="chat-msg"><div class="chat-av sensei">◉</div><div class="chat-bub sensei" style="color:var(--text3)">Sensei sedang berpikir...</div></div>';
+      S.tasks.forEach((t,i)=>{
+        taskList+='<div class="task-card '+(t.active?'active':'')+'" style="opacity:'+(t.done?.5:1)+'">'
+          +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'
+          +'<div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+          +'<input type="checkbox"'+(t.done?' checked':'')+' onchange="toggleTask('+i+')" style="accent-color:var(--gold);width:13px;height:13px;flex-shrink:0">'
+          +'<div style="font-size:13px;color:var(--text);'+(t.done?'text-decoration:line-through;color:var(--text3)':'')+'">'+esc(t.title)+'</div></div>'
+          +'<div style="font-size:11px;color:var(--text3);margin-left:21px;line-height:1.6">'+esc(t.desc)+'</div>'
+          +'<div style="display:flex;gap:5px;margin-top:7px;margin-left:21px;flex-wrap:wrap">'
+          +'<span class="tag tg">⏱ '+t.duration+'m</span>'
+          +(t.week?'<span class="tag tb">W'+t.week+'</span>':'')
+          +(t.skill?'<span class="tag tb">'+esc(t.skill)+'</span>':'')
+          +(t.deadline?'<span class="tag '+(new Date(t.deadline)<new Date()?'tr':'')+'">📅 '+esc(t.deadline)+'</span>':'')
+          +'</div></div>'
+          +'<div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">'
+          +(!t.done?'<button class="btn btn-sm btn-gold" onclick="activateTask('+i+')">▶</button>':'')
+          +'<button class="btn btn-sm btn-danger" onclick="delTask('+i+')">×</button></div></div></div>';
+      });
     }
-
     set('app',
-      '<div class="page-title">Sensei AI</div>'
-      +'<div class="page-sub">Guru menggambar · bisa lihat gambarmu · 24/7</div>'
-      +'<div class="chat-area">'
-        +'<div class="chat-msgs" id="chat-msgs">'+msgsHtml+'</div>'
-        +'<div class="chat-inp-area">'
-        +'<div id="sensei-img-prev" style="margin-bottom:8px"></div>'
-        +'<div style="display:flex;gap:8px">'
-        +'<button class="btn btn-sm" onclick="document.getElementById(\'sensei-img\').click()" title="Upload gambar">◈</button>'
-        +'<input type="file" id="sensei-img" accept="image/*" style="display:none" onchange="prevSenseiImg(event)">'
-        +'<input class="inp" id="sensei-inp" placeholder="Tanya Sensei atau upload gambar untuk feedback..." onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendSensei()}">'
-        +'<button class="btn btn-primary" id="sensei-btn" onclick="sendSensei()">Kirim →</button>'
-        +'</div>'
-        +'<button class="btn btn-sm" onclick="clearChat()" style="margin-top:8px">Hapus chat</button>'
-        +'</div></div>'
+      '<div class="page-title">Tugas & Timer</div><div class="page-sub">Latihan terstruktur + countdown timer</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">'
+      +'<button class="btn btn-gold" id="gen-btn" onclick="generateTasks()">✦ Generate Tugas AI</button>'
+      +'<button class="btn btn-danger btn-sm" onclick="clearDone()">Hapus Selesai</button></div>'
+      +'<div class="g2" style="margin-bottom:18px">'
+      +'<div class="card"><div class="sec-title">Timer Sesi</div>'
+      +'<div class="tdisp" id="main-td">'+fmtTimer(S.timerSec)+'</div>'
+      +'<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin:7px 0" id="timer-lbl">'+esc(S.timerName)+'</div>'
+      +'<div style="display:flex;gap:7px;flex-wrap:wrap">'
+      +'<button class="btn btn-gold" onclick="toggleTimer()" id="main-tbtn">'+(S.timerOn?'⏸ Pause':'▶ Mulai')+'</button>'
+      +'<button class="btn" onclick="resetTimer()">↺ Reset</button>'
+      +'<select class="inp" id="timer-sel" onchange="setPreset(this.value)" style="width:auto">'
+      +'<option value="1500">Pomodoro 25m</option><option value="600">Gesture 10m</option>'
+      +'<option value="1800">Sesi 30m</option><option value="2700">Sesi 45m</option>'
+      +'<option value="3600">Sesi 1j</option><option value="300">Istirahat 5m</option></select></div>'
+      +'<div style="font-size:10px;color:var(--text3);margin-top:8px">💡 Pomodoro: 25m fokus → 5m istirahat</div></div>'
+      +'<div class="card"><div class="sec-title">Quick Timer — Latihan W'+S.week+'</div>'+exTimers+'</div></div>'
+      +'<div class="sec-title">Daftar Tugas</div>'+taskList
     );
-    scrollChat();
   },
 
+  // ── SKILLS ────────────────────────────────────────
   skills(){
-    let html='<div class="page-title">Skill Tree</div><div class="page-sub">Track kemampuanmu berdasarkan referensi terpercaya</div>'
-      +'<div style="margin-bottom:20px;padding:12px 16px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);font-size:12px;color:var(--text2)">📚 Ref: Drawabox · Betty Edwards · James Gurney · Proko · Vilppu · Hampton · Andrew Loomis · Bridgman · Stephen Silver · Shogakukan · CTRL+PAINT · Marco Bucci</div>';
-
+    let html='<div class="page-title">Skill Tree</div><div class="page-sub">Progress kemampuan berdasarkan referensi master</div>';
     SKILL_TREE.forEach(cat=>{
-      let skillHtml='';
+      let skills='';
       cat.skills.forEach(s=>{
-        const val=S.skills[s.k]||0;
-        const lv=val<20?'Belum mulai':val<40?'Tahu teori':val<60?'Bisa sedikit':val<80?'Mahir':'Master';
-        skillHtml+='<div class="skill-node '+(val>=80?'mastered':'')+'">'
-          +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
-          +'<div><div style="font-size:12px;color:var(--text)">'+esc(s.n)+'</div>'
-          +'<div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-top:2px">'+esc(s.desc)+'</div></div>'
-          +'<div style="text-align:right;flex-shrink:0;margin-left:12px">'
-          +'<div style="font-family:var(--fm);font-size:11px;color:var(--gold)">'+val+'%</div>'
-          +'<div style="font-size:9px;color:var(--text3)">'+lv+'</div></div></div>'
-          +'<input type="range" min="0" max="100" step="5" value="'+val+'" oninput="updateSkill(\''+s.k+'\',this.value)" style="width:100%;margin-top:8px;accent-color:var(--gold)">'
-          +'<div class="pbar"><div class="pfill" style="width:'+val+'%"></div></div></div>';
+        const v=S.skills[s.k]||0;
+        const lv=v<20?'Belum':v<40?'Tahu':v<60?'Bisa':v<80?'Mahir':'Master';
+        skills+='<div class="sk-node '+(v>=80?'mastered':'')+'">'
+          +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+          +'<div style="font-size:12px;color:var(--text)">'+esc(s.n)+'</div>'
+          +'<div style="font-family:var(--fm);font-size:10px;color:var(--gold)">'+v+'% <span style="color:var(--text3)">'+lv+'</span></div></div>'
+          +'<input type="range" min="0" max="100" step="5" value="'+v+'" oninput="updateSkill(\''+s.k+'\',this.value)" style="width:100%;accent-color:var(--gold)">'
+          +'<div class="pbar"><div class="pfill" style="width:'+v+'%"></div></div></div>';
       });
-      html+='<div class="card" style="margin-bottom:14px">'
-        +'<div style="margin-bottom:12px"><div style="font-family:var(--fd);font-size:15px;color:var(--text)">'+esc(cat.cat)+'</div>'
-        +'<div style="font-size:10px;color:var(--text3);font-family:var(--fm)">'+esc(cat.ref)+'</div></div>'
-        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">'+skillHtml+'</div></div>';
+      html+='<div class="card" style="margin-bottom:12px">'
+        +'<div style="margin-bottom:10px"><div style="font-family:var(--fd);font-size:14px;color:var(--text)">'+esc(cat.cat)+'</div>'
+        +'<div style="font-size:9px;color:var(--text3);font-family:var(--fm)">'+esc(cat.ref)+'</div></div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">'+skills+'</div></div>';
     });
     set('app',html);
+  },
+
+  // ── SENSEI AI ─────────────────────────────────────
+  sensei(){
+    let msgs='';
+    if(!S.chat.length){
+      msgs='<div style="text-align:center;padding:36px 20px">'
+        +'<div style="font-size:44px;margin-bottom:14px">◉</div>'
+        +'<div style="font-family:var(--fd);font-size:16px;color:var(--text2);margin-bottom:6px">Sensei siap membimbingmu</div>'
+        +'<div style="font-size:11px;color:var(--text3);margin-bottom:22px">Tanya apa saja · upload gambar untuk feedback visual · minta latihan harian</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;max-width:480px;margin:0 auto">';
+      ['Dari mana aku mulai belajar menggambar?','Berikan latihan gesture 10 menit sekarang','Bagaimana cara konstruksi kepala Loomis?','Tips menggambar karakter anime yang benar','Kenapa garisiku goyang? Cara memperbaiki?','Aku mau gambar karakter Yuura Yozakura VTuber Indonesia, dari mana mulai?'].forEach(q=>{
+        msgs+='<button onclick="quickAsk(\''+q+'\')" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:9px 11px;border-radius:4px;cursor:pointer;font-size:11px;font-family:var(--fb);text-align:left;transition:border-color .15s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'+esc(q)+'</button>';
+      });
+      msgs+='</div></div>';
+    } else {
+      S.chat.forEach(m=>{msgs+=renderMsg(m,'gold');});
+      msgs+='<div id="typing" style="display:none" class="cmsg"><div class="cav sensei">◉</div><div class="cbub sensei" style="color:var(--text3)">Sensei sedang berpikir...</div></div>';
+    }
+    set('app',
+      '<div class="page-title">Sensei AI</div><div class="page-sub">Guru menggambar · vision · 24/7</div>'
+      +'<div class="chat-area">'
+      +'<div class="chat-msgs" id="chat-msgs">'+msgs+'</div>'
+      +'<div style="padding-top:12px;border-top:1px solid var(--border)">'
+      +'<div id="si-prev" style="margin-bottom:7px"></div>'
+      +'<div style="display:flex;gap:7px">'
+      +'<button class="btn btn-sm" onclick="document.getElementById(\'si-file\').click()" title="Upload gambar">◈</button>'
+      +'<input type="file" id="si-file" accept="image/*" style="display:none" onchange="prevSenseiImg(event)">'
+      +'<input class="inp" id="si-inp" placeholder="Tanya Sensei... atau upload gambar untuk feedback" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendSensei()}">'
+      +'<button class="btn btn-gold" id="si-btn" onclick="sendSensei()">Kirim →</button></div>'
+      +'<button class="btn btn-sm btn-danger" onclick="clearChat(\'chat\')" style="margin-top:7px">Hapus chat</button>'
+      +'</div></div>'
+    );
+    scrollChat('chat-msgs');
+  },
+
+  // ── PROJECTS ──────────────────────────────────────
+  projects(){
+    let cards='';
+    if(!S.projects.length){
+      cards='<div class="empty"><div class="ei">◈</div><div>Belum ada project — buat project baru!</div></div>';
+    } else {
+      S.projects.forEach(p=>{
+        const done=p.assets.filter(a=>a.done).length;
+        const total=p.assets.length;
+        const pct=total?Math.round(done/total*100):0;
+        const pending=p.assets.filter(a=>!a.done&&a.priority==='high');
+        cards+='<div class="proj-card" onclick="openProject(\''+p.id+'\')">'
+          +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+          +'<div><div style="font-family:var(--fd);font-size:15px;color:var(--text)">'+esc(p.name)+'</div>'
+          +'<div style="font-size:11px;color:var(--text3);margin-top:2px">'+esc(p.desc)+'</div></div>'
+          +'<div style="display:flex;gap:5px;align-items:center">'
+          +'<span class="tag tb">'+done+'/'+total+' asset</span>'
+          +(pending.length?'<span class="tag tr">'+pending.length+' urgent</span>':'')+'</div></div>'
+          +'<div class="pbar" style="height:5px"><div class="pfill blue" style="width:'+pct+'%"></div></div>'
+          +'<div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-top:4px">'+pct+'% selesai'+(p.deadline?' · deadline '+esc(p.deadline):'')+'</div></div>';
+      });
+    }
+    set('app',
+      '<div class="page-title blue">Project Tracker</div><div class="page-sub">Ilustrasi & asset gambar projectmu</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:20px">'
+      +'<button class="btn btn-blue" onclick="openAddProject()">+ Buat Project</button>'
+      +'<button class="btn btn-sm" id="ai-proj-btn" onclick="aiProjectManager()">◈ AI Project Manager</button></div>'
+      +cards
+    );
+  },
+
+  // ── YUURA GALLERY ─────────────────────────────────
+  yuura(){
+    let grid='';
+    const fanart=S.yuura.filter(y=>y.type==='fanart');
+    const original=S.yuura.filter(y=>y.type==='original');
+
+    ['fanart','original'].forEach(type=>{
+      const items=type==='fanart'?fanart:original;
+      grid+='<div style="margin-bottom:24px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+        +'<div style="font-family:var(--fd);font-size:16px;color:var(--pink)">'+(type==='fanart'?'✿ Fan Art':'✦ Original Scene')+'</div>'
+        +'<span class="tag tp">'+items.length+' karya</span></div>'
+        +'<div class="gg">';
+      if(!items.length){
+        grid+='<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--text3);font-size:12px">Belum ada karya — upload sekarang!</div>';
+      } else {
+        items.forEach(y=>{
+          const thumb=y.files&&y.files[0]?'<img src="'+y.files[0]+'" alt="'+esc(y.title)+'">':'<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:28px">✿</div>';
+          grid+='<div class="gc pink" onclick="viewYuura(\''+y.id+'\')">'
+            +'<div class="gt">'+thumb+'</div>'
+            +'<div class="gi"><div class="gi-t">'+esc(y.title)+'</div>'
+            +'<div class="gi-m">'+esc(y.date)+(y.rating?' · '+'★'.repeat(y.rating):'')+'</div>'
+            +'<div style="display:flex;gap:3px;margin-top:5px">'+(y.outfit?'<span class="tag tp">'+esc(y.outfit)+'</span>':'')+(y.mood?'<span class="tag tpu">'+esc(y.mood)+'</span>':'')+'</div>'
+            +'</div></div>';
+        });
+      }
+      grid+='</div></div>';
+    });
+
+    set('app',
+      '<div class="yuura-banner">'
+      +'<div class="yuura-title">✿ Yuura Yozakura</div>'
+      +'<div class="yuura-sub">VTuber Indonesia · Fan Art & Original Scene Dedication</div>'
+      +'<div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
+      +'<button class="btn btn-pink" onclick="openYuuraUpload()">+ Upload Karya</button>'
+      +'<button class="btn btn-sm" onclick="downloadAllYuura()">⬇ Download Semua</button>'
+      +'</div></div>'
+      +grid
+    );
+  },
+
+  // ── YUURA TASKS ────────────────────────────────────
+  'yuura-tasks'(){
+    let taskList='';
+    if(!S.yuuraTasks.length){
+      taskList='<div class="empty"><div class="ei">♡</div><div>Belum ada task Yuura — generate dengan AI!</div></div>';
+    } else {
+      S.yuuraTasks.forEach((t,i)=>{
+        taskList+='<div style="border:1px solid '+(t.done?'var(--border)':'rgba(232,111,160,0.25)')+';border-radius:var(--r);background:'+(t.done?'var(--bg2)':'rgba(232,111,160,0.03)')+';padding:14px 16px;margin-bottom:8px;opacity:'+(t.done?.5:1)+'">'
+          +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'
+          +'<div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+          +'<input type="checkbox"'+(t.done?' checked':'')+' onchange="toggleYuuraTask('+i+')" style="accent-color:var(--pink);width:13px;height:13px;flex-shrink:0">'
+          +'<div style="font-size:13px;color:var(--text);'+(t.done?'text-decoration:line-through;color:var(--text3)':'')+'">'+esc(t.title)+'</div></div>'
+          +'<div style="font-size:11px;color:var(--text3);margin-left:21px;line-height:1.6">'+esc(t.desc)+'</div>'
+          +'<div style="display:flex;gap:5px;margin-top:7px;margin-left:21px;flex-wrap:wrap">'
+          +(t.type?'<span class="tag tp">'+esc(t.type)+'</span>':'')
+          +(t.difficulty?'<span class="tag '+(t.difficulty==='hard'?'tr':t.difficulty==='medium'?'tg':'tgr')+'">'+esc(t.difficulty)+'</span>':'')
+          +(t.estimatedTime?'<span class="tag tpu">'+t.estimatedTime+'m</span>':'')
+          +'</div></div>'
+          +'<div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">'
+          +'<button class="btn btn-sm btn-danger" onclick="delYuuraTask('+i+')">×</button></div></div></div>';
+      });
+    }
+    set('app',
+      '<div class="page-title pink">Yuura Tasks</div><div class="page-sub">Task khusus untuk project Yuura Yozakura</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">'
+      +'<button class="btn btn-pink" id="gen-yuura-btn" onclick="generateYuuraTasks()">✿ Generate Yuura Tasks AI</button>'
+      +'<button class="btn btn-sm btn-danger" onclick="clearDoneYuuraTasks()">Hapus Selesai</button></div>'
+      +taskList
+    );
   }
 };
 
-// ─── HELPERS ──────────────────────────────────────────────
-function set(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
-function toggleWk(n,forceOpen=false){const b=document.getElementById('wkb-'+n);if(b){if(forceOpen)b.classList.add('open');else b.classList.toggle('open');}}
-function setWeek(n){S.week=n;sv('week');RENDER.curriculum();}
+// ══════════════════════════════════════════════════
+// LEARNING FUNCTIONS
+// ══════════════════════════════════════════════════
+function toggleWk(n,fo=false){const b=document.getElementById('wkb-'+n);if(b){fo?b.style.display='block':b.style.display=(b.style.display==='none'?'block':'none');}}
+function setWeek(n){S.week=n;sv('week');RENDER.learn();}
 function updateSkill(k,v){S.skills[k]=parseInt(v);sv('skills');}
-function toggleGoal(i){S.goals[i].done=!S.goals[i].done;sv('goals');RENDER.dashboard();}
-function removeGoal(i){S.goals.splice(i,1);sv('goals');RENDER.dashboard();}
-function addGoal(){const inp=document.getElementById('new-goal');if(!inp||!inp.value.trim())return;S.goals.push({text:inp.value.trim(),done:false});sv('goals');RENDER.dashboard();}
 
-// ─── TASKS ────────────────────────────────────────────────
-function toggleTask(i){S.tasks[i].done=!S.tasks[i].done;S.tasks[i].active=false;sv('tasks');RENDER.tasks();updateSB();}
-function deleteTask(i){S.tasks.splice(i,1);sv('tasks');RENDER.tasks();updateSB();}
-function clearDone(){S.tasks=S.tasks.filter(t=>!t.done);sv('tasks');RENDER.tasks();updateSB();}
-function activateTask(i){
-  S.tasks.forEach(t=>t.active=false);S.tasks[i].active=true;
-  S.timerSec=S.tasks[i].duration*60;S.timerName=S.tasks[i].title;
-  sv('tasks');RENDER.tasks();
-  document.getElementById('ft').style.display='block';
-  document.getElementById('ft-name').textContent=S.timerName;
-  syncTimer();
-}
-
-async function generateTasks(){
-  const btn=document.getElementById('gen-btn');
-  if(!btn)return;
-  btn.textContent='⟳ Generating...';btn.disabled=true;
-  const week=CUR[S.week-1];
-  const skills=Object.entries(S.skills).map(([k,v])=>k+':'+v+'%').join(', ');
-  const prompt='Generate 6 drawing practice tasks untuk:\n- Minggu kurikulum: '+S.week+' ('+week.title+')\n- Level: Pemula total\n- Skill saat ini: '+(skills||'semua 0%')+'\n- Style target: Anime, Realism, Character Design, Digital Painting, Sketch\n- Referensi: '+week.ref+'\n\nBuat tasks bervariasi: 10m, 25m, 45m. Jelaskan CARA melakukannya detail. Deadline 1-2 minggu dari '+(new Date().toISOString().slice(0,10))+'.\n\nRespond HANYA JSON array valid tanpa teks lain:\n[{"title":"nama","desc":"cara detail","duration":25,"week":1,"skill":"gesture","deadline":"2026-06-01"}]';
-  try{
-    const text=await gemini([{text:prompt}],'',1000);
-    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
-    S.tasks=[...S.tasks,...parsed];sv('tasks');RENDER.tasks();updateSB();
-  }catch(e){alert('Error: '+e.message);}
-  if(btn){btn.textContent='✦ Generate Tugas AI';btn.disabled=false;}
-}
-
-// ─── TIMER ────────────────────────────────────────────────
+// ── Timer ──
+function fmtTimer(s){const m=Math.floor(s/60),sec=s%60;return(m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;}
 function syncTimer(){
-  const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
-  const str=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-  const urgent=S.timerSec<60;
-  ['main-td','ft-disp'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.textContent=str;el.className='timer-disp'+(urgent?' urgent':'');}
-  });
+  const str=fmtTimer(S.timerSec);const urgent=S.timerSec<60;
+  const cls='tdisp'+(urgent?' urgent':'');
+  ['main-td','ft-disp'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=str;el.className=cls;}});
   const lbl=S.timerOn?'⏸ Pause':'▶ Mulai';
   ['main-tbtn','ft-btn'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lbl;});
-  const tl=document.getElementById('timer-lbl');
-  if(tl)tl.textContent=S.timerName;
-  const fn=document.getElementById('ft-name');
-  if(fn)fn.textContent=S.timerName;
+  const tl=document.getElementById('timer-lbl');if(tl)tl.textContent=S.timerName;
+  const fn=document.getElementById('ft-name');if(fn)fn.textContent=S.timerName;
 }
 function toggleTimer(){
   if(S.timerOn){clearInterval(S.timerIv);S.timerOn=false;}
-  else{
-    S.timerOn=true;
-    S.timerIv=setInterval(()=>{
-      S.timerSec--;
-      if(S.timerSec<=0){
-        clearInterval(S.timerIv);S.timerOn=false;S.timerSec=0;
-        playAlarm();alert('⏰ Waktu habis! '+S.timerName+' selesai!');
-      }
-      syncTimer();
-    },1000);
-  }
+  else{S.timerOn=true;S.timerIv=setInterval(()=>{S.timerSec--;if(S.timerSec<=0){clearInterval(S.timerIv);S.timerOn=false;S.timerSec=0;playAlarm();alert('⏰ Waktu habis! '+S.timerName);}syncTimer();},1000);}
   syncTimer();
 }
-function resetTimer(){
-  clearInterval(S.timerIv);S.timerOn=false;
-  const sel=document.getElementById('timer-sel');
-  S.timerSec=sel?parseInt(sel.value):1500;
-  syncTimer();
-}
+function resetTimer(){clearInterval(S.timerIv);S.timerOn=false;const s=document.getElementById('timer-sel');S.timerSec=s?parseInt(s.value):1500;syncTimer();}
 function setPreset(v){clearInterval(S.timerIv);S.timerOn=false;S.timerSec=parseInt(v);syncTimer();}
-function startExTimer(wk,i){
-  const ex=CUR[wk-1]?.exs[i];if(!ex)return;
-  S.timerSec=ex.d*60;S.timerName=ex.t;
-  if(S.timerOn){clearInterval(S.timerIv);S.timerOn=false;}
-  document.getElementById('ft').style.display='block';
-  goTo('tasks');
-}
-function playAlarm(){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    [0,.3,.6,.9].forEach(t=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.frequency.value=880;o.type='sine';
-      g.gain.setValueAtTime(.5,ctx.currentTime+t);
-      g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+t+.25);
-      o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.25);
-    });
-  }catch(e){}
+function startExTimer(wk,i){const ex=CUR[wk-1]?.exs[i];if(!ex)return;S.timerSec=ex.d*60;S.timerName=ex.t;if(S.timerOn){clearInterval(S.timerIv);S.timerOn=false;}document.getElementById('ft').style.display='block';go('tasks');}
+function activateTask(i){S.tasks.forEach(t=>t.active=false);S.tasks[i].active=true;S.timerSec=S.tasks[i].duration*60;S.timerName=S.tasks[i].title;sv('tasks');document.getElementById('ft').style.display='block';syncTimer();RENDER.tasks();}
+function playAlarm(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();[0,.3,.6].forEach(t=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;g.gain.setValueAtTime(.4,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+t+.25);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.3);});}catch(e){}}
+
+// ── Tasks ──
+function toggleTask(i){S.tasks[i].done=!S.tasks[i].done;S.tasks[i].active=false;sv('tasks');RENDER.tasks();updateSB();}
+function delTask(i){S.tasks.splice(i,1);sv('tasks');RENDER.tasks();updateSB();}
+function clearDone(){S.tasks=S.tasks.filter(t=>!t.done);sv('tasks');RENDER.tasks();updateSB();}
+
+async function generateTasks(){
+  const btn=document.getElementById('gen-btn');if(!btn)return;
+  btn.textContent='⟳ Generating...';btn.disabled=true;
+  const week=CUR[S.week-1];
+  const sk=Object.entries(S.skills).map(([k,v])=>k+':'+v+'%').join(', ');
+  const prompt='Generate 6 drawing tasks. Respond ONLY valid JSON array:\n[{"title":"nama","desc":"cara detail","duration":25,"week":1,"skill":"gesture","deadline":"2026-06-15"}]\nUntuk: Minggu '+S.week+' ('+week.title+'), pemula, skill: '+(sk||'semua 0%')+', style: Anime/Realism/Character/Digital. Deadline 1-2 minggu dari '+today()+'.';
+  try{const text=await gemini([{text:prompt}],'',1000);const p=JSON.parse(text.replace(/```json|```/g,'').trim());S.tasks=[...S.tasks,...p];sv('tasks');RENDER.tasks();updateSB();}
+  catch(e){alert('Error: '+e.message);}
+  if(btn){btn.textContent='✦ Generate Tugas AI';btn.disabled=false;}
 }
 
-// ─── SUBMIT ASSIGNMENT ────────────────────────────────────
-let subImgPreview=null;
-
+// ── Submit Assignment ──
+let subImgFiles=[];
 function openSubmit(wn){
-  S.subFiles=[];S.subWeek=wn;subImgPreview=null;
+  subImgFiles=[];S.subWeek=wn;
   const week=CUR[wn-1];
-  let rubHtml='';week.asgn.rubric.forEach(r=>{rubHtml+='<div style="font-size:12px;color:var(--text3);padding:3px 0;display:flex;gap:8px"><span style="color:var(--gold)">◆</span>'+esc(r)+'</div>';});
-  document.getElementById('m-submit-title').textContent='W'+wn+': '+week.asgn.title;
-  set('m-submit-body',
-    '<div class="hl-box" style="margin-bottom:16px">'
-    +'<div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:10px">'+esc(week.asgn.desc)+'</div>'
-    +'<div class="sec-title">Rubrik</div>'+rubHtml+'</div>'
-    +'<div class="upload-zone" id="sub-zone" onclick="document.getElementById(\'sub-file\').click()" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondrop="dropSub(event)">'
-    +'<div style="font-size:32px;color:var(--border2);margin-bottom:10px" id="sub-icon">⬆</div>'
-    +'<div style="font-size:13px;color:var(--text2)" id="sub-txt">Upload foto / scan karyamu di sini</div></div>'
-    +'<input type="file" id="sub-file" accept="image/*" multiple style="display:none" onchange="prevSubFile(event)">'
-    +'<div id="sub-prevs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>'
-    +'<div class="fg" style="margin:14px 0"><label class="flbl">Catatan untuk Sensei (opsional)</label>'
-    +'<textarea class="ta" id="sub-notes" placeholder="Ceritakan prosesmu, apa yang sulit..."></textarea></div>'
-    +'<div id="sub-err" style="color:var(--red);font-size:12px;margin-bottom:10px"></div>'
-    +'<button class="btn btn-primary" id="sub-btn" onclick="submitWork()">Kumpulkan & Minta Penilaian AI ✦</button>'
+  let rub='';week.asgn.rubric.forEach(r=>{rub+='<div style="font-size:11px;color:var(--text3);padding:3px 0;display:flex;gap:7px"><span style="color:var(--gold)">◆</span>'+esc(r)+'</div>';});
+  document.getElementById('m-submit-t').textContent='W'+wn+': '+week.asgn.title;
+  set('m-submit-b',
+    '<div class="hlbox" style="margin-bottom:14px">'
+    +'<div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px">'+esc(week.asgn.desc)+'</div>'
+    +'<div class="sec-title">Rubrik</div>'+rub+'</div>'
+    +'<div class="upzone" id="sub-z" onclick="document.getElementById(\'sub-f\').click()" ondragover="event.preventDefault();this.classList.add(\'over\')" ondrop="dropSubFile(event)">'
+    +'<div style="font-size:28px;color:var(--border2);margin-bottom:8px" id="sub-icon">⬆</div>'
+    +'<div style="font-size:12px;color:var(--text2)" id="sub-txt">Upload foto karyamu</div></div>'
+    +'<input type="file" id="sub-f" accept="image/*" multiple style="display:none" onchange="prevSubFiles(event)">'
+    +'<div id="sub-prevs" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>'
+    +'<div class="fg" style="margin:12px 0"><label class="flbl">Catatan untuk Sensei (opsional)</label>'
+    +'<textarea class="ta" id="sub-notes" placeholder="Ceritakan prosesmu..."></textarea></div>'
+    +'<div id="sub-err" style="color:var(--red);font-size:11px;margin-bottom:8px"></div>'
+    +'<button class="btn btn-gold" id="sub-btn" onclick="submitWork()">Kumpulkan & Minta Penilaian AI ✦</button>'
   );
   openM('m-submit');
 }
-
-function dropSub(e){e.preventDefault();document.getElementById('sub-zone').classList.remove('dragover');prevFilesFromList(e.dataTransfer.files);}
-function prevSubFile(e){prevFilesFromList(e.target.files);}
-function prevFilesFromList(files){
-  S.subFiles=[];
-  const c=document.getElementById('sub-prevs');if(!c)return;
-  c.innerHTML='';
-  Array.from(files).slice(0,4).forEach(file=>{
-    const r=new FileReader();
-    r.onload=ev=>{
-      S.subFiles.push(ev.target.result);
-      const img=document.createElement('img');
-      img.src=ev.target.result;img.style.cssText='height:80px;width:80px;object-fit:cover;border-radius:4px;border:1px solid var(--border)';
-      c.appendChild(img);
-    };
-    r.readAsDataURL(file);
-  });
-  const icon=document.getElementById('sub-icon');const txt=document.getElementById('sub-txt');
-  if(icon)icon.textContent='✓';if(txt)txt.textContent=files.length+' file siap dikumpulkan';
+function dropSubFile(e){e.preventDefault();document.getElementById('sub-z').classList.remove('over');handleSubFiles(e.dataTransfer.files);}
+function prevSubFiles(e){handleSubFiles(e.target.files);}
+async function handleSubFiles(files){
+  subImgFiles=[];
+  const c=document.getElementById('sub-prevs');if(!c)return;c.innerHTML='';
+  for(const file of Array.from(files).slice(0,4)){
+    const data=await readFile(file);subImgFiles.push(data);
+    const img=document.createElement('img');img.src=data;img.style.cssText='height:70px;width:70px;object-fit:cover;border-radius:4px;border:1px solid var(--border)';
+    c.appendChild(img);
+  }
+  const ic=document.getElementById('sub-icon');const tx=document.getElementById('sub-txt');
+  if(ic)ic.textContent='✓';if(tx)tx.textContent=files.length+' file siap';
 }
-
 async function submitWork(){
-  if(!S.subFiles.length){document.getElementById('sub-err').textContent='Upload gambar dulu!';return;}
-  const btn=document.getElementById('sub-btn');
-  btn.textContent='⟳ Sensei menilai...';btn.disabled=true;
+  if(!subImgFiles.length){document.getElementById('sub-err').textContent='Upload gambar dulu!';return;}
+  const btn=document.getElementById('sub-btn');btn.textContent='⟳ Sensei menilai...';btn.disabled=true;
   document.getElementById('sub-err').textContent='';
   const week=CUR[S.subWeek-1];
   const notes=document.getElementById('sub-notes')?.value||'';
-  const rubricTxt=week.asgn.rubric.map((r,i)=>(i+1)+'. '+r).join('\n');
-  const sysPrompt='Kamu penilai karya seni ahli. Nilai berdasarkan rubrik. Respond HANYA JSON valid tanpa teks lain:\n{"scores":{"kriteria1":85,"kriteria2":70},"total":80,"grade":"B+","strengths":["kelebihan"],"improvements":["perbaikan"],"sensei_note":"catatan encouraging 2-3 kalimat","next_focus":"1 fokus berikutnya"}\nGrade: 95+=A+,90=A,85=A-,80=B+,75=B,70=B-,65=C+,60=C,<60=D';
-  const prompt='Nilai karya untuk tugas MINGGU '+S.subWeek+': "'+week.asgn.title+'"\nKurikulum: '+week.title+' ('+week.ref+')\nDeskripsi: '+week.asgn.desc+'\nRubrik:\n'+rubricTxt+(notes?'\nCatatan murid: '+notes:'')+'\nIni pemula total — nilai konstruktif dan encouraging, fokus progress bukan kesempurnaan.';
+  const rubTxt=week.asgn.rubric.map((r,i)=>(i+1)+'. '+r).join('\n');
+  const sys='Kamu penilai karya seni. Respond HANYA JSON valid:\n{"scores":{"k1":80,"k2":75},"total":78,"grade":"B+","strengths":["s1"],"improvements":["i1"],"sensei_note":"catatan 2-3 kalimat","next_focus":"1 fokus"}\nGrade: 95+=A+,90=A,85=A-,80=B+,75=B,70=B-,65=C+,60=C,<60=D';
+  const prompt='Nilai karya tugas W'+S.subWeek+': "'+week.asgn.title+'"\n'+week.title+' ('+week.ref+')\n'+week.asgn.desc+'\nRubrik:\n'+rubTxt+(notes?'\nCatatan: '+notes:'')+'\nIni pemula total — nilai konstruktif, fokus progress.';
   try{
-    const b=S.subFiles[0].split(',')[1],mt=S.subFiles[0].split(';')[0].split(':')[1];
-    const text=await gemini([{inlineData:{mimeType:mt,data:b}},{text:prompt}],sysPrompt,1500);
-    let parsed;
-    try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}
-    catch{parsed={total:75,grade:'B',strengths:['Sudah mengerjakan tugas'],improvements:['Terus berlatih'],sensei_note:text,next_focus:'Latihan setiap hari'};}
-    const sub={id:Date.now(),weekNum:S.subWeek,files:S.subFiles,notes,date:new Date().toISOString().slice(0,10),title:'[W'+S.subWeek+'] '+week.asgn.title,cat:'study',submittedAt:new Date().toISOString(),...parsed};
+    const b=subImgFiles[0].split(',')[1],mt=subImgFiles[0].split(';')[0].split(':')[1];
+    const text=await gemini([{inlineData:{mimeType:mt,data:b}},{text:prompt}],sys,1500);
+    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch{parsed={total:75,grade:'B',strengths:['Sudah mengerjakan'],improvements:['Terus berlatih'],sensei_note:text,next_focus:'Latihan tiap hari'};}
+    const sub={id:Date.now(),weekNum:S.subWeek,files:subImgFiles,notes,date:today(),title:'[W'+S.subWeek+'] '+week.asgn.title,type:'sub',cat:'study',...parsed};
     S.subs[S.subWeek]=sub;sv('subs');
-    S.journal.push({...sub,type:'submission'});sv('journal');
-    addStreak();
-    closeM('m-submit');viewGrade(S.subWeek);
-  }catch(e){
-    document.getElementById('sub-err').textContent='Error: '+e.message;
-    btn.textContent='Coba Lagi';btn.disabled=false;
-  }
+    S.journal.push(sub);sv('journal');
+    addStreak();closeM('m-submit');viewGrade(S.subWeek);
+  }catch(e){document.getElementById('sub-err').textContent='Error: '+e.message;btn.textContent='Coba Lagi';btn.disabled=false;}
 }
-
 function viewGrade(wn){
   const sub=S.subs[wn];if(!sub)return;
   const week=CUR[wn-1];
-  let filesHtml='';
-  if(sub.files){sub.files.forEach(f=>{filesHtml+='<img src="'+f+'" style="height:100px;width:100px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewFull(\''+f+'\')">';});}
-  let scoresHtml='';
-  if(sub.scores){
-    Object.entries(sub.scores).forEach(([k,v])=>{
-      scoresHtml+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">'
-        +'<div style="font-size:11px;color:var(--text2);width:170px;flex-shrink:0">'+esc(k)+'</div>'
-        +'<div style="flex:1;height:5px;background:var(--bg3);border-radius:2px;overflow:hidden">'
-        +'<div style="height:100%;width:'+v+'%;background:'+(v>=80?'var(--gold)':v>=60?'var(--blue)':'var(--red)')+';border-radius:2px"></div></div>'
-        +'<div style="font-family:var(--fm);font-size:11px;color:var(--text2);width:28px;text-align:right">'+v+'</div></div>';
-    });
-  }
-  let strHtml='',impHtml='';
-  if(sub.strengths){sub.strengths.forEach(s=>{strHtml+='<div style="font-size:12px;color:var(--text2);padding:3px 0">✓ '+esc(s)+'</div>';});}
-  if(sub.improvements){sub.improvements.forEach(s=>{impHtml+='<div style="font-size:12px;color:var(--text2);padding:3px 0">→ '+esc(s)+'</div>';});}
-
-  set('m-grade-body',
-    '<div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap">'
-    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'+filesHtml+'</div>'
-    +'<div><div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-bottom:4px">MINGGU '+wn+' · '+esc(week.title)+'</div>'
-    +'<div class="grade-circle"><div class="grade-letter">'+esc(sub.grade||'?')+'</div><div class="grade-score">'+sub.total+'/100</div></div></div></div>'
-    +(scoresHtml?'<div style="margin-bottom:16px"><div class="sec-title">Skor per Kriteria</div>'+scoresHtml+'</div>':'')
-    +'<div class="g2" style="margin-bottom:16px">'
-    +(strHtml?'<div class="green-box"><div class="sec-title">Kelebihan</div>'+strHtml+'</div>':'')
-    +(impHtml?'<div class="red-box"><div class="sec-title">Perlu Diperbaiki</div>'+impHtml+'</div>':'')
+  let files='';if(sub.files)sub.files.forEach(f=>{files+='<img src="'+f+'" style="height:90px;width:90px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer" onclick="previewFull(\''+f+'\')">';});
+  let scores='';if(sub.scores)Object.entries(sub.scores).forEach(([k,v])=>{scores+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><div style="font-size:11px;color:var(--text2);width:160px;flex-shrink:0">'+esc(k)+'</div><div style="flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden"><div style="height:100%;width:'+v+'%;background:'+(v>=80?'var(--gold)':v>=60?'var(--blue)':'var(--red)')+';border-radius:2px"></div></div><div style="font-family:var(--fm);font-size:10px;color:var(--text2);width:26px;text-align:right">'+v+'</div></div>';});
+  let str='';if(sub.strengths)sub.strengths.forEach(s=>{str+='<div style="font-size:11px;color:var(--text2);padding:2px 0">✓ '+esc(s)+'</div>';});
+  let imp='';if(sub.improvements)sub.improvements.forEach(s=>{imp+='<div style="font-size:11px;color:var(--text2);padding:2px 0">→ '+esc(s)+'</div>';});
+  set('m-grade-b',
+    '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap">'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap">'+files+'</div>'
+    +'<div><div style="font-size:9px;color:var(--text3);font-family:var(--fm);margin-bottom:4px">MINGGU '+wn+' · '+esc(week.title)+'</div>'
+    +'<div style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--golddim)">'
+    +'<div style="font-family:var(--fd);font-size:26px;color:var(--gold);line-height:1">'+esc(sub.grade||'?')+'</div>'
+    +'<div style="font-family:var(--fm);font-size:9px;color:var(--text3)">'+sub.total+'/100</div></div></div></div>'
+    +(scores?'<div style="margin-bottom:14px"><div class="sec-title">Skor per Kriteria</div>'+scores+'</div>':'')
+    +'<div class="g2" style="margin-bottom:14px">'
+    +(str?'<div class="greenbox"><div class="sec-title">Kelebihan</div>'+str+'</div>':'')
+    +(imp?'<div class="redbox"><div class="sec-title">Perlu Diperbaiki</div>'+imp+'</div>':'')
     +'</div>'
-    +(sub.sensei_note?'<div class="hl-box" style="margin-bottom:14px;font-size:13px;color:var(--text);line-height:1.8;font-style:italic">"'+esc(sub.sensei_note)+'"</div>':'')
-    +(sub.next_focus?'<div style="font-size:13px;color:var(--text2)"><span style="color:var(--gold)">◆ Fokus berikutnya:</span> '+esc(sub.next_focus)+'</div>':'')
-    +'<div style="margin-top:16px;display:flex;gap:8px">'
+    +(sub.sensei_note?'<div class="hlbox" style="margin-bottom:12px;font-size:12px;color:var(--text);line-height:1.8;font-style:italic">"'+esc(sub.sensei_note)+'"</div>':'')
+    +(sub.next_focus?'<div style="font-size:12px;color:var(--text2)"><span style="color:var(--gold)">◆ Fokus:</span> '+esc(sub.next_focus)+'</div>':'')
+    +'<div style="margin-top:14px;display:flex;gap:7px">'
     +'<button class="btn btn-sm" onclick="closeM(\'m-grade\');openSubmit('+wn+')">Kumpul Ulang</button>'
     +'<button class="btn btn-sm" onclick="closeM(\'m-grade\')">Tutup</button></div>'
   );
   openM('m-grade');
 }
 
-// ─── PORTFOLIO / WORKS ────────────────────────────────────
-function viewWork(id){
-  const all=[...S.works,...Object.values(S.subs).filter(s=>s.files)];
-  const w=all.find(x=>x.id===id);if(!w)return;
-  document.getElementById('m-work-title').textContent=w.title;
-  let filesHtml='';
-  if(w.files){w.files.forEach((f,i)=>{
-    filesHtml+=(f.startsWith('data:video')?'<video src="'+f+'" controls style="max-height:280px;max-width:100%;border-radius:4px">':'<img src="'+f+'" style="max-height:280px;max-width:100%;border-radius:4px;cursor:zoom-in" onclick="previewFull(\''+f+'\')" >');
-  });}
-  let dlHtml='';
-  if(w.files){w.files.forEach((f,i)=>{dlHtml+='<a class="btn btn-sm" href="'+f+'" download="'+esc(w.title)+'-'+(i+1)+'.png">⬇ '+( i+1)+'</a>';});}
-  set('m-work-body',
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">'+filesHtml+'</div>'
-    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">'
-    +(w.cat?'<span class="tag tag-blue">'+esc(w.cat)+'</span>':'')
-    +(w.level?'<span class="tag tag-gold">'+esc(w.level)+'</span>':'')
-    +(w.grade?'<span class="tag tag-green">'+esc(w.grade)+'</span>':'')+'</div>'
-    +'<div style="font-family:var(--fm);font-size:10px;color:var(--text3);margin-bottom:10px">'+(w.date||'')+(w.duration?' · '+w.duration+'m':'')+'</div>'
-    +(w.notes?'<div style="font-size:13px;color:var(--text2);line-height:1.8;background:var(--bg3);padding:12px;border-radius:4px;margin-bottom:14px">'+esc(w.notes)+'</div>':'')
-    +'<div style="display:flex;gap:8px;flex-wrap:wrap">'+dlHtml
-    +'<button class="btn btn-sm btn-danger" onclick="deleteWork('+id+')">Hapus</button>'
-    +'<button class="btn btn-sm" onclick="closeM(\'m-work\')">Tutup</button></div>'
+// ══════════════════════════════════════════════════
+// PROJECTS
+// ══════════════════════════════════════════════════
+function openAddProject(){
+  set('m-addproj-b',
+    '<div class="fg" style="margin-bottom:10px"><label class="flbl">Nama Project</label><input class="inp" id="pj-name" placeholder="mis. Game RPG — Character Sprites"></div>'
+    +'<div class="fg" style="margin-bottom:10px"><label class="flbl">Deskripsi</label><input class="inp" id="pj-desc" placeholder="Deskripsi singkat project"></div>'
+    +'<div class="fg" style="margin-bottom:10px"><label class="flbl">Deadline (opsional)</label><input type="date" class="inp" id="pj-dl"></div>'
+    +'<div style="display:flex;gap:8px;margin-top:14px">'
+    +'<button class="btn btn-blue" onclick="saveNewProject()">Buat Project →</button>'
+    +'<button class="btn" onclick="closeM(\'m-addproj\')">Batal</button></div>'
   );
-  openM('m-work');
+  openM('m-addproj');
 }
-function deleteWork(id){
-  if(!confirm('Hapus karya ini?'))return;
-  S.works=S.works.filter(w=>w.id!==id);
-  delete S.subs[Object.keys(S.subs).find(k=>S.subs[k].id===id)];
-  S.journal=S.journal.filter(j=>j.id!==id);
-  sv('works');sv('subs');sv('journal');
-  closeM('m-work');RENDER[S.page]();
-}
-function downloadAll(){
-  const all=[...S.works,...Object.values(S.subs)];
-  all.forEach(w=>{w.files?.forEach((f,i)=>{const a=document.createElement('a');a.href=f;a.download=w.title+'-'+(i+1)+'.png';a.click();});});
+function saveNewProject(){
+  const name=document.getElementById('pj-name')?.value.trim();
+  if(!name)return;
+  const proj={id:'p'+Date.now(),name,desc:document.getElementById('pj-desc')?.value||'',deadline:document.getElementById('pj-dl')?.value||'',assets:[],createdAt:today()};
+  S.projects.push(proj);sv('projects');closeM('m-addproj');RENDER.projects();updateSB();
 }
 
-// ─── SENSEI CHAT ──────────────────────────────────────────
+function openProject(id){
+  const p=S.projects.find(x=>x.id===id);if(!p)return;
+  S.activeProjectId=id;
+  const done=p.assets.filter(a=>a.done).length;
+  const pct=p.assets.length?Math.round(done/p.assets.length*100):0;
+
+  let assetList='';
+  if(!p.assets.length){
+    assetList='<div class="empty" style="padding:20px"><div class="ei">◈</div><div style="font-size:12px">Belum ada asset — tambah atau generate dengan AI</div></div>';
+  } else {
+    // sort by priority
+    const sorted=[...p.assets].sort((a,b)=>{const po={high:0,medium:1,low:2};return (po[a.priority]||1)-(po[b.priority]||1);});
+    sorted.forEach((a,i)=>{
+      const realIdx=p.assets.indexOf(a);
+      const priCol=a.priority==='high'?'var(--red)':a.priority==='low'?'var(--green)':'var(--gold)';
+      assetList+='<div class="asset-row '+(a.done?'done':'')+'">'
+        +'<input type="checkbox"'+(a.done?' checked':'')+' onchange="toggleAsset(\''+id+'\','+realIdx+')" style="accent-color:var(--blue);flex-shrink:0">'
+        +'<div style="width:8px;height:8px;border-radius:50%;background:'+priCol+';flex-shrink:0"></div>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:12px;color:var(--text);'+(a.done?'text-decoration:line-through;':'')+'">'+esc(a.name)+'</div>'
+        +'<div style="font-size:10px;color:var(--text3)">'+esc(a.category||'')+(a.estimatedHours?' · ~'+a.estimatedHours+'jam':'')+(a.notes?' · '+esc(a.notes):'')+'</div>'
+        +'</div>'
+        +(a.done?'<span class="tag tgr">Done</span>':'<span class="tag '+(a.priority==='high'?'tr':a.priority==='low'?'tgr':'tg')+'">'+esc(a.priority||'med')+'</span>')
+        +'<button class="btn btn-sm btn-danger" onclick="delAsset(\''+id+'\','+realIdx+')">×</button></div>';
+    });
+  }
+
+  document.getElementById('m-proj-t').textContent=p.name;
+  set('m-proj-b',
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">'
+    +'<div style="font-size:12px;color:var(--text2)">'+esc(p.desc)+'</div>'
+    +'<div style="display:flex;gap:6px"><button class="btn btn-sm btn-blue" onclick="openAddAsset(\''+id+'\')">+ Asset</button>'
+    +'<button class="btn btn-sm" id="ai-asset-btn" onclick="aiSuggestAssets(\''+id+'\')">◈ AI Suggest</button>'
+    +'<button class="btn btn-sm btn-danger" onclick="delProject(\''+id+'\')">Hapus Project</button></div></div>'
+    +'<div class="pbar" style="height:6px;margin-bottom:6px"><div class="pfill blue" style="width:'+pct+'%"></div></div>'
+    +'<div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-bottom:14px">'+pct+'% selesai · '+done+'/'+p.assets.length+' asset'+(p.deadline?' · deadline '+esc(p.deadline):'')+'</div>'
+    +'<div class="sec-title">Asset List</div>'+assetList
+  );
+  openM('m-proj');
+}
+
+function openAddAsset(projId){
+  S.activeProjectId=projId;
+  set('m-addasset-b',
+    '<div class="fg" style="margin-bottom:8px"><label class="flbl">Nama Asset</label><input class="inp" id="as-name" placeholder="mis. Character sprite idle animation"></div>'
+    +'<div class="frow" style="margin-bottom:8px">'
+    +'<div class="fg"><label class="flbl">Kategori</label><select class="sel" id="as-cat"><option>Character</option><option>Background</option><option>UI/Icon</option><option>Effect</option><option>Cutscene</option><option>Concept Art</option><option>Other</option></select></div>'
+    +'<div class="fg"><label class="flbl">Prioritas</label><select class="sel" id="as-pri"><option value="high">🔴 High</option><option value="medium" selected>🟡 Medium</option><option value="low">🟢 Low</option></select></div>'
+    +'</div>'
+    +'<div class="frow" style="margin-bottom:8px">'
+    +'<div class="fg"><label class="flbl">Estimasi (jam)</label><input type="number" class="inp" id="as-hrs" value="2" min="0.5" step="0.5"></div>'
+    +'<div class="fg"><label class="flbl">Deadline</label><input type="date" class="inp" id="as-dl"></div>'
+    +'</div>'
+    +'<div class="fg" style="margin-bottom:12px"><label class="flbl">Notes</label><input class="inp" id="as-notes" placeholder="Detail tambahan..."></div>'
+    +'<div style="display:flex;gap:7px">'
+    +'<button class="btn btn-blue" onclick="saveAsset()">Tambah Asset</button>'
+    +'<button class="btn" onclick="closeM(\'m-addasset\')">Batal</button></div>'
+  );
+  openM('m-addasset');
+}
+function saveAsset(){
+  const name=document.getElementById('as-name')?.value.trim();if(!name)return;
+  const p=S.projects.find(x=>x.id===S.activeProjectId);if(!p)return;
+  p.assets.push({name,category:document.getElementById('as-cat')?.value||'Other',priority:document.getElementById('as-pri')?.value||'medium',estimatedHours:parseFloat(document.getElementById('as-hrs')?.value)||2,deadline:document.getElementById('as-dl')?.value||'',notes:document.getElementById('as-notes')?.value||'',done:false,addedAt:today()});
+  sv('projects');closeM('m-addasset');openProject(S.activeProjectId);
+}
+function toggleAsset(projId,i){const p=S.projects.find(x=>x.id===projId);if(!p)return;p.assets[i].done=!p.assets[i].done;sv('projects');openProject(projId);updateSB();}
+function delAsset(projId,i){const p=S.projects.find(x=>x.id===projId);if(!p)return;p.assets.splice(i,1);sv('projects');openProject(projId);}
+function delProject(id){if(!confirm('Hapus project ini?'))return;S.projects=S.projects.filter(p=>p.id!==id);sv('projects');closeM('m-proj');RENDER.projects();updateSB();}
+
+async function aiSuggestAssets(projId){
+  const btn=document.getElementById('ai-asset-btn');if(!btn)return;
+  const p=S.projects.find(x=>x.id===projId);if(!p)return;
+  btn.textContent='⟳ Analyzing...';btn.disabled=true;
+  const existing=p.assets.map(a=>a.name).join(', ');
+  const prompt='Kamu project manager ilustrasi game. Suggest 8 asset gambar untuk project "'+p.name+'" ('+p.desc+'). Asset yang sudah ada: '+(existing||'belum ada')+'. Respond HANYA JSON array:\n[{"name":"nama asset","category":"Character","priority":"high","estimatedHours":3,"notes":"detail spesifikasi"}]\nPriority: high/medium/low. Category: Character/Background/UI-Icon/Effect/Cutscene/Concept Art.';
+  try{
+    const text=await gemini([{text:prompt}],'',1200);
+    const suggested=JSON.parse(text.replace(/```json|```/g,'').trim());
+    suggested.forEach(a=>{p.assets.push({...a,done:false,addedAt:today()});});
+    sv('projects');openProject(projId);
+  }catch(e){alert('Error: '+e.message);}
+  if(btn){btn.textContent='◈ AI Suggest';btn.disabled=false;}
+}
+
+async function aiProjectManager(){
+  const btn=document.getElementById('ai-proj-btn');if(!btn)return;
+  btn.textContent='⟳ Analyzing...';btn.disabled=true;
+  const projSummary=S.projects.map(p=>{const done=p.assets.filter(a=>a.done).length;return p.name+': '+done+'/'+p.assets.length+' selesai, deadline: '+(p.deadline||'tidak ada');}).join('\n');
+  const skills=Object.entries(S.skills).filter(([,v])=>v>0).map(([k,v])=>k+':'+v+'%').join(', ');
+  const prompt='Kamu AI project manager untuk ilustrator pemula. Analisis semua project berikut dan berikan rekomendasi prioritas:\n\nProjects:\n'+(projSummary||'Belum ada project')+'\n\nSkill saat ini: '+(skills||'semua masih 0%')+'\n\nBerikan:\n1. Urutan priority pengerjaan yang optimal\n2. Estimasi total waktu\n3. Bottleneck yang perlu diperhatikan\n4. Next 3 hal yang harus dikerjakan hari ini\n\nBalas dalam Bahasa Indonesia, singkat dan actionable.';
+  try{
+    const text=await gemini([{text:prompt}],'Kamu AI project manager ilustrasi yang efisien dan praktis. Berikan analisis singkat, actionable, dan encouraging.',1200);
+    set('m-aiproj-b','<div style="white-space:pre-wrap;font-size:13px;color:var(--text2);line-height:1.8">'+esc(text)+'</div>');
+    openM('m-aiproj');
+  }catch(e){alert('Error: '+e.message);}
+  if(btn){btn.textContent='◈ AI Project Manager';btn.disabled=false;}
+}
+
+// ══════════════════════════════════════════════════
+// YUURA YOZAKURA
+// ══════════════════════════════════════════════════
+let yuuraUploadFiles=[];
+
+function openYuuraUpload(){
+  yuuraUploadFiles=[];S.yuuraRating=0;
+  set('m-yuura-b',
+    '<div class="upzone" id="yu-zone" onclick="document.getElementById(\'yu-f\').click()" ondragover="event.preventDefault();this.classList.add(\'over\')" ondrop="dropYuuraFile(event)">'
+    +'<div style="font-size:28px;margin-bottom:8px" id="yu-icon">✿</div>'
+    +'<div style="font-size:12px;color:var(--text2)" id="yu-txt">Upload fan art atau original scene Yuura</div></div>'
+    +'<input type="file" id="yu-f" accept="image/*" multiple style="display:none" onchange="prevYuuraFiles(event)">'
+    +'<div id="yu-prevs" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>'
+    +'<div class="divider"></div>'
+    +'<div class="frow" style="margin-bottom:8px">'
+    +'<div class="fg"><label class="flbl">Judul</label><input class="inp" id="yu-title" placeholder="mis. Yuura Birthday Art 2026"></div>'
+    +'<div class="fg"><label class="flbl">Tipe</label><select class="sel" id="yu-type"><option value="fanart">✿ Fan Art</option><option value="original">✦ Original Scene</option></select></div>'
+    +'</div>'
+    +'<div class="frow" style="margin-bottom:8px">'
+    +'<div class="fg"><label class="flbl">Outfit / Costume</label><input class="inp" id="yu-outfit" placeholder="mis. Default, Live2D, Original..."></div>'
+    +'<div class="fg"><label class="flbl">Mood / Ekspresi</label><input class="inp" id="yu-mood" placeholder="mis. Happy, Shy, Cool..."></div>'
+    +'</div>'
+    +'<div class="fg" style="margin-bottom:8px"><label class="flbl">Catatan / Cerita</label><textarea class="ta" id="yu-notes" placeholder="Ceritakan proses, inspirasi, atau scene yang digambar..."></textarea></div>'
+    +'<div class="fg" style="margin-bottom:14px"><label class="flbl">Rating Diri Sendiri</label>'
+    +'<div class="stars" id="yu-stars"><span class="star" onclick="setYuuraRating(1)">★</span><span class="star" onclick="setYuuraRating(2)">★</span><span class="star" onclick="setYuuraRating(3)">★</span><span class="star" onclick="setYuuraRating(4)">★</span><span class="star" onclick="setYuuraRating(5)">★</span></div></div>'
+    +'<div style="display:flex;gap:7px">'
+    +'<button class="btn btn-pink" onclick="saveYuura()">Simpan ke Galeri Yuura ✿</button>'
+    +'<button class="btn" onclick="closeM(\'m-yuura\')">Batal</button></div>'
+  );
+  openM('m-yuura');
+}
+function dropYuuraFile(e){e.preventDefault();document.getElementById('yu-zone').classList.remove('over');handleYuuraFiles(e.dataTransfer.files);}
+function prevYuuraFiles(e){handleYuuraFiles(e.target.files);}
+async function handleYuuraFiles(files){
+  yuuraUploadFiles=[];
+  const c=document.getElementById('yu-prevs');if(!c)return;c.innerHTML='';
+  for(const file of Array.from(files).slice(0,4)){
+    const data=await readFile(file);yuuraUploadFiles.push(data);
+    const img=document.createElement('img');img.src=data;img.style.cssText='height:70px;width:70px;object-fit:cover;border-radius:4px;border:1px solid rgba(232,111,160,0.3)';
+    c.appendChild(img);
+  }
+  const ic=document.getElementById('yu-icon');const tx=document.getElementById('yu-txt');
+  if(ic)ic.textContent='✓';if(tx)tx.textContent=files.length+' file siap';
+}
+function setYuuraRating(n){
+  S.yuuraRating=n;
+  document.querySelectorAll('#yu-stars .star').forEach((s,i)=>s.classList.toggle('on',i<n));
+}
+function saveYuura(){
+  const title=document.getElementById('yu-title')?.value.trim();
+  if(!title||!yuuraUploadFiles.length){alert('Isi judul dan upload gambar dulu!');return;}
+  const entry={
+    id:Date.now(),title,type:document.getElementById('yu-type')?.value||'fanart',
+    outfit:document.getElementById('yu-outfit')?.value||'',
+    mood:document.getElementById('yu-mood')?.value||'',
+    notes:document.getElementById('yu-notes')?.value||'',
+    rating:S.yuuraRating,files:yuuraUploadFiles,date:today()
+  };
+  S.yuura.push(entry);sv('yuura');
+  S.journal.push({...entry,_yuura:true});sv('journal');
+  addStreak();closeM('m-yuura');RENDER.yuura();updateSB();
+}
+function viewYuura(id){
+  const y=S.yuura.find(x=>x.id==id);if(!y)return;
+  document.getElementById('m-vy-t').textContent=y.title;
+  let files='';if(y.files)y.files.forEach((f,i)=>{files+=(f.startsWith('data:video')?'<video src="'+f+'" controls style="max-height:260px;max-width:100%;border-radius:4px;margin-bottom:8px">':'<img src="'+f+'" style="max-height:260px;max-width:100%;border-radius:4px;cursor:zoom-in;margin-bottom:8px" onclick="previewFull(\''+f+'\')" >');});
+  let dls='';if(y.files)y.files.forEach((f,i)=>{dls+='<a class="btn btn-sm" href="'+f+'" download="yuura-'+esc(y.title)+'-'+(i+1)+'.png">⬇ '+( i+1)+'</a>';});
+  set('m-vy-b',
+    files
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'
+    +'<span class="tag tp">'+(y.type==='fanart'?'✿ Fan Art':'✦ Original')+'</span>'
+    +(y.outfit?'<span class="tag tp">'+esc(y.outfit)+'</span>':'')
+    +(y.mood?'<span class="tag tpu">'+esc(y.mood)+'</span>':'')
+    +(y.rating?'<span style="color:var(--pink);font-size:13px">'+'★'.repeat(y.rating)+'</span>':'')
+    +'</div>'
+    +'<div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-bottom:8px">'+esc(y.date)+'</div>'
+    +(y.notes?'<div style="font-size:12px;color:var(--text2);line-height:1.8;background:var(--bg3);padding:10px;border-radius:4px;margin-bottom:12px">'+esc(y.notes)+'</div>':'')
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap">'+dls
+    +'<button class="btn btn-sm btn-danger" onclick="delYuura('+y.id+')">Hapus</button>'
+    +'<button class="btn btn-sm" onclick="closeM(\'m-viewyuura\')">Tutup</button></div>'
+  );
+  openM('m-viewyuura');
+}
+function delYuura(id){
+  if(!confirm('Hapus karya ini?'))return;
+  S.yuura=S.yuura.filter(y=>y.id!==id);
+  S.journal=S.journal.filter(j=>j.id!==id);
+  sv('yuura');sv('journal');closeM('m-viewyuura');RENDER.yuura();updateSB();
+}
+function downloadAllYuura(){
+  S.yuura.forEach(y=>{y.files?.forEach((f,i)=>{const a=document.createElement('a');a.href=f;a.download='yuura-'+y.title+'-'+(i+1)+'.png';a.click();});});
+}
+
+async function generateYuuraTasks(){
+  const btn=document.getElementById('gen-yuura-btn');if(!btn)return;
+  btn.textContent='⟳ Generating...';btn.disabled=true;
+  const sk=Object.entries(S.skills).filter(([,v])=>v>0).map(([k,v])=>k+':'+v+'%').join(', ')||'semua masih 0%';
+  const existing=S.yuura.length+' karya ('+S.yuura.filter(y=>y.type==='fanart').length+' fan art, '+S.yuura.filter(y=>y.type==='original').length+' original)';
+  const prompt='Generate 6 drawing tasks khusus untuk menggambar Yuura Yozakura (VTuber Indonesia). Variasi: fan art pose, ekspresi, outfit, original scene. Level: pemula. Skill: '+sk+'. Karya yang sudah ada: '+existing+'.\nRespond HANYA JSON array:\n[{"title":"judul task","desc":"detail cara menggambar","type":"fanart atau original","difficulty":"easy/medium/hard","estimatedTime":30}]';
+  try{
+    const text=await gemini([{text:prompt}],'Kamu art director yang spesialisasi karakter anime VTuber Indonesia. Berikan tasks yang inspiring dan progressif.',1000);
+    const tasks=JSON.parse(text.replace(/```json|```/g,'').trim());
+    S.yuuraTasks=[...S.yuuraTasks,...tasks.map(t=>({...t,done:false,id:Date.now()+Math.random()}))];
+    sv('yuuraTasks');RENDER['yuura-tasks']();
+  }catch(e){alert('Error: '+e.message);}
+  if(btn){btn.textContent='✿ Generate Yuura Tasks AI';btn.disabled=false;}
+}
+function toggleYuuraTask(i){S.yuuraTasks[i].done=!S.yuuraTasks[i].done;sv('yuuraTasks');RENDER['yuura-tasks']();}
+function delYuuraTask(i){S.yuuraTasks.splice(i,1);sv('yuuraTasks');RENDER['yuura-tasks']();}
+function clearDoneYuuraTasks(){S.yuuraTasks=S.yuuraTasks.filter(t=>!t.done);sv('yuuraTasks');RENDER['yuura-tasks']();}
+
+// ══════════════════════════════════════════════════
+// SENSEI AI
+// ══════════════════════════════════════════════════
 let senseiImg=null;
-function renderMsg(m){
-  return '<div class="chat-msg '+m.role+'">'
-    +'<div class="chat-av '+(m.role==='user'?'user':'sensei')+'">'+(m.role==='user'?'✎':'◉')+'</div>'
-    +'<div class="chat-bub '+(m.role==='sensei'?'sensei':'') +'">'
-    +(m.img?'<img src="'+m.img+'" style="max-width:100%;max-height:200px;border-radius:4px;margin-bottom:8px;display:block">':'')
+function renderMsg(m,accentColor){
+  return '<div class="cmsg '+m.role+'">'
+    +'<div class="cav '+(m.role==='user'?'user':'sensei')+'">'+(m.role==='user'?'✎':'◉')+'</div>'
+    +'<div class="cbub '+(m.role==='ai'?'sensei':'')+'">'
+    +(m.img?'<img src="'+m.img+'" style="max-width:100%;max-height:180px;border-radius:4px;margin-bottom:7px;display:block">':'')
     +esc(m.text)+'</div></div>';
 }
-function scrollChat(){setTimeout(()=>{const c=document.getElementById('chat-msgs');if(c)c.scrollTop=c.scrollHeight;},80);}
-function prevSenseiImg(e){
-  const file=e.target.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    senseiImg=ev.target.result;
-    const p=document.getElementById('sensei-img-prev');
-    if(p)p.innerHTML='<div style="position:relative;display:inline-block"><img src="'+senseiImg+'" style="height:60px;border-radius:4px"><button onclick="senseiImg=null;document.getElementById(\'sensei-img-prev\').innerHTML=\'\'" style="position:absolute;top:-6px;right:-6px;background:var(--bg2);border:1px solid var(--border2);color:var(--text3);border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:10px">×</button></div>';
-  };
-  r.readAsDataURL(file);
-}
-function quickAsk(q){const inp=document.getElementById('sensei-inp');if(inp)inp.value=q;sendSensei();}
+function scrollChat(id){setTimeout(()=>{const c=document.getElementById(id||'chat-msgs');if(c)c.scrollTop=c.scrollHeight;},80);}
+function prevSenseiImg(e){const f=e.target.files[0];if(!f)return;readFile(f).then(d=>{senseiImg=d;const p=document.getElementById('si-prev');if(p)p.innerHTML='<div style="position:relative;display:inline-block"><img src="'+d+'" style="height:55px;border-radius:4px"><button onclick="senseiImg=null;document.getElementById(\'si-prev\').innerHTML=\'\'" style="position:absolute;top:-5px;right:-5px;background:var(--bg2);border:1px solid var(--border2);color:var(--text3);border-radius:50%;width:16px;height:16px;cursor:pointer;font-size:9px">×</button></div>';});}
+function quickAsk(q){const inp=document.getElementById('si-inp');if(inp)inp.value=q;sendSensei();}
+
+const SENSEI_SYS='Kamu adalah Sensei — guru menggambar AI yang ahli, inspiratif, sabar, dan paham budaya Indonesia dan VTuber scene. Muridmu adalah pemula total yang ingin menguasai Anime/Manga, Realism, Character Design, Digital Painting, Sketch — dan punya dedikasi khusus untuk menggambar Yuura Yozakura (VTuber Indonesia).\n\nReferensi: Drawabox, Betty Edwards, James Gurney, Proko, Vilppu, Hampton, Loomis, Bridgman, Stephen Silver, Shogakukan, CTRL+PAINT, Marco Bucci, Kim Jung Gi.\n\nKarakter:\n- Hangat, encouraging, jujur dan spesifik\n- Kalau lihat gambar: critique detail + actionable improvements\n- Akhiri dengan 1 tip yang bisa dipraktekkan HARI INI\n- Kalau ditanya soal Yuura, bantu dengan teknik menggambar style VTuber anime\n\nBalas Bahasa Indonesia. Singkat, max 4 paragraf.';
+
 async function sendSensei(){
-  const inp=document.getElementById('sensei-inp');
+  const inp=document.getElementById('si-inp');
   const text=inp?.value.trim();
   if(!text&&!senseiImg)return;
   const msg={role:'user',text:text||'',img:senseiImg};
   S.chat.push(msg);sv('chat');
   if(inp)inp.value='';
   const imgCopy=senseiImg;senseiImg=null;
-  const prev=document.getElementById('sensei-img-prev');
-  if(prev)prev.innerHTML='';
+  const prev=document.getElementById('si-prev');if(prev)prev.innerHTML='';
   const container=document.getElementById('chat-msgs');
   if(container){
-    container.insertAdjacentHTML('beforeend',renderMsg(msg));
-    let typingEl=document.getElementById('typing');
-    if(typingEl)typingEl.style.display='flex';
-    else container.insertAdjacentHTML('beforeend','<div id="typing" class="chat-msg"><div class="chat-av sensei">◉</div><div class="chat-bub sensei" style="color:var(--text3)">Sensei sedang berpikir...</div></div>');
-    scrollChat();
+    container.insertAdjacentHTML('beforeend',renderMsg(msg,'gold'));
+    const typ=document.getElementById('typing');
+    if(typ)typ.style.display='flex';
+    else container.insertAdjacentHTML('beforeend','<div id="typing" class="cmsg"><div class="cav sensei">◉</div><div class="cbub sensei" style="color:var(--text3)">Sensei sedang berpikir...</div></div>');
+    scrollChat('chat-msgs');
   }
-  const btn=document.getElementById('sensei-btn');
-  if(btn){btn.textContent='...';btn.disabled=true;}
-  const sysPrompt='Kamu adalah Sensei — guru menggambar AI yang ahli, inspiratif, dan sabar. Muridmu adalah pemula total yang ingin menguasai: Anime/Manga, Realism, Character Design, Digital Painting, Sketch.\n\nReferensi: Drawabox, Betty Edwards, James Gurney, Proko, Vilppu, Hampton, Andrew Loomis, Bridgman, Stephen Silver, Shogakukan, CTRL+PAINT, Marco Bucci, Kim Jung Gi.\n\nKarakter:\n- Hangat, encouraging, jujur dan spesifik\n- Feedback berdasarkan referensi terpercaya\n- Kasih latihan mikro 5-15 menit yang bisa langsung dilakukan\n- Kalau lihat gambar: critique detail + actionable improvements\n- Akhiri dengan 1 tip yang bisa dipraktekkan HARI INI\n\nBalas dalam Bahasa Indonesia. Singkat dan padat, max 4 paragraf.';
+  const btn=document.getElementById('si-btn');if(btn){btn.textContent='...';btn.disabled=true;}
   try{
-    const reply=await geminiChat(S.chat,sysPrompt,1000);
-    const rm={role:'sensei',text:reply};
-    S.chat.push(rm);sv('chat');addStreak();
-    const typing=document.getElementById('typing');if(typing)typing.remove();
-    if(container){container.insertAdjacentHTML('beforeend',renderMsg(rm));scrollChat();}
+    const reply=await geminiChat(S.chat,SENSEI_SYS,1000);
+    const rm={role:'ai',text:reply};S.chat.push(rm);sv('chat');addStreak();
+    const typ=document.getElementById('typing');if(typ)typ.remove();
+    if(container){container.insertAdjacentHTML('beforeend',renderMsg(rm,'gold'));scrollChat('chat-msgs');}
   }catch(e){
-    const typing=document.getElementById('typing');if(typing)typing.remove();
-    const em={role:'sensei',text:'Error: '+e.message};
-    S.chat.push(em);sv('chat');
-    if(container){container.insertAdjacentHTML('beforeend',renderMsg(em));scrollChat();}
+    const typ=document.getElementById('typing');if(typ)typ.remove();
+    const em={role:'ai',text:'Error: '+e.message};S.chat.push(em);sv('chat');
+    if(container){container.insertAdjacentHTML('beforeend',renderMsg(em,'gold'));scrollChat('chat-msgs');}
   }
   if(btn){btn.textContent='Kirim →';btn.disabled=false;}
 }
-function clearChat(){if(!confirm('Hapus seluruh chat?'))return;S.chat=[];sv('chat');RENDER.sensei();}
+function clearChat(type){if(!confirm('Hapus chat?'))return;if(type==='chat'){S.chat=[];sv('chat');RENDER.sensei();}}
 
-// ─── DATA EXPORT/IMPORT ───────────────────────────────────
+// ══════════════════════════════════════════════════
+// DATA EXPORT / IMPORT
+// ══════════════════════════════════════════════════
 function exportData(){
-  const d=JSON.stringify({works:S.works,journal:S.journal,tasks:S.tasks,subs:S.subs,skills:S.skills,goals:S.goals,streak:S.streak,week:S.week,exportedAt:new Date().toISOString()},null,2);
-  const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(d);a.download='atelier-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  const d=JSON.stringify({works:S.works,journal:S.journal,tasks:S.tasks,subs:S.subs,skills:S.skills,goals:S.goals,streak:S.streak,chat:S.chat,week:S.week,projects:S.projects,yuura:S.yuura,yuuraTasks:S.yuuraTasks,yuuraChat:S.yuuraChat,exportedAt:new Date().toISOString()},null,2);
+  const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(d);a.download='creative-studio-backup-'+today()+'.json';a.click();
 }
 function importData(e){
   const file=e.target.files[0];if(!file)return;
@@ -1030,18 +1260,26 @@ function importData(e){
   r.onload=ev=>{
     try{
       const d=JSON.parse(ev.target.result);
-      if(d.works){S.works=d.works;sv('works');}if(d.journal){S.journal=d.journal;sv('journal');}
-      if(d.tasks){S.tasks=d.tasks;sv('tasks');}if(d.subs){S.subs=d.subs;sv('subs');}
-      if(d.skills){S.skills=d.skills;sv('skills');}if(d.goals){S.goals=d.goals;sv('goals');}
-      if(d.streak){S.streak=d.streak;sv('streak');}if(d.week){S.week=d.week;DB.set('week',d.week);}
-      alert('Data berhasil diimport!');RENDER[S.page]();
-    }catch(e){alert('File tidak valid: '+e.message);}
+      const keys=['works','journal','tasks','subs','skills','goals','streak','chat','projects','yuura','yuuraTasks','yuuraChat'];
+      keys.forEach(k=>{if(d[k]!==undefined){S[k]=d[k];sv(k);}});
+      if(d.week){S.week=d.week;sv('week');}
+      alert('Data berhasil diimport!');go(S.page);
+    }catch(err){alert('File tidak valid: '+err.message);}
   };
   r.readAsText(file);e.target.value='';
 }
 
-// ─── INIT ─────────────────────────────────────────────────
-window.addEventListener('load',()=>{goTo('dashboard');});
+// ══════════════════════════════════════════════════
+// GOALS
+// ══════════════════════════════════════════════════
+function toggleGoal(i){S.goals[i].done=!S.goals[i].done;sv('goals');RENDER.home();}
+function removeGoal(i){S.goals.splice(i,1);sv('goals');RENDER.home();}
+function addGoal(){const inp=document.getElementById('new-goal');if(!inp||!inp.value.trim())return;S.goals.push({text:inp.value.trim(),done:false});sv('goals');RENDER.home();}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+window.addEventListener('load',()=>{go('home');});
 </script>
 </body>
 </html>
