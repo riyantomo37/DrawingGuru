@@ -1,0 +1,9 @@
+name = "drawingguru"
+main = "worker.js"
+compatibility_date = "2025-06-01"
+
+# Serve the repo's static files (index.html, etc.) through the Worker.
+# binding = "ASSETS" exposes env.ASSETS.fetch() used in worker.js.
+[assets]
+directory = "."
+binding = "ASSETS"
